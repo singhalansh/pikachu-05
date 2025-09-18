@@ -65,12 +65,6 @@ export default function CitizenSignupPage() {
             const { error } = await supabase.auth.signUp({
                 email: formData.email,
                 password: formData.password,
-                options: {
-                    data: { name: formData.name },
-                    emailRedirectTo:
-                        process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
-                        `${window.location.origin}/citizen/dashboard`,
-                },
             });
             if (error) throw error;
             toast({
@@ -99,11 +93,6 @@ export default function CitizenSignupPage() {
         supabase.auth
             .signInWithOAuth({
                 provider: "google",
-                options: {
-                    redirectTo:
-                        process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
-                        `${window.location.origin}/citizen/dashboard`,
-                },
             })
             .catch((error: any) => {
                 toast({
@@ -116,6 +105,19 @@ export default function CitizenSignupPage() {
             })
             .finally(() => setIsLoading(false));
     };
+
+    // Handle OAuth callback: extract access_token from URL hash and set cookie
+    React.useEffect(() => {
+                        if (typeof window !== "undefined" && window.location.hash.includes('access_token=')) {
+                                const params = new URLSearchParams(window.location.hash.substring(1));
+                                const accessToken = params.get('access_token');
+                                const refreshToken = params.get('refresh_token');
+                                if (accessToken) {
+                                        // Redirect to API route to set cookie server-side and redirect to dashboard
+                                        window.location.href = `/api/auth/set-token?access_token=${encodeURIComponent(accessToken)}${refreshToken ? `&refresh_token=${encodeURIComponent(refreshToken)}` : ''}&redirect=/citizen/dashboard`;
+                                }
+                        }
+    }, [router]);
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4">

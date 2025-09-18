@@ -1,5 +1,5 @@
-"use client"
 
+"use client"
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -33,6 +33,7 @@ import {
 } from "lucide-react"
 import AnalyticsCharts from "@/components/analytics-charts"
 
+// Removed client-side auth redirect; middleware enforces admin access
 // Mock data for admin dashboard
 const overviewStats = {
   totalIssues: 1247,

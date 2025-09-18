@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -22,6 +23,11 @@ import {
   MessageCircle,
 } from "lucide-react"
 import InteractiveMap from "@/components/interactive-map"
+
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 // Mock data for issues
 const mockIssues = [

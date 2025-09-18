@@ -29,6 +29,17 @@ export default function CitizenLoginPage() {
     const router = useRouter();
 
     useEffect(() => {
+                // Handle OAuth callback: extract access_token and refresh_token from URL hash, set cookie, and update Supabase session
+                                if (window.location.hash.includes('access_token=')) {
+                                        const params = new URLSearchParams(window.location.hash.substring(1));
+                                        const accessToken = params.get('access_token');
+                                        const refreshToken = params.get('refresh_token');
+                                        if (accessToken) {
+                                                // Redirect to API route to set cookie server-side and redirect to dashboard
+                                                window.location.href = `/api/auth/set-token?access_token=${encodeURIComponent(accessToken)}${refreshToken ? `&refresh_token=${encodeURIComponent(refreshToken)}` : ''}&redirect=/citizen/dashboard`;
+                                                return;
+                                        }
+                                }
         const supabase = createClient();
         const checkSession = async () => {
             const { data } = await supabase.auth.getSession();
@@ -55,23 +66,26 @@ export default function CitizenLoginPage() {
         const supabase = createClient();
 
         try {
-            const { error } = await supabase.auth.signInWithPassword({
+            const { data, error } = await supabase.auth.signInWithPassword({
                 email,
                 password,
-                options: {
-                    emailRedirectTo:
-                        process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
-                        `${window.location.origin}/citizen/dashboard`,
-                },
             });
-
             if (error) throw error;
-
+            // Persist tokens in HTTP-only cookies for middleware
+            if (data?.session?.access_token) {
+                await fetch("/api/auth/set-token", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        access_token: data.session.access_token,
+                        refresh_token: data.session.refresh_token,
+                    }),
+                });
+            }
             toast({
                 title: "Login Successful",
                 description: "Welcome back! Redirecting to your dashboard...",
             });
-
             router.push("/citizen/dashboard");
         } catch (error: any) {
             toast({
@@ -91,9 +105,7 @@ export default function CitizenLoginPage() {
             .signInWithOAuth({
                 provider: "google",
                 options: {
-                    redirectTo:
-                        process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ||
-                        `${window.location.origin}/citizen/dashboard`,
+                    redirectTo: `${window.location.origin}/citizen/login`,
                 },
             })
             .catch((error: any) => {
