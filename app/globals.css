@@ -226,7 +226,7 @@
   }
 
   body {
-    @apply bg-background text-foreground mobile-text;
+    @apply bg-background text-foreground;
   }
 
   /* Better focus indicators */
