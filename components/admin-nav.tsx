@@ -13,6 +13,13 @@ import {
     Shield,
     Users,
     LogOut,
+    Map,
+    ListTodo,
+    Clock,
+    TrendingUp,
+    MessageSquare,
+    Eye,
+    UserCog,
 } from "lucide-react";
 import NotificationSystem from "@/components/notification-system";
 
@@ -23,25 +30,46 @@ const navItems = [
         icon: BarChart3,
     },
     {
+        href: "/admin/roles",
+        label: "Roles & Access",
+        icon: UserCog,
+    },
+    {
+        href: "/admin/map",
+        label: "Issue Map",
+        icon: Map,
+    },
+    {
         href: "/admin/issues",
-        label: "Manage Issues",
+        label: "Issue Management",
         icon: Settings,
     },
     {
-        href: "/admin/notifications",
-        label: "Notifications",
-        icon: Bell,
+        href: "/admin/tasks",
+        label: "Department Tasks",
+        icon: ListTodo,
+    },
+    {
+        href: "/admin/escalation",
+        label: "Escalation",
+        icon: Clock,
+        badge: 3,
+    },
+    {
+        href: "/admin/analytics",
+        label: "Analytics",
+        icon: TrendingUp,
+    },
+    {
+        href: "/admin/communication",
+        label: "Communications",
+        icon: MessageSquare,
         badge: 5,
     },
     {
-        href: "/admin/reports",
-        label: "Reports",
-        icon: FileText,
-    },
-    {
-        href: "/admin/users",
-        label: "Users",
-        icon: Users,
+        href: "/admin/transparency",
+        label: "Transparency",
+        icon: Eye,
     },
 ];
 

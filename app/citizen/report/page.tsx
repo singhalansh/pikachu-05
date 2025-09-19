@@ -167,9 +167,8 @@ export default function ReportIssuePage() {
                     <SelectItem value="pothole">Pothole</SelectItem>
                     <SelectItem value="streetlight">Streetlight</SelectItem>
                     <SelectItem value="garbage">Garbage Collection</SelectItem>
-                    <SelectItem value="water-leakage">Water Leakage</SelectItem>
-                    <SelectItem value="traffic-signal">Traffic Signal</SelectItem>
-                    <SelectItem value="road-damage">Road Damage</SelectItem>
+                    <SelectItem value="water-leak">Water Leakage</SelectItem>
+                    <SelectItem value="traffic">Traffic Signal</SelectItem>
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
