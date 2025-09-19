@@ -1,71 +1,86 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
-import Link from "next/link"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { MapPin, Upload, Camera, ArrowLeft, CheckCircle, AlertTriangle } from "lucide-react"
+import { MapPin, Upload, Camera, AlertCircle } from "lucide-react"
+import MapPicker, { MapPickerValue } from "@/components/map-picker"
 import { useToast } from "@/hooks/use-toast"
+import { useAuth } from "@/contexts/auth-context"
+import { createClient } from "@/lib/supabase/client"
 
 export default function ReportIssuePage() {
   const [formData, setFormData] = useState({
     title: "",
-    category: "",
     description: "",
-    location: "",
-    coordinates: { lat: "", lng: "" },
-    image: null as File | null,
+    category: "",
+    priority: "medium",
+    location_address: "",
+    location_lat: "",
+    location_lng: "",
+    image_url: ""
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const { toast } = useToast()
+  const router = useRouter()
+  const { user } = useAuth()
+  const supabase = createClient()
+  
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (user === null) {
+      router.push('/citizen/login')
+    }
+  }, [user, router])
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setFormData((prev) => ({ ...prev, image: file }))
-    }
-  }
-
-  const handleLocationDetect = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setFormData((prev) => ({
-            ...prev,
-            coordinates: {
-              lat: position.coords.latitude.toString(),
-              lng: position.coords.longitude.toString(),
-            },
-          }))
-          toast({
-            title: "Location Detected",
-            description: "Your current location has been captured.",
-          })
-        },
-        (error) => {
-          toast({
-            title: "Location Error",
-            description: "Unable to detect location. Please enter manually.",
-            variant: "destructive",
-          })
-        },
-      )
-    } else {
+  const handleFileUpload = async (file: File) => {
+    if (!user) {
       toast({
-        title: "Location Not Supported",
-        description: "Geolocation is not supported by this browser.",
+        title: "Authentication required",
+        description: "Please sign in to upload images",
         variant: "destructive",
       })
+      return
+    }
+
+    setIsUploading(true)
+    try {
+      const form = new FormData()
+      form.append('file', file)
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: form,
+        credentials: 'include',
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to upload file')
+
+      setFormData(prev => ({ ...prev, image_url: data.url }))
+
+      toast({
+        title: "Success",
+        description: "Image uploaded successfully",
+      })
+    } catch (error: any) {
+      console.error('Upload error:', error)
+      toast({
+        title: "Upload failed",
+        description: error.message || "Failed to upload image. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsUploading(false)
     }
   }
 
@@ -73,269 +88,260 @@ export default function ReportIssuePage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      const response = await fetch('/api/issues', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(formData)
+      })
 
-    toast({
-      title: "Issue Reported Successfully!",
-      description:
-        "Your issue has been submitted and assigned ID: ISS-" +
-        Math.floor(Math.random() * 1000)
-          .toString()
-          .padStart(3, "0"),
-    })
+      const data = await response.json()
 
-    setIsSubmitting(false)
+      if (response.ok) {
+        toast({
+          title: "Issue reported successfully",
+          description: "Your issue has been submitted and will be reviewed by our team."
+        })
+        router.push('/citizen/dashboard')
+      } else {
+        throw new Error(data.error || 'Failed to submit issue')
+      }
+    } catch (error: any) {
+      toast({
+        title: "Submission failed",
+        description: error.message || "Failed to submit issue. Please try again.",
+        variant: "destructive"
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
-    // Reset form
-    setFormData({
-      title: "",
-      category: "",
-      description: "",
-      location: "",
-      coordinates: { lat: "", lng: "" },
-      image: null,
-    })
-
-    // Redirect to dashboard after success
-    setTimeout(() => {
-      window.location.href = "/citizen/dashboard"
-    }, 2000)
+  const getCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData(prev => ({
+            ...prev,
+            location_lat: position.coords.latitude.toString(),
+            location_lng: position.coords.longitude.toString()
+          }))
+          toast({
+            title: "Location detected",
+            description: "Your current location has been added to the issue."
+          })
+        },
+        (error) => {
+          toast({
+            title: "Location access denied",
+            description: "Please enter your location manually.",
+            variant: "destructive"
+          })
+        }
+      )
+    }
   }
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-10 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
-        <div className="container mx-auto px-4 py-3 sm:py-4">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-            <Button variant="ghost" size="sm" asChild className="self-start">
-              <Link href="/citizen/dashboard">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                <span className="hidden sm:inline">Back to Dashboard</span>
-                <span className="sm:hidden">Back</span>
-              </Link>
-            </Button>
-            <div className="flex-1">
-              <h1 className="text-xl sm:text-2xl font-bold">Report New Issue</h1>
-              <p className="text-sm sm:text-base text-muted-foreground">
-                Help improve your community by reporting civic issues
-              </p>
-            </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold mb-2">Report an Issue</h1>
+            <p className="text-muted-foreground">
+              Help improve your community by reporting issues that need attention
+            </p>
           </div>
-        </div>
-      </div>
 
-      <div className="container mx-auto px-4 py-4 sm:py-6 max-w-2xl">
-        <Card>
-          <CardHeader className="pb-4 sm:pb-6">
-            <CardTitle className="flex items-center text-lg sm:text-xl">
-              <AlertTriangle className="w-5 h-5 mr-2 text-accent" />
-              Issue Details
-            </CardTitle>
-            <CardDescription className="text-sm sm:text-base">
-              Provide as much detail as possible to help municipal authorities address the issue quickly.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-              {/* Issue Title */}
-              <div className="space-y-2">
-                <Label htmlFor="title" className="text-sm font-medium">
-                  Issue Title *
-                </Label>
-                <Input
-                  id="title"
-                  placeholder="Brief description of the issue"
-                  value={formData.title}
-                  onChange={(e) => handleInputChange("title", e.target.value)}
-                  className="h-11 sm:h-10"
-                  required
-                />
-              </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Issue Details</CardTitle>
+              <CardDescription>
+                Provide as much detail as possible to help us address the issue quickly
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Title */}
+                <div className="space-y-2">
+                  <Label htmlFor="title">Issue Title *</Label>
+                  <Input
+                    id="title"
+                    placeholder="Brief description of the issue"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    required
+                  />
+                </div>
 
-              {/* Category */}
-              <div className="space-y-2">
-                <Label htmlFor="category" className="text-sm font-medium">
-                  Category *
-                </Label>
-                <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                  <SelectTrigger className="h-11 sm:h-10">
-                    <SelectValue placeholder="Select issue category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pothole">Pothole</SelectItem>
-                    <SelectItem value="streetlight">Streetlight</SelectItem>
-                    <SelectItem value="garbage">Garbage Collection</SelectItem>
-                    <SelectItem value="water-leak">Water Leakage</SelectItem>
-                    <SelectItem value="traffic">Traffic Signal</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
-              {/* Description */}
-              <div className="space-y-2">
-                <Label htmlFor="description" className="text-sm font-medium">
-                  Description *
-                </Label>
-                <Textarea
-                  id="description"
-                  placeholder="Provide detailed description of the issue, including any relevant context or urgency"
-                  value={formData.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
-                  rows={4}
-                  className="resize-none"
-                  required
-                />
-              </div>
 
-              {/* Location */}
-              <div className="space-y-3 sm:space-y-4">
-                <Label className="text-sm font-medium">Location *</Label>
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description *</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Provide detailed information about the issue..."
+                    value={formData.description}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    rows={4}
+                    required
+                  />
+                </div>
 
-                <div className="space-y-3">
-                  <div className="flex flex-col sm:flex-row gap-2">
+
+                {/* Category and Priority */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Category *</Label>
+                    <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Roads">Roads & Infrastructure</SelectItem>
+                        <SelectItem value="Lighting">Street Lighting</SelectItem>
+                        <SelectItem value="Sanitation">Sanitation & Waste</SelectItem>
+                        <SelectItem value="Water">Water & Sewage</SelectItem>
+                        <SelectItem value="Traffic">Traffic & Safety</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="priority">Priority</Label>
+                    <Select value={formData.priority} onValueChange={(value) => handleInputChange('priority', value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Location (Required) with Google Maps */}
+                <div className="space-y-2">
+                  <Label>Location *</Label>
+                  <MapPicker
+                    value={{
+                      address: formData.location_address,
+                      lat: formData.location_lat ? parseFloat(formData.location_lat) : null,
+                      lng: formData.location_lng ? parseFloat(formData.location_lng) : null,
+                    }}
+                    onChange={(val: MapPickerValue) => {
+                      setFormData(prev => ({
+                        ...prev,
+                        location_address: val.address,
+                        location_lat: val.lat !== null ? String(val.lat) : '',
+                        location_lng: val.lng !== null ? String(val.lng) : '',
+                      }))
+                    }}
+                    height={260}
+                  />
+
+                  <div className="space-y-1">
+                    <Label className="text-xs">Selected address</Label>
+                    <Input value={formData.location_address} readOnly className="text-xs" />
+                  </div>
+
+                  {/* Optional Landmark */}
+                  <div className="space-y-2">
+                    <Label htmlFor="landmark">Landmark (optional)</Label>
                     <Input
-                      placeholder="Enter street address or landmark"
-                      value={formData.location}
-                      onChange={(e) => handleInputChange("location", e.target.value)}
-                      className="flex-1 h-11 sm:h-10"
-                      required
+                      id="landmark"
+                      placeholder="Nearby landmark (optional)"
+                      value={(formData as any).landmark || ''}
+                      onChange={(e) => setFormData(prev => ({ ...prev, landmark: e.target.value }))}
                     />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleLocationDetect}
-                      className="h-11 sm:h-10 sm:w-auto bg-transparent"
+                  </div>
+
+                  <div className="text-xs text-muted-foreground">Use the search box or click on the map to set the exact location.</div>
+                </div>
+
+                {/* Image Upload */}
+                <div className="space-y-2">
+                  <Label>Photo (Optional)</Label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) handleFileUpload(file)
+                      }}
+                      className="hidden"
+                      id="image-upload"
+                    />
+                    <label
+                      htmlFor="image-upload"
+                      className="flex items-center gap-2 px-4 py-2 border border-dashed border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"
                     >
-                      <MapPin className="w-4 h-4 mr-2" />
-                      <span className="sm:hidden">Detect Location</span>
-                      <span className="hidden sm:inline">Detect</span>
-                    </Button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <Input
-                      placeholder="Latitude"
-                      value={formData.coordinates.lat}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          coordinates: { ...prev.coordinates, lat: e.target.value },
-                        }))
-                      }
-                      className="h-11 sm:h-10"
-                    />
-                    <Input
-                      placeholder="Longitude"
-                      value={formData.coordinates.lng}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          coordinates: { ...prev.coordinates, lng: e.target.value },
-                        }))
-                      }
-                      className="h-11 sm:h-10"
-                    />
-                  </div>
-                </div>
-
-                {/* Map Placeholder */}
-                <div className="h-40 sm:h-48 bg-muted rounded-lg flex items-center justify-center border-2 border-dashed border-border">
-                  <div className="text-center p-4">
-                    <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground mx-auto mb-2" />
-                    <p className="text-sm text-muted-foreground">Interactive map for location selection</p>
-                    <p className="text-xs text-muted-foreground mt-1">Click to pin exact location</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Photo Upload */}
-              <div className="space-y-2">
-                <Label htmlFor="photo" className="text-sm font-medium">
-                  Photo Evidence
-                </Label>
-                <div className="border-2 border-dashed border-border rounded-lg p-4 sm:p-6">
-                  <div className="text-center">
-                    {formData.image ? (
-                      <div className="space-y-3">
-                        <CheckCircle className="w-8 h-8 text-status-resolved mx-auto" />
-                        <p className="text-sm font-medium">{formData.image.name}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {(formData.image.size / 1024 / 1024).toFixed(2)} MB
-                        </p>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setFormData((prev) => ({ ...prev, image: null }))}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <Upload className="w-8 h-8 text-muted-foreground mx-auto" />
-                        <div>
-                          <p className="text-sm font-medium">Upload a photo of the issue</p>
-                          <p className="text-xs text-muted-foreground">PNG, JPG up to 10MB</p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                          <Button type="button" variant="outline" size="sm" asChild className="h-10 bg-transparent">
-                            <label htmlFor="photo" className="cursor-pointer">
-                              <Upload className="w-4 h-4 mr-2" />
-                              Choose File
-                            </label>
-                          </Button>
-                          <Button type="button" variant="outline" size="sm" className="h-10 bg-transparent">
-                            <Camera className="w-4 h-4 mr-2" />
-                            Take Photo
-                          </Button>
-                        </div>
+                      <Camera className="h-4 w-4" />
+                      {isUploading ? "Uploading..." : "Upload Photo"}
+                    </label>
+                    {formData.image_url && (
+                      <div className="flex items-center gap-2 text-sm text-green-600">
+                        <Upload className="h-4 w-4" />
+                        Image uploaded
                       </div>
                     )}
-                    <input id="photo" type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                   </div>
                 </div>
-              </div>
 
-              {/* Submit Button */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                <Button type="submit" className="h-11 sm:h-10 sm:flex-1" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="w-4 h-4 mr-2" />
-                      Submit Issue Report
-                    </>
-                  )}
-                </Button>
-                <Button type="button" variant="outline" asChild className="h-11 sm:h-10 sm:w-auto bg-transparent">
-                  <Link href="/citizen/dashboard">Cancel</Link>
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+                {/* Submit Button */}
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.back()}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={
+                      isSubmitting ||
+                      !formData.title ||
+                      !formData.description ||
+                      !formData.category ||
+                      !(formData.location_lat && formData.location_lng)
+                    }
+                    className="flex-1"
+                  >
+                    {isSubmitting ? "Submitting..." : "Submit Issue"}
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
 
-        {/* Help Card */}
-        <Card className="mt-4 sm:mt-6">
-          <CardHeader className="pb-3 sm:pb-4">
-            <CardTitle className="text-base sm:text-lg">Reporting Tips</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm">
-            <p>• Be specific and descriptive in your issue title and description</p>
-            <p>• Include photos whenever possible - they help authorities understand the problem</p>
-            <p>• Provide accurate location information for faster response</p>
-            <p>• Check if the issue has already been reported to avoid duplicates</p>
-            <p>• For emergencies, contact emergency services directly</p>
-          </CardContent>
-        </Card>
+          {/* Help Text */}
+          <Card className="mt-6">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
+                <div className="text-sm text-muted-foreground">
+                  <p className="font-medium mb-1">Tips for better issue reports:</p>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>Be specific about the location and nature of the issue</li>
+                    <li>Include photos when possible to help with identification</li>
+                    <li>Provide accurate contact information for follow-up</li>
+                    <li>Check if similar issues have already been reported</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   )

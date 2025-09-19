@@ -1,13 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
+    tsconfigPath: './tsconfig.json',
   },
   images: {
     unoptimized: true,
+  },
+  experimental: {
+    typedRoutes: true,
   },
   async headers() {
     return [

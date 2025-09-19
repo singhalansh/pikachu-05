@@ -1,123 +1,91 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { MapPin, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { createClient } from "@/lib/supabase/client";
-
-import React, { useEffect } from "react";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function CitizenLoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    
     const { toast } = useToast();
+    const { user, signIn, signInWithGoogle } = useAuth();
     const router = useRouter();
+    const searchParams = useSearchParams();
 
+    // Redirect if user is already logged in
     useEffect(() => {
-                // Handle OAuth callback: extract access_token and refresh_token from URL hash, set cookie, and update Supabase session
-                                if (window.location.hash.includes('access_token=')) {
-                                        const params = new URLSearchParams(window.location.hash.substring(1));
-                                        const accessToken = params.get('access_token');
-                                        const refreshToken = params.get('refresh_token');
-                                        if (accessToken) {
-                                                // Redirect to API route to set cookie server-side and redirect to dashboard
-                                                window.location.href = `/api/auth/set-token?access_token=${encodeURIComponent(accessToken)}${refreshToken ? `&refresh_token=${encodeURIComponent(refreshToken)}` : ''}&redirect=/citizen/dashboard`;
-                                                return;
-                                        }
-                                }
-        const supabase = createClient();
-        const checkSession = async () => {
-            const { data } = await supabase.auth.getSession();
-            if (data.session) {
+        if (user) {
+            const redirectTo = searchParams.get('redirectedFrom');
+            if (redirectTo && redirectTo.startsWith('/')) {
+                router.push(redirectTo as any);
+            } else {
                 router.push("/citizen/dashboard");
             }
-        };
-        checkSession();
-        const { data: listener } = supabase.auth.onAuthStateChange(
-            (_event, session) => {
-                if (session) {
-                    router.push("/citizen/dashboard");
-                }
-            }
-        );
-        return () => {
-            listener?.subscription.unsubscribe();
-        };
-    }, [router]);
-    const handleLogin = async (e: React.FormEvent) => {
+        }
+    }, [user, router, searchParams]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-
-        const supabase = createClient();
+        setError(null);
 
         try {
-            const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-            });
+            const { error } = await signIn(email, password);
             if (error) throw error;
-            // Persist tokens in HTTP-only cookies for middleware
-            if (data?.session?.access_token) {
-                await fetch("/api/auth/set-token", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        access_token: data.session.access_token,
-                        refresh_token: data.session.refresh_token,
-                    }),
-                });
-            }
+            
+            // Redirect to dashboard is handled by the auth context
             toast({
                 title: "Login Successful",
-                description: "Welcome back! Redirecting to your dashboard...",
+                description: "Welcome back! Redirecting to your dashboard..."
             });
-            router.push("/citizen/dashboard");
-        } catch (error: any) {
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Failed to sign in";
+            setError(errorMessage);
             toast({
                 title: "Login Failed",
-                description: error.message || "An error occurred during login.",
-                variant: "destructive",
+                description: errorMessage,
+                variant: "destructive"
             });
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleGoogleLogin = () => {
-        const supabase = createClient();
+    const handleGoogleLogin = async () => {
         setIsLoading(true);
-        supabase.auth
-            .signInWithOAuth({
-                provider: "google",
-                options: {
-                    redirectTo: `${window.location.origin}/citizen/login`,
-                },
-            })
-            .catch((error: any) => {
-                toast({
-                    title: "Google Login Failed",
-                    description:
-                        error.message ||
-                        "An error occurred during Google login.",
-                    variant: "destructive",
-                });
-            })
-            .finally(() => setIsLoading(false));
+        setError(null);
+
+        try {
+            const { error } = await signInWithGoogle('citizen');
+            if (error) throw error;
+            
+            toast({
+                title: "Login Successful",
+                description: "Welcome! Redirecting to your dashboard..."
+            });
+        } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : "Failed to sign in with Google";
+            setError(errorMessage);
+            toast({
+                title: "Google Login Failed",
+                description: errorMessage,
+                variant: "destructive"
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -128,20 +96,22 @@ export default function CitizenLoginPage() {
                         <MapPin className="w-8 h-8 text-accent mr-2" />
                         <h1 className="text-2xl font-bold">Civic Platform</h1>
                     </div>
-                    <h2 className="text-xl text-muted-foreground">
-                        Citizen Portal
-                    </h2>
+                    <h2 className="text-xl text-muted-foreground">Citizen Portal</h2>
                 </div>
 
                 <Card>
                     <CardHeader className="text-center">
                         <CardTitle>Welcome Back</CardTitle>
-                        <CardDescription>
-                            Sign in to report issues and track their progress
-                        </CardDescription>
+                        <CardDescription>Sign in to report issues and track their progress</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        <form onSubmit={handleLogin} className="space-y-4">
+                        {error && (
+                            <div className="bg-red-50 text-red-700 p-3 rounded-md text-sm">
+                                {error}
+                            </div>
+                        )}
+
+                        <form onSubmit={handleSubmit} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="email">Email</Label>
                                 <div className="relative">
@@ -151,9 +121,7 @@ export default function CitizenLoginPage() {
                                         type="email"
                                         placeholder="Enter your email"
                                         value={email}
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
-                                        }
+                                        onChange={(e) => setEmail(e.target.value)}
                                         className="pl-10"
                                         required
                                         disabled={isLoading}
@@ -167,23 +135,17 @@ export default function CitizenLoginPage() {
                                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                                     <Input
                                         id="password"
-                                        type={
-                                            showPassword ? "text" : "password"
-                                        }
+                                        type={showPassword ? "text" : "password"}
                                         placeholder="Enter your password"
                                         value={password}
-                                        onChange={(e) =>
-                                            setPassword(e.target.value)
-                                        }
+                                        onChange={(e) => setPassword(e.target.value)}
                                         className="pl-10 pr-10"
                                         required
                                         disabled={isLoading}
                                     />
                                     <button
                                         type="button"
-                                        onClick={() =>
-                                            setShowPassword(!showPassword)
-                                        }
+                                        onClick={() => setShowPassword(!showPassword)}
                                         className="absolute right-3 top-3 text-muted-foreground hover:text-foreground"
                                         disabled={isLoading}
                                     >
@@ -196,11 +158,7 @@ export default function CitizenLoginPage() {
                                 </div>
                             </div>
 
-                            <Button
-                                type="submit"
-                                className="w-full"
-                                disabled={isLoading}
-                            >
+                            <Button type="submit" className="w-full" disabled={isLoading}>
                                 {isLoading ? "Signing In..." : "Sign In"}
                             </Button>
                         </form>
@@ -220,6 +178,7 @@ export default function CitizenLoginPage() {
                             variant="outline"
                             className="w-full bg-transparent"
                             onClick={handleGoogleLogin}
+                            disabled={isLoading}
                         >
                             <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                                 <path
@@ -254,9 +213,16 @@ export default function CitizenLoginPage() {
                             </Link>
                         </div>
 
-                        <div className="text-center">
+                        <div className="text-center mt-2 text-sm">
+                            <span className="text-muted-foreground">Are you an admin? </span>
+                            <Link href="/admin/login" className="text-accent hover:underline mr-2">Admin Login</Link>
+                            <span className="text-muted-foreground">or</span>
+                            <Link href="/admin/signup" className="text-accent hover:underline ml-2">Admin Sign up</Link>
+                        </div>
+
+                        <div className="text-center mt-2">
                             <Link
-                                href="/citizen/forgot-password"
+                                href={{ pathname: "/citizen/forgot-password" }}
                                 className="text-sm text-muted-foreground hover:text-accent"
                             >
                                 Forgot your password?

@@ -1,6 +1,7 @@
 
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -32,8 +33,8 @@ import {
   BarChart3,
 } from "lucide-react"
 import AnalyticsCharts from "@/components/analytics-charts"
+import { createClient } from "@/lib/supabase/client"
 
-// Removed client-side auth redirect; middleware enforces admin access
 // Mock data for admin dashboard
 const overviewStats = {
   totalIssues: 1247,
@@ -106,6 +107,7 @@ const recentIssues = [
   },
 ]
 
+// Helper functions
 const getStatusColor = (status: string) => {
   switch (status) {
     case "submitted":
@@ -135,7 +137,21 @@ const getPriorityColor = (priority: string) => {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const [selectedTimeRange, setSelectedTimeRange] = useState("7d")
+  
+  useEffect(() => {
+    const checkAuth = async () => {
+      const supabase = createClient()
+      const { data: { user }, error } = await supabase.auth.getUser()
+      
+      if (error || !user || (user.user_metadata?.role !== "admin" && user.role !== "admin")) {
+        router.push("/admin/login")
+      }
+    }
+    
+    checkAuth()
+  }, [router])
 
   return (
     <div className="min-h-screen bg-background">

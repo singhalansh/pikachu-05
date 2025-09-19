@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { CitizenPortalButton } from "@/components/citizen-portal-button"
 
 export default function HomePage() {
   return (
@@ -15,9 +16,7 @@ export default function HomePage() {
             Report civic issues in your community and track their resolution. Together, we can make our city better.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center max-w-md sm:max-w-none mx-auto">
-            <Button asChild size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-3">
-              <Link href="/citizen/login">Citizen Portal</Link>
-            </Button>
+            <CitizenPortalButton />
             <Button
               asChild
               variant="outline"

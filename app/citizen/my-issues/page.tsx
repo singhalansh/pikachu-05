@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,61 +8,20 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, Calendar, MapPin, Clock, Eye, AlertTriangle, CheckCircle, Plus } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
 
-// Mock data for user's issues
-const userIssues = [
-  {
-    id: "ISS-001",
-    title: "Large pothole on Main Street",
-    category: "pothole",
-    status: "in-progress",
-    location: "Main Street & 5th Ave",
-    reportedDate: "2024-01-15",
-    lastUpdate: "2024-01-18",
-    image: "/street-pothole.png",
-    description: "Deep pothole causing damage to vehicles",
-    timeline: [
-      { status: "submitted", date: "2024-01-15", description: "Issue reported and submitted" },
-      { status: "in-review", date: "2024-01-16", description: "Issue reviewed by municipal team" },
-      { status: "in-progress", date: "2024-01-18", description: "Repair crew assigned and work started" },
-    ],
-    assignedDepartment: "Road Maintenance",
-    estimatedCompletion: "2024-01-25",
-  },
-  {
-    id: "ISS-005",
-    title: "Broken streetlight near school",
-    category: "streetlight",
-    status: "submitted",
-    location: "School Street",
-    reportedDate: "2024-01-20",
-    lastUpdate: "2024-01-20",
-    image: "/broken-streetlight-near-school.jpg",
-    description: "Streetlight has been out for a week, creating safety concerns",
-    timeline: [{ status: "submitted", date: "2024-01-20", description: "Issue reported and submitted" }],
-    assignedDepartment: "Electrical Services",
-    estimatedCompletion: null,
-  },
-  {
-    id: "ISS-003",
-    title: "Overflowing garbage bin",
-    category: "garbage",
-    status: "resolved",
-    location: "Central Park Entrance",
-    reportedDate: "2024-01-10",
-    lastUpdate: "2024-01-14",
-    image: "/overflowing-garbage-bin.png",
-    description: "Garbage bin needs immediate attention",
-    timeline: [
-      { status: "submitted", date: "2024-01-10", description: "Issue reported and submitted" },
-      { status: "in-review", date: "2024-01-11", description: "Issue reviewed by sanitation team" },
-      { status: "in-progress", date: "2024-01-12", description: "Cleanup crew dispatched" },
-      { status: "resolved", date: "2024-01-14", description: "Garbage collected and bin cleaned" },
-    ],
-    assignedDepartment: "Sanitation",
-    estimatedCompletion: "2024-01-14",
-  },
-]
+type Issue = {
+  id: string
+  title: string
+  description: string
+  category: string
+  status: string
+  location_address: string | null
+  image_url: string | null
+  created_at: string
+  updated_at: string
+  user_id: string
+}
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -124,11 +83,35 @@ const getCategoryLabel = (category: string) => {
 
 export default function MyIssuesPage() {
   const [selectedIssue, setSelectedIssue] = useState<string | null>(null)
+  const [issues, setIssues] = useState<Issue[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const { user } = useAuth()
 
-  const activeIssues = userIssues.filter((issue) => issue.status !== "resolved")
-  const resolvedIssues = userIssues.filter((issue) => issue.status === "resolved")
+  useEffect(() => {
+    const fetchMine = async () => {
+      if (!user?.id) return
+      try {
+        setLoading(true)
+        setError(null)
+        const res = await fetch(`/api/issues?page=1&limit=100`, { credentials: 'include' })
+        const json = await res.json()
+        if (!res.ok) throw new Error(json.error || 'Failed to fetch issues')
+        const mine = (json.issues || []).filter((i: Issue) => i.user_id === user.id)
+        setIssues(mine)
+      } catch (e: any) {
+        setError(e.message || 'Failed to load your issues')
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchMine()
+  }, [user?.id])
 
-  const selectedIssueData = userIssues.find((issue) => issue.id === selectedIssue)
+  const activeIssues = useMemo(() => issues.filter(i => (i.status === 'resolved') === false), [issues])
+  const resolvedIssues = useMemo(() => issues.filter(i => i.status === 'resolved'), [issues])
+
+  const selectedIssueData = issues.find((issue) => issue.id === selectedIssue) || null
 
   return (
     <div className="min-h-screen bg-background">
@@ -169,7 +152,13 @@ export default function MyIssuesPage() {
               </TabsList>
 
               <TabsContent value="active" className="space-y-4">
-                {activeIssues.length === 0 ? (
+                {loading && (
+                  <Card><CardContent className="p-6 text-sm text-muted-foreground">Loading your issues...</CardContent></Card>
+                )}
+                {error && (
+                  <Card><CardContent className="p-6 text-sm text-red-600">{error}</CardContent></Card>
+                )}
+                {!loading && !error && activeIssues.length === 0 ? (
                   <Card>
                     <CardContent className="p-8 text-center">
                       <AlertTriangle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
@@ -193,7 +182,7 @@ export default function MyIssuesPage() {
                         <div className="flex gap-4">
                           <div className="w-20 h-20 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                             <img
-                              src={issue.image || "/placeholder.svg"}
+                              src={issue.image_url || "/placeholder.svg"}
                               alt={issue.title}
                               className="w-full h-full object-cover"
                             />
@@ -205,22 +194,22 @@ export default function MyIssuesPage() {
                                 <h3 className="font-semibold truncate">{issue.title}</h3>
                                 <p className="text-sm text-muted-foreground">ID: {issue.id}</p>
                               </div>
-                              <Badge className={getStatusColor(issue.status)}>
+                              <Badge className={getStatusColor(issue.status.replace('_','-'))}>
                                 {getStatusIcon(issue.status)}
-                                <span className="ml-1 capitalize">{issue.status.replace("-", " ")}</span>
+                                <span className="ml-1 capitalize">{issue.status.replace(/[_-]/g, " ")}</span>
                               </Badge>
                             </div>
 
                             <div className="space-y-2">
                               <div className="flex items-center text-sm text-muted-foreground">
                                 <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                                <span className="truncate">{issue.location}</span>
+                                <span className="truncate">{issue.location_address || 'N/A'}</span>
                               </div>
 
                               <div className="flex items-center justify-between text-sm text-muted-foreground">
                                 <div className="flex items-center">
                                   <Calendar className="w-4 h-4 mr-1" />
-                                  {new Date(issue.reportedDate).toLocaleDateString()}
+                                  {new Date(issue.created_at).toLocaleDateString()}
                                 </div>
                                 <Badge variant="outline">{getCategoryLabel(issue.category)}</Badge>
                               </div>
@@ -228,9 +217,9 @@ export default function MyIssuesPage() {
                               <div className="space-y-1">
                                 <div className="flex justify-between text-sm">
                                   <span>Progress</span>
-                                  <span>{getProgressPercentage(issue.status)}%</span>
+                                  <span>{getProgressPercentage(issue.status.replace('_','-'))}%</span>
                                 </div>
-                                <Progress value={getProgressPercentage(issue.status)} className="h-2" />
+                                <Progress value={getProgressPercentage(issue.status.replace('_','-'))} className="h-2" />
                               </div>
                             </div>
                           </div>
@@ -254,7 +243,7 @@ export default function MyIssuesPage() {
                       <div className="flex gap-4">
                         <div className="w-20 h-20 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                           <img
-                            src={issue.image || "/placeholder.svg"}
+                            src={issue.image_url || "/placeholder.svg"}
                             alt={issue.title}
                             className="w-full h-full object-cover"
                           />
@@ -275,11 +264,11 @@ export default function MyIssuesPage() {
                           <div className="flex items-center justify-between text-sm text-muted-foreground">
                             <div className="flex items-center">
                               <MapPin className="w-4 h-4 mr-1" />
-                              {issue.location}
+                              {issue.location_address || 'N/A'}
                             </div>
                             <div className="flex items-center">
                               <Calendar className="w-4 h-4 mr-1" />
-                              Resolved {new Date(issue.lastUpdate).toLocaleDateString()}
+                              Resolved {new Date(issue.updated_at || issue.created_at).toLocaleDateString()}
                             </div>
                           </div>
                         </div>
@@ -298,9 +287,9 @@ export default function MyIssuesPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span>Issue Details</span>
-                    <Badge className={getStatusColor(selectedIssueData.status)}>
+                    <Badge className={getStatusColor(selectedIssueData.status.replace('_','-'))}>
                       {getStatusIcon(selectedIssueData.status)}
-                      <span className="ml-1 capitalize">{selectedIssueData.status.replace("-", " ")}</span>
+                      <span className="ml-1 capitalize">{selectedIssueData.status.replace(/[_-]/g, " ")}</span>
                     </Badge>
                   </CardTitle>
                   <CardDescription>{selectedIssueData.id}</CardDescription>
@@ -313,7 +302,7 @@ export default function MyIssuesPage() {
 
                   <div className="w-full h-48 bg-muted rounded-lg overflow-hidden">
                     <img
-                      src={selectedIssueData.image || "/placeholder.svg"}
+                      src={selectedIssueData.image_url || "/placeholder.svg"}
                       alt={selectedIssueData.title}
                       className="w-full h-full object-cover"
                     />
@@ -322,7 +311,7 @@ export default function MyIssuesPage() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Location:</span>
-                      <span>{selectedIssueData.location}</span>
+                      <span>{selectedIssueData.location_address || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Category:</span>
@@ -330,43 +319,14 @@ export default function MyIssuesPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Reported:</span>
-                      <span>{new Date(selectedIssueData.reportedDate).toLocaleDateString()}</span>
+                      <span>{new Date(selectedIssueData.created_at).toLocaleDateString()}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Department:</span>
-                      <span>{selectedIssueData.assignedDepartment}</span>
+                      <span className="text-muted-foreground">Last Updated:</span>
+                      <span>{new Date(selectedIssueData.updated_at || selectedIssueData.created_at).toLocaleDateString()}</span>
                     </div>
-                    {selectedIssueData.estimatedCompletion && (
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Est. Completion:</span>
-                        <span>{new Date(selectedIssueData.estimatedCompletion).toLocaleDateString()}</span>
-                      </div>
-                    )}
                   </div>
 
-                  <div>
-                    <h4 className="font-semibold mb-3">Timeline</h4>
-                    <div className="space-y-3">
-                      {selectedIssueData.timeline.map((event, index) => (
-                        <div key={index} className="flex gap-3">
-                          <div
-                            className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                              event.status === selectedIssueData.status ? "bg-accent" : "bg-muted-foreground"
-                            }`}
-                          />
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <span className="text-sm font-medium capitalize">{event.status.replace("-", " ")}</span>
-                              <span className="text-xs text-muted-foreground">
-                                {new Date(event.date).toLocaleDateString()}
-                              </span>
-                            </div>
-                            <p className="text-sm text-muted-foreground">{event.description}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             ) : (

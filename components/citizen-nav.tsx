@@ -20,6 +20,7 @@ import NotificationSystem from "@/components/notification-system";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import { signOut } from "@/lib/auth-utils";
 
 const navItems = [
     {
@@ -84,7 +85,7 @@ export default function CitizenNav() {
                         }`}
                         onClick={onItemClick}
                     >
-                        <Link href={item.href}>
+                        <Link href={item.href as any}>
                             <Icon className="w-4 h-4 mr-2" />
                             {item.label}
                             {item.badge && (
@@ -103,11 +104,8 @@ export default function CitizenNav() {
     );
 
     // Add Supabase logout logic
-    const router = useRouter();
     const handleLogout = async () => {
-        const supabase = createClient();
-        await supabase.auth.signOut();
-        router.push("/citizen/login");
+        await signOut('/citizen/login');
     };
 
     return (

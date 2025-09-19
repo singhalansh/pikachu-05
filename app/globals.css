@@ -137,6 +137,15 @@
     body {
         @apply bg-background text-foreground;
     }
+
+    /* Ensure pointer cursor for all buttons and button-like elements */
+    button,
+    [role="button"],
+    input[type="button"],
+    input[type="submit"],
+    a[role="button"] {
+        cursor: pointer;
+    }
 }
 
 /* Custom utility classes for status colors */
