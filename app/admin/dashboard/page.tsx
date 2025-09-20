@@ -159,7 +159,6 @@ export default function AdminDashboard() {
     // Current user state
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [currentUserProfile, setCurrentUserProfile] = useState<any>(null);
-    const [userRole, setUserRole] = useState<string>('citizen');
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -168,16 +167,12 @@ export default function AdminDashboard() {
                 error,
             } = await supabase.auth.getUser();
 
-            if (error || !user) {
+            if (
+                error ||
+                !user ||
+                (user.user_metadata?.role !== "admin" && user.role !== "admin")
+            ) {
                 router.push("/admin/login");
-                return;
-            }
-
-            // Check if user has staff role (any role other than citizen)
-            const role = user.user_metadata?.role || user.role || 'citizen';
-            setUserRole(role);
-            if (role === 'citizen') {
-                router.push("/citizen/dashboard");
                 return;
             }
 
@@ -810,7 +805,7 @@ export default function AdminDashboard() {
                                             )}
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            {userRole.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                            Admin
                                         </p>
                                     </div>
                                 </div>

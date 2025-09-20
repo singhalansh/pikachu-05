@@ -84,7 +84,7 @@ export async function POST(
     // Create notification for the issue owner (if not commenting on their own issue)
     if (issue.user_id !== user.id) {
       const commenterName = comment.profiles?.full_name || 'Someone';
-      const notificationTitle = is_admin ? 'Staff Response' : 'New Comment';
+      const notificationTitle = is_admin ? 'Admin Response' : 'New Comment';
       const notificationMessage = `${commenterName} commented on your issue "${issue.title}": "${content.substring(0, 100)}${content.length > 100 ? '...' : ''}"`;
 
       await supabase

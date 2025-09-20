@@ -60,7 +60,7 @@ export function requireAuth(
     };
 }
 
-export function requireRole(role: "citizen" | "department_head" | "supervisor" | "field_worker" | "clerk_operator" | "technician") {
+export function requireRole(role: "admin" | "citizen") {
     return function (
         handler: (request: NextRequest, user: any) => Promise<NextResponse>
     ) {

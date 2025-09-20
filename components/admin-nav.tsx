@@ -39,7 +39,6 @@ export default function AdminNav() {
   const pathname = usePathname();
   const router = useRouter();
   const { signOut } = useAuth();
-  
   const handleLogout = async () => {
     await signOut();
   };
@@ -89,7 +88,6 @@ export default function AdminNav() {
             </nav>
           </div>
 
-          {/* Right section */}
           <div className="flex items-center space-x-4">
             <AdminNotifications />
 

@@ -59,71 +59,27 @@ export interface Database {
           location_lng?: number | null
         }
       }
-      roles: {
-        Row: {
-          id: string
-          name: string
-          description: string | null
-          level: number
-          permissions: any | null
-          is_active: boolean | null
-          created_at: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          id?: string
-          name: string
-          description?: string | null
-          level: number
-          permissions?: any | null
-          is_active?: boolean | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          id?: string
-          name?: string
-          description?: string | null
-          level?: number
-          permissions?: any | null
-          is_active?: boolean | null
-          created_at?: string | null
-          updated_at?: string | null
-        }
-      }
       profiles: {
         Row: {
           id: string
-          email: string
-          full_name: string | null
-          phone: string | null
-          address: string | null
-          created_at: string | null
           updated_at: string | null
-          role_id: string | null
-          department_id: string | null
+          full_name: string | null
+          email: string | null
+          role: 'citizen' | 'admin'
         }
         Insert: {
           id: string
-          email: string
-          full_name?: string | null
-          phone?: string | null
-          address?: string | null
-          created_at?: string | null
           updated_at?: string | null
-          role_id?: string | null
-          department_id?: string | null
+          full_name?: string | null
+          email?: string | null
+          role?: 'citizen' | 'admin'
         }
         Update: {
           id?: string
-          email?: string
-          full_name?: string | null
-          phone?: string | null
-          address?: string | null
-          created_at?: string | null
           updated_at?: string | null
-          role_id?: string | null
-          department_id?: string | null
+          full_name?: string | null
+          email?: string | null
+          role?: 'citizen' | 'admin'
         }
       }
     }

@@ -11,8 +11,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if user is admin (you might want to adjust this logic)
-    const userRole = user.user_metadata?.role || user.role || 'citizen';
-    const isAdmin = userRole !== 'citizen' || 
+    const isAdmin = user.user_metadata?.role === 'admin' || 
                    user.email?.includes('@admin.') ||
                    user.email?.includes('@city.gov');
 

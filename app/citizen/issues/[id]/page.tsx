@@ -725,7 +725,7 @@ export default function IssueDetailPage() {
                                                                     className="text-xs"
                                                                 >
                                                                     {c.is_admin
-                                                                        ? "staff"
+                                                                        ? "admin"
                                                                         : "citizen"}
                                                                 </Badge>
                                                                 {/* Only show edit/delete for own comments */}

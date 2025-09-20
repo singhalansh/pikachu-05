@@ -13,7 +13,7 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // console.log('Auth callback page loaded');
+        console.log('Auth callback page loaded');
         const roleParam = searchParams.get('role');
         const wasUpdated = searchParams.get('updated') === 'true';
         
@@ -51,7 +51,7 @@ export default function AuthCallbackPage() {
         console.log('User role from metadata:', userRole);
         
         // If no role in metadata but we have a role param (fallback for edge cases)
-        if (!userRole && roleParam) {
+        if (!userRole && roleParam && (roleParam === 'admin' || roleParam === 'citizen')) {
           console.log('No role in metadata, using role param:', roleParam);
           userRole = roleParam;
           
@@ -77,9 +77,9 @@ export default function AuthCallbackPage() {
         // Clear any stored role from localStorage (cleanup)
         localStorage.removeItem('pendingGoogleSignupRole');
 
-        // Redirect based on final role (staff roles go to admin dashboard, citizens go to citizen dashboard)
-        const dashboardPath = userRole !== 'citizen' ? '/admin/dashboard' : '/citizen/dashboard';
-        // console.log('Final role:', userRole, 'Redirecting to:', dashboardPath);
+        // Redirect based on final role
+        const dashboardPath = userRole === 'admin' ? '/admin/dashboard' : '/citizen/dashboard';
+        console.log('Final role:', userRole, 'Redirecting to:', dashboardPath);
         
         router.replace(dashboardPath);
         
