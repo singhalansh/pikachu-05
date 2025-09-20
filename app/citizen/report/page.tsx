@@ -3,12 +3,10 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Camera, AlertCircle, Upload } from "lucide-react"
+import { Camera, AlertCircle, Upload, CheckCircle, X } from "lucide-react"
 import MapPicker, { MapPickerValue } from "@/components/map-picker"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/contexts/auth-context"
@@ -40,6 +38,8 @@ export default function ReportIssuePage() {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
+  const [showDialog, setShowDialog] = useState(false)
+  const [dialogType, setDialogType] = useState<'success' | 'error'>('success')
   const { toast } = useToast()
   const router = useRouter()
   const { user } = useAuth()
@@ -127,6 +127,11 @@ export default function ReportIssuePage() {
     }
   }
 
+  const handleDialogOk = () => {
+    setShowDialog(false)
+    router.push('/citizen/dashboard')
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -167,16 +172,14 @@ export default function ReportIssuePage() {
       console.log("=================================")
 
       if (decision !== "Yes") {
-        toast({
-          title: "Verification Failed",
-          description: "Your report did not pass AI verification. Please ensure it is a legitimate civic issue.",
-          variant: "destructive"
-        })
+        // Show error dialog for failed verification
+        setDialogType('error')
+        setShowDialog(true)
         setIsSubmitting(false)
         return
       }
 
-      // Submit issue to backend (or Supabase)
+      // Submit issue to backend (or Supabase) if verification passes
       const res = await fetch('/api/issues', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -186,12 +189,7 @@ export default function ReportIssuePage() {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to submit issue')
 
-      toast({
-        title: "Issue Reported Successfully!",
-        description: "Your issue has been submitted and will be reviewed by our team."
-      })
-
-      // Reset form
+      // Reset form on successful submission
       setFormData({
         title: "",
         description: "",
@@ -203,7 +201,9 @@ export default function ReportIssuePage() {
         image_url: "",
       })
 
-      setTimeout(() => router.push("/citizen/dashboard"), 1500)
+      // Show success dialog
+      setDialogType('success')
+      setShowDialog(true)
 
     } catch (err: any) {
       console.error("Error during submission:", err)
@@ -212,26 +212,26 @@ export default function ReportIssuePage() {
         description: err.message || "Something went wrong. Please try again.",
         variant: "destructive"
       })
-    } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold mb-2">Report an Issue</h1>
-            <p className="text-muted-foreground">Help improve your community by reporting issues that need attention</p>
+            <p className="text-gray-600">Help improve your community by reporting issues that need attention</p>
           </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Issue Details</CardTitle>
-              <CardDescription>Provide as much detail as possible to help us address the issue quickly</CardDescription>
-            </CardHeader>
-            <CardContent>
+          {/* Card replacement */}
+          <div className="bg-white rounded-lg shadow-md border">
+            <div className="p-6 border-b">
+              <h2 className="text-xl font-semibold mb-2">Issue Details</h2>
+              <p className="text-gray-600">Provide as much detail as possible to help us address the issue quickly</p>
+            </div>
+            <div className="p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Title */}
                 <div className="space-y-2">
@@ -249,29 +249,33 @@ export default function ReportIssuePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="category">Category *</Label>
-                    <Select value={formData.category} onValueChange={(v) => handleInputChange('category', v)}>
-                      <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Roads">Roads & Infrastructure</SelectItem>
-                        <SelectItem value="Lighting">Street Lighting</SelectItem>
-                        <SelectItem value="Sanitation">Sanitation & Waste</SelectItem>
-                        <SelectItem value="Water">Water & Sewage</SelectItem>
-                        <SelectItem value="Traffic">Traffic & Safety</SelectItem>
-                        <SelectItem value="Other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <select 
+                      value={formData.category} 
+                      onChange={e => handleInputChange('category', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="">Select category</option>
+                      <option value="Roads">Roads & Infrastructure</option>
+                      <option value="Lighting">Street Lighting</option>
+                      <option value="Sanitation">Sanitation & Waste</option>
+                      <option value="Water">Water & Sewage</option>
+                      <option value="Traffic">Traffic & Safety</option>
+                      <option value="Other">Other</option>
+                    </select>
                   </div>
 
                   <div className="space-y-2">
                     <Label htmlFor="priority">Priority</Label>
-                    <Select value={formData.priority} onValueChange={(v) => handleInputChange('priority', v)}>
-                      <SelectTrigger><SelectValue placeholder="Select priority" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <select 
+                      value={formData.priority} 
+                      onChange={e => handleInputChange('priority', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                    </select>
                   </div>
                 </div>
 
@@ -315,10 +319,42 @@ export default function ReportIssuePage() {
                   </Button>
                 </div>
               </form>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Custom Dialog Modal */}
+      {showDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-mx-4 mx-4">
+            <div className="text-center">
+              <div className="mb-4">
+                {dialogType === 'success' ? (
+                  <CheckCircle className="h-12 w-12 text-green-600 mx-auto" />
+                ) : (
+                  <X className="h-12 w-12 text-red-600 mx-auto" />
+                )}
+              </div>
+              <h3 className="text-lg font-semibold mb-2">
+                {dialogType === 'success' 
+                  ? "Issue Submitted Successfully!" 
+                  : "Verification Failed"
+                }
+              </h3>
+              <p className="text-gray-600 mb-6">
+                {dialogType === 'success' 
+                  ? "Your issue has been submitted successfully and will be reviewed by our team. You will receive notifications about the progress."
+                  : "Your report did not pass AI verification. Please ensure the issue description matches the category and represents a legitimate civic concern. You can try submitting again with more accurate information."
+                }
+              </p>
+              <Button onClick={handleDialogOk} className="w-full">
+                OK
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

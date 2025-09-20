@@ -18,6 +18,7 @@ import {
     Shield,
     Users,
     LogOut,
+    Flag
 } from "lucide-react";
 import AdminNotifications from "@/components/admin-notifications";
 
@@ -68,7 +69,8 @@ export default function AdminNav() {
                                                     : 'text-gray-700 hover:bg-gray-100'
                                             }`}
                                         >
-                                            <Icon className="w-4 h-4 mr-2" />
+                                             {/* ✅ Render icon only if it exists */}
+                                            {Icon && <Icon className="w-4 h-4 mr-2" />}
                                             {item.label}
                                             {item.badge && (
                                                 <Badge
