@@ -24,6 +24,7 @@ import {
   Building2,
 } from "lucide-react"
 import SimpleAdminActions from "@/components/simple-admin-actions"
+import AIUrgencyBadge from "@/components/ai-urgency-badge"
 
 interface Issue {
   id: string;
@@ -495,6 +496,7 @@ export default function AdminIssuesPage() {
                           <TableHead className="min-w-[300px]">Issue</TableHead>
                           <TableHead className="w-24">Status</TableHead>
                           <TableHead className="w-20">Priority</TableHead>
+                          <TableHead className="w-24">AI Urgency</TableHead>
                           <TableHead className="w-24">Category</TableHead>
                           <TableHead className="min-w-[150px]">Assigned To</TableHead>
                           <TableHead className="min-w-[120px]">Reported</TableHead>
@@ -547,6 +549,13 @@ export default function AdminIssuesPage() {
                               <Badge className={`${getPriorityColor(issue.priority)} text-xs`} variant="outline">
                                 {issue.priority.charAt(0).toUpperCase()}
                               </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <AIUrgencyBadge 
+                                urgency={issue.ai_urgency}
+                                confidence={issue.ai_confidence}
+                                className="text-xs"
+                              />
                             </TableCell>
                             <TableCell>
                               <Badge variant="outline" className="text-xs">
@@ -688,6 +697,15 @@ export default function AdminIssuesPage() {
                             <Badge className={`${getPriorityColor(issue.priority)} text-xs`} variant="outline">
                               {issue.priority}
                             </Badge>
+                          </div>
+                          
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground">AI Urgency</span>
+                            <AIUrgencyBadge 
+                              urgency={issue.ai_urgency}
+                              confidence={issue.ai_confidence}
+                              className="text-xs"
+                            />
                           </div>
                           
                           <div className="flex items-center justify-between">

@@ -31,7 +31,8 @@ export async function middleware(request: NextRequest) {
   // Skip middleware for truly public routes and static assets
   if (pathname === '/' || pathname.startsWith('/_next/') || 
       pathname.startsWith('/api/auth/') || pathname === '/favicon.ico' ||
-      pathname.startsWith('/auth/callback')) {
+      pathname.startsWith('/auth/callback') ||
+      pathname.includes('/ai-urgency')) { // Allow AI urgency detection
     return NextResponse.next();
   }
   

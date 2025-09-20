@@ -74,6 +74,7 @@ export async function GET(request: NextRequest) {
         comments:comments(count),
         issue_votes:issue_votes(count)
       `)
+      .order('ai_urgency', { ascending: false })
       .order('upvotes', { ascending: false })
       .order('created_at', { ascending: false })
       .range((page - 1) * limit, page * limit - 1);
@@ -276,6 +277,17 @@ export async function POST(request: NextRequest) {
             .single();
 
         if (issue && !error) {
+            // Trigger AI urgency detection asynchronously (non-blocking)
+            fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/issues/${issue.id}/ai-urgency`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).catch(err => {
+                console.error('Failed to trigger AI urgency detection:', err);
+                // Don't fail the issue creation if AI detection fails
+            });
+            
             return NextResponse.json({ issue }, { status: 201 });
         }
 

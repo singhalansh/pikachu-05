@@ -30,6 +30,7 @@ import {
 import { GoogleMap } from "@/components/ui/google-map";
 import { FallbackMap } from "@/components/ui/fallback-map";
 import { createClient } from "@/lib/supabase/client";
+import AIUrgencyBadge from "@/components/ai-urgency-badge";
 
 type Issue = {
     id: string;
@@ -43,6 +44,8 @@ type Issue = {
     image_url: string | null;
     created_at: string;
     upvotes?: number | null;
+    ai_urgency?: "low" | "medium" | "high" | null;
+    ai_confidence?: number | null;
 };
 
 const getStatusColor = (status: string) => {
@@ -222,10 +225,24 @@ export default function CitizenDashboard() {
                 return matchesSearch && matchesStatus && matchesCategory;
             })
             .sort((a, b) => {
-                // Primary sort: by upvotes (descending)
-                const upvoteDiff = (b.upvotes || 0) - (a.upvotes || 0);
-                if (upvoteDiff !== 0) return upvoteDiff;
-
+                // Calculate combined scores using AI urgency and upvotes
+                const getCombinedScore = (issue: Issue) => {
+                    const upvotes = issue.upvotes || 0;
+                    const urgency = issue.ai_urgency || 'medium';
+                    
+                    // AI urgency weight: low=1, medium=2, high=3
+                    const urgencyWeight = urgency === 'high' ? 3 : urgency === 'medium' ? 2 : 1;
+                    const upvoteScore = Math.log(1 + upvotes);
+                    
+                    // Combined score: 0.7 * AI urgency + 0.3 * log(1 + upvotes)
+                    return 0.7 * urgencyWeight + 0.3 * upvoteScore;
+                };
+                
+                const scoreA = getCombinedScore(a);
+                const scoreB = getCombinedScore(b);
+                const scoreDiff = scoreB - scoreA;
+                
+                if (scoreDiff !== 0) return scoreDiff;
                 // Secondary sort: by creation date (descending) for stable sorting
                 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
             });
@@ -617,21 +634,28 @@ export default function CitizenDashboard() {
                                                                 {issue.title}
                                                             </h3>
                                                         </Link>
-                                                        <Badge
-                                                            className={`${getStatusColor(
-                                                                issue.status
-                                                            )} flex-shrink-0 text-xs h-6`}
-                                                        >
-                                                            {getStatusIcon(
-                                                                issue.status
-                                                            )}
-                                                            <span className="ml-1 hidden sm:inline capitalize">
-                                                                {issue.status.replace(
-                                                                    "-",
-                                                                    " "
+                                                        <div className="flex flex-col gap-1 items-end">
+                                                            <Badge
+                                                                className={`${getStatusColor(
+                                                                    issue.status
+                                                                )} flex-shrink-0 text-xs h-6`}
+                                                            >
+                                                                {getStatusIcon(
+                                                                    issue.status
                                                                 )}
-                                                            </span>
-                                                        </Badge>
+                                                                <span className="ml-1 hidden sm:inline capitalize">
+                                                                    {issue.status.replace(
+                                                                        "-",
+                                                                        " "
+                                                                    )}
+                                                                </span>
+                                                            </Badge>
+                                                            <AIUrgencyBadge 
+                                                                urgency={issue.ai_urgency}
+                                                                confidence={issue.ai_confidence}
+                                                                className="text-xs"
+                                                            />
+                                                        </div>
                                                     </div>
 
                                                     <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
