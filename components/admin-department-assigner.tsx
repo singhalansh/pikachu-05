@@ -195,7 +195,7 @@ export default function AdminDepartmentAssigner({
   }
 
   return (
-    <Card>
+    <Card className="overflow-visible">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Building2 className="w-5 h-5" />
@@ -210,7 +210,7 @@ export default function AdminDepartmentAssigner({
           </div>
         )}
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 overflow-visible">
         {/* Category-based suggestions */}
         {suggestedDepartments.length > 0 && (
           <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
@@ -239,13 +239,13 @@ export default function AdminDepartmentAssigner({
         <div className="space-y-2">
           <Label htmlFor="department">Select Department</Label>
           <Select value={selectedDepartmentId} onValueChange={setSelectedDepartmentId}>
-            <SelectTrigger>
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose a department" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="w-full min-w-[300px] max-w-[400px]">
               {departments.map((department) => (
-                <SelectItem key={department.id} value={department.id}>
-                  <div className="flex flex-col">
+                <SelectItem key={department.id} value={department.id} className="w-full">
+                  <div className="flex flex-col w-full">
                     <span className="font-medium">{department.name}</span>
                     {department.description && (
                       <span className="text-xs text-muted-foreground">

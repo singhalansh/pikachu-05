@@ -368,6 +368,18 @@ export default function IssueDetailPage() {
                                 <p className="text-muted-foreground leading-relaxed">
                                     {issue?.description || "No description"}
                                 </p>
+                                
+                                {issue?.audio_url && (
+                                    <div className="mt-4">
+                                        <h3 className="text-sm font-medium mb-2">Audio Recording</h3>
+                                        <audio 
+                                            src={issue.audio_url} 
+                                            controls 
+                                            className="w-full" 
+                                            preload="metadata"
+                                        />
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
 

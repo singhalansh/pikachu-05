@@ -131,7 +131,7 @@ DECLARE
   notification_link TEXT;
 BEGIN
   -- Set notification link
-  notification_link := '/citizen/my-issues/' || NEW.id;
+  notification_link := '/citizen/issues/' || NEW.id;
   
   -- Handle different status changes
   CASE NEW.status

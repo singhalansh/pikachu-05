@@ -225,7 +225,7 @@ export default function CitizenDashboard() {
                 // Primary sort: by upvotes (descending)
                 const upvoteDiff = (b.upvotes || 0) - (a.upvotes || 0);
                 if (upvoteDiff !== 0) return upvoteDiff;
-                
+
                 // Secondary sort: by creation date (descending) for stable sorting
                 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
             });
@@ -261,9 +261,9 @@ export default function CitizenDashboard() {
         const a =
             Math.sin(dLat / 2) * Math.sin(dLat / 2) +
             Math.cos((lat1 * Math.PI) / 180) *
-                Math.cos((lat2 * Math.PI) / 180) *
-                Math.sin(dLng / 2) *
-                Math.sin(dLng / 2);
+            Math.cos((lat2 * Math.PI) / 180) *
+            Math.sin(dLng / 2) *
+            Math.sin(dLng / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c;
     };
@@ -389,7 +389,7 @@ export default function CitizenDashboard() {
                                 asChild
                                 className="w-full sm:w-auto bg-transparent"
                             >
-                                <Link href="/citizen/my-issues">My Issues</Link>
+                                <Link href="/citizen/issues">My Issues</Link>
                             </Button>
                         </div>
                     </div>
@@ -955,7 +955,7 @@ export default function CitizenDashboard() {
                                             {filteredIssues.length})
                                             {userLocation &&
                                                 nearbyIssues.length !==
-                                                    filteredIssues.length && (
+                                                filteredIssues.length && (
                                                     <span className="text-xs font-normal text-muted-foreground ml-2">
                                                         ({nearbyIssues.length}{" "}
                                                         nearby)
@@ -983,12 +983,11 @@ export default function CitizenDashboard() {
                                                 ].map((issue) => (
                                                     <div
                                                         key={issue.id}
-                                                        className={`p-2 border rounded cursor-pointer transition-colors hover:bg-muted/50 ${
-                                                            selectedIssue ===
-                                                            issue.id
+                                                        className={`p-2 border rounded cursor-pointer transition-colors hover:bg-muted/50 ${selectedIssue ===
+                                                                issue.id
                                                                 ? "ring-2 ring-accent"
                                                                 : ""
-                                                        }`}
+                                                            }`}
                                                         onClick={() =>
                                                             setSelectedIssue(
                                                                 issue.id

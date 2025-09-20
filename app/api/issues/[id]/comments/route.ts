@@ -37,7 +37,7 @@ export async function POST(
   try {
     const supabase = createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -93,7 +93,7 @@ export async function POST(
           user_id: issue.user_id,
           title: notificationTitle,
           message: notificationMessage,
-          link: `/citizen/my-issues/${issueId}`,
+          link: `/citizen/issues/${issueId}`,
           issue_id: issueId
         });
     }
