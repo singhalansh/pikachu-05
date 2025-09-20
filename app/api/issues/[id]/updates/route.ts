@@ -50,8 +50,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       return NextResponse.json({ error: 'Issue not found' }, { status: 404 });
     }
 
-    const userRole = user.user_metadata?.role || user.role || 'citizen';
-    const isAdmin = userRole !== 'citizen';
+    const isAdmin = user.user_metadata?.role === 'admin';
 
     // Insert timeline update first
     const { data: update, error: insError } = await supabase

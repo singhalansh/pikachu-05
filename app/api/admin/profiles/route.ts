@@ -8,8 +8,7 @@ export async function GET(request: NextRequest) {
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const userRole = user.user_metadata?.role || user.role || 'citizen';
-    const isAdmin = userRole !== 'citizen';
+    const isAdmin = user.user_metadata?.role === 'admin';
     if (!isAdmin) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }

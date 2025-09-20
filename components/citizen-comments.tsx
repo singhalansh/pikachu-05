@@ -153,7 +153,7 @@ export default function CitizenComments({ issueId }: CitizenCommentsProps) {
                         variant={comment.is_admin ? 'default' : 'secondary'} 
                         className="text-xs"
                       >
-                        {comment.is_admin ? 'Staff' : 'Citizen'}
+                        {comment.is_admin ? 'Admin' : 'Citizen'}
                       </Badge>
                     </div>
                     <span className="text-xs text-muted-foreground">
