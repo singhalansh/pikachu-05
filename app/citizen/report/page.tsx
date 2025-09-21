@@ -34,6 +34,8 @@ import {
     Trash2,
     Download,
     Shield,
+    RefreshCw,
+    CheckCircle,
 } from "lucide-react";
 import MapPicker, { MapPickerValue } from "@/components/map-picker";
 import { useToast } from "@/hooks/use-toast";
@@ -84,6 +86,12 @@ export default function ReportIssuePage() {
         "text"
     );
     const [departments, setDepartments] = useState<Department[]>([]);
+    
+    // Auto-categorization states
+    const [isAutoCategorizing, setIsAutoCategorizing] = useState(false);
+    const [suggestedCategory, setSuggestedCategory] = useState<string>("");
+    const [categoryConfidence, setCategoryConfidence] = useState<number>(0);
+    const [autoCategorizeEnabled, setAutoCategorizeEnabled] = useState(true);
 
     // Speech-to-text (Web Speech API) state
     const [supportsSpeech, setSupportsSpeech] = useState(false);
@@ -157,6 +165,67 @@ export default function ReportIssuePage() {
 
         fetchDepartments();
     }, []);
+
+    // Auto-categorize based on description changes
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            if (autoCategorizeEnabled && formData.description.trim().length > 20) {
+                autoSuggestCategory();
+            }
+        }, 1500); // Debounce for 1.5 seconds
+
+        return () => clearTimeout(timeoutId);
+    }, [formData.description, autoCategorizeEnabled]);
+
+    const autoSuggestCategory = async () => {
+        if (!formData.description.trim()) return;
+        
+        setIsAutoCategorizing(true);
+        try {
+            const response = await fetch("/api/auto-categorize", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    description: formData.description,
+                    title: formData.title,
+                    availableCategories: departments.map(d => d.name)
+                }),
+            });
+
+            if (response.ok) {
+                const { suggestedCategory, confidence, reasoning } = await response.json();
+                setSuggestedCategory(suggestedCategory);
+                setCategoryConfidence(confidence);
+                
+                // If confidence is high and no category is selected, auto-apply
+                if (confidence > 0.8 && !formData.category) {
+                    setFormData(prev => ({ ...prev, category: suggestedCategory }));
+                    toast({
+                        title: "Category Auto-Selected",
+                        description: `Based on your description, we've selected "${suggestedCategory}" (${Math.round(confidence * 100)}% confidence)`,
+                    });
+                } else if (confidence > 0.6 && formData.category !== suggestedCategory) {
+                    toast({
+                        title: "Category Suggestion",
+                        description: `Consider changing category to "${suggestedCategory}" based on your description`,
+                    });
+                }
+            }
+        } catch (error) {
+            console.error("Auto-categorization error:", error);
+        } finally {
+            setIsAutoCategorizing(false);
+        }
+    };
+
+    const applySuggestedCategory = () => {
+        setFormData(prev => ({ ...prev, category: suggestedCategory }));
+        toast({
+            title: "Category Updated",
+            description: `Changed category to "${suggestedCategory}"`,
+        });
+        setSuggestedCategory("");
+    };
 
     const handleInputChange = (field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
@@ -298,7 +367,7 @@ export default function ReportIssuePage() {
                     .trim();
                 setTranscript(combined);
             };
-            recognition.onerror = (e: SpeechRecognitionErrorEvent) => {
+            recognition.onerror = (e: Event) => {
                 console.warn("Speech recognition error:", e);
             };
             recognition.onend = () => {
@@ -398,167 +467,237 @@ export default function ReportIssuePage() {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-
+    const sendAdminNotification = async (issueData: any) => {
         try {
-            // Convert file to base64 if exists
-            let imageBase64: string | null = null;
-            if (formData.file) {
-                const reader = new FileReader();
-                imageBase64 = await new Promise<string>((resolve, reject) => {
-                    reader.onload = () => resolve(reader.result as string);
-                    reader.onerror = reject;
-                    reader.readAsDataURL(formData.file as File);
-                });
-            }
-
-            // Gemini verification
-            const effectiveDescription =
-                descriptionMode === "audio" && transcribeEnabled && transcript
-                    ? transcript
-                    : formData.description;
-
-            const verifyRes = await fetch("/api/verify-issue", {
+            const response = await fetch("/api/admin/notifications", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    title: formData.title,
-                    category: formData.category,
-                    description: effectiveDescription,
-                    imageBase64,
+                    type: "new_issue",
+                    title: `New Issue Reported: ${issueData.title}`,
+                    message: `A new ${issueData.category.toLowerCase()} issue has been reported by ${user?.email || 'a citizen'}. Location: ${issueData.location_address}`,
+                    priority: issueData.priority,
+                    data: {
+                        issueId: issueData.id || `ISS-${Date.now()}`,
+                        category: issueData.category,
+                        location: issueData.location_address,
+                        reportedBy: user?.email || 'anonymous',
+                        reportedAt: new Date().toISOString()
+                    }
                 }),
             });
 
-            if (!verifyRes.ok) throw new Error("Verification request failed");
-            const { decision, category: verifiedCategory } =
-                await verifyRes.json();
-
-            console.log("=== GEMINI VERIFICATION LOG ===");
-            console.log("Title:", formData.title);
-            console.log("Category (Original):", formData.category);
-            console.log("Category (Verified):", verifiedCategory);
-            console.log("Description:", formData.description);
-            console.log("Has Image:", !!formData.file);
-            console.log("Gemini Decision:", decision);
-            console.log("=================================");
-
-            if (decision !== "Yes") {
-                toast({
-                    title: "Verification Failed",
-                    description:
-                        "Your report did not pass AI verification. Please ensure it is a legitimate civic issue.",
-                    variant: "destructive",
-                });
-                setIsSubmitting(false);
-                return;
-            }
-
-            // Upload audio if there's a recording but no audio_url yet
-            // Use verified category from Gemini
-            let finalFormData = {
-                ...formData,
-                category: verifiedCategory || formData.category,
-                description: effectiveDescription,
-            };
-
-            if (audioBlob && !formData.audio_url) {
-                try {
-                    // Convert blob to file
-                    const audioFile = new File(
-                        [audioBlob],
-                        `audio-${Date.now()}.webm`,
-                        { type: "audio/webm" }
-                    );
-
-                    // Upload to Supabase storage
-                    const fileName = `${user?.id}/${Date.now()}-${
-                        audioFile.name
-                    }`;
-
-                    const { data, error } = await supabase.storage
-                        .from("audio")
-                        .upload(fileName, audioFile, {
-                            cacheControl: "3600",
-                            upsert: false,
-                        });
-
-                    if (error) {
-                        console.error("Supabase storage upload error:", error);
-                        throw error;
-                    }
-
-                    // Get public URL
-                    const {
-                        data: { publicUrl },
-                    } = supabase.storage.from("audio").getPublicUrl(fileName);
-
-                    finalFormData.audio_url = publicUrl;
-                } catch (audioError: any) {
-                    console.error("Audio upload error:", audioError);
-                    const errorMessage = audioError?.message || "Unknown error";
-                    toast({
-                        title: "Audio upload failed",
-                        description: `Failed to upload audio: ${errorMessage}. Submitting without audio.`,
-                        variant: "destructive",
-                    });
-                }
-            }
-
-            // Submit issue to backend
-            const response = await fetch("/api/issues", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(finalFormData),
-            });
-
-            const responseText = await response.text();
-            const data = responseText ? JSON.parse(responseText) : {};
-
-            if (response.ok) {
-                toast({
-                    title: "Issue reported successfully",
-                    description:
-                        "Your issue has been submitted and will be reviewed by our team.",
-                });
-
-                // Reset form
-                setFormData({
-                    title: "",
-                    description: "",
-                    category: "",
-                    priority: "medium",
-                    location_address: "",
-                    location_lat: "",
-                    location_lng: "",
-                    image_url: "",
-                    audio_url: "",
-                });
-                setAudioBlob(null);
-                setRecordingTime(0);
-
-                setTimeout(() => router.push("/citizen/dashboard"), 1500);
+            if (!response.ok) {
+                console.error('Failed to send admin notification:', await response.text());
             } else {
-                console.error("API error response:", data);
-                throw new Error(data.error || "Failed to submit issue");
+                console.log('Admin notification sent successfully');
             }
-        } catch (error: any) {
-            console.error("Error during submission:", error);
-            toast({
-                title: "Submission failed",
-                description:
-                    error.message ||
-                    "Failed to submit issue. Please try again.",
-                variant: "destructive",
-            });
-        } finally {
-            setIsSubmitting(false);
+        } catch (error) {
+            console.error("Failed to send admin notification:", error);
+            // Don't throw - this shouldn't block issue submission
         }
     };
+
+    // Key changes to app/citizen/report/page.tsx - Updated handleSubmit function
+
+const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+        // Convert file to base64 if exists
+        let imageBase64: string | null = null;
+        if (formData.file) {
+            const reader = new FileReader();
+            imageBase64 = await new Promise<string>((resolve, reject) => {
+                reader.onload = () => resolve(reader.result as string);
+                reader.onerror = reject;
+                reader.readAsDataURL(formData.file as File);
+            });
+        }
+
+        // Gemini verification
+        const effectiveDescription =
+            descriptionMode === "audio" && transcribeEnabled && transcript
+                ? transcript
+                : formData.description;
+
+        const verifyRes = await fetch("/api/verify-issue", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                title: formData.title,
+                category: formData.category,
+                description: effectiveDescription,
+                imageBase64,
+            }),
+        });
+
+        if (!verifyRes.ok) throw new Error("Verification request failed");
+        const { decision, category: verifiedCategory } =
+            await verifyRes.json();
+
+        console.log("=== GEMINI VERIFICATION LOG ===");
+        console.log("Title:", formData.title);
+        console.log("Category (Original):", formData.category);
+        console.log("Category (Verified):", verifiedCategory);
+        console.log("Description:", formData.description);
+        console.log("Has Image:", !!formData.file);
+        console.log("Gemini Decision:", decision);
+        console.log("=================================");
+
+        if (decision !== "Yes") {
+            toast({
+                title: "Verification Failed",
+                description:
+                    "Your report did not pass AI verification. Please ensure it is a legitimate civic issue.",
+                variant: "destructive",
+            });
+            setIsSubmitting(false);
+            return;
+        }
+
+        // Use verified category from Gemini
+        let finalFormData = {
+            ...formData,
+            category: verifiedCategory || formData.category,
+            description: effectiveDescription,
+        };
+
+        // Upload audio if there's a recording but no audio_url yet
+        if (audioBlob && !formData.audio_url) {
+            try {
+                // Convert blob to file
+                const audioFile = new File(
+                    [audioBlob],
+                    `audio-${Date.now()}.webm`,
+                    { type: "audio/webm" }
+                );
+
+                // Upload to Supabase storage
+                const fileName = `${user?.id}/${Date.now()}-${
+                    audioFile.name
+                }`;
+
+                const { data, error } = await supabase.storage
+                    .from("audio")
+                    .upload(fileName, audioFile, {
+                        cacheControl: "3600",
+                        upsert: false,
+                    });
+
+                if (error) {
+                    console.error("Supabase storage upload error:", error);
+                    throw error;
+                }
+
+                // Get public URL
+                const {
+                    data: { publicUrl },
+                } = supabase.storage.from("audio").getPublicUrl(fileName);
+
+                finalFormData.audio_url = publicUrl;
+            } catch (audioError: any) {
+                console.error("Audio upload error:", audioError);
+                const errorMessage = audioError?.message || "Unknown error";
+                toast({
+                    title: "Audio upload failed",
+                    description: `Failed to upload audio: ${errorMessage}. Submitting without audio.`,
+                    variant: "destructive",
+                });
+            }
+        }
+
+        // Submit issue to backend
+        const response = await fetch("/api/issues", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(finalFormData),
+        });
+
+        const responseText = await response.text();
+        const data = responseText ? JSON.parse(responseText) : {};
+
+        if (response.ok) {
+            // **FIXED: Send notification to admin immediately after successful issue creation**
+            try {
+                const notificationResponse = await fetch("/api/admin/notifications", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json" 
+                    },
+                    body: JSON.stringify({
+                        type: "new_issue",
+                        title: `New Issue Reported: ${finalFormData.title}`,
+                        message: `A new ${finalFormData.category.toLowerCase()} issue has been reported by ${user?.email || 'a citizen'}. Location: ${finalFormData.location_address}`,
+                        priority: finalFormData.priority,
+                        data: {
+                            issueId: data.id || `ISS-${Date.now()}`,
+                            category: finalFormData.category,
+                            location: finalFormData.location_address,
+                            reportedBy: user?.email || 'anonymous',
+                            reportedAt: new Date().toISOString()
+                        }
+                    }),
+                });
+
+                if (notificationResponse.ok) {
+                    console.log('✅ Admin notification sent successfully');
+                } else {
+                    const errorText = await notificationResponse.text();
+                    console.error('❌ Failed to send admin notification:', errorText);
+                }
+            } catch (notificationError) {
+                console.error("❌ Admin notification error:", notificationError);
+                // Don't fail the entire submission for notification errors
+            }
+
+            toast({
+                title: "Issue reported successfully",
+                description:
+                    "Your issue has been submitted and administrators have been notified.",
+            });
+
+            // Reset form
+            setFormData({
+                title: "",
+                description: "",
+                category: "",
+                priority: "medium",
+                location_address: "",
+                location_lat: "",
+                location_lng: "",
+                image_url: "",
+                audio_url: "",
+            });
+            setAudioBlob(null);
+            setRecordingTime(0);
+            setTranscript("");
+            setSuggestedCategory("");
+
+            setTimeout(() => router.push("/citizen/dashboard"), 1500);
+        } else {
+            console.error("API error response:", data);
+            throw new Error(data.error || "Failed to submit issue");
+        }
+    } catch (error: any) {
+        console.error("Error during submission:", error);
+        toast({
+            title: "Submission failed",
+            description:
+                error.message ||
+                "Failed to submit issue. Please try again.",
+            variant: "destructive",
+        });
+    } finally {
+        setIsSubmitting(false);
+    }
+};
+
+// Also remove the redundant sendAdminNotification function since we're doing it inline now
 
     return (
         <div className="min-h-screen bg-background">
@@ -601,6 +740,21 @@ export default function ReportIssuePage() {
                                     />
                                 </div>
 
+                                {/* Auto-categorization Toggle */}
+                                <div className="flex items-center justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <Shield className="w-4 h-4 text-blue-600" />
+                                        <div>
+                                            <span className="text-sm font-medium">Smart Category Detection</span>
+                                            <p className="text-xs text-muted-foreground">AI will suggest the best category based on your description</p>
+                                        </div>
+                                    </div>
+                                    <Switch
+                                        checked={autoCategorizeEnabled}
+                                        onCheckedChange={setAutoCategorizeEnabled}
+                                    />
+                                </div>
+
                                 {/* Description */}
                                 <div className="space-y-2">
                                     <Label>Description * (Text or Audio)</Label>
@@ -626,18 +780,48 @@ export default function ReportIssuePage() {
                                             value="text"
                                             className="space-y-2"
                                         >
-                                            <Textarea
-                                                id="description"
-                                                placeholder="Provide detailed information about the issue..."
-                                                value={formData.description}
-                                                onChange={(e) =>
-                                                    handleInputChange(
-                                                        "description",
-                                                        e.target.value
-                                                    )
-                                                }
-                                                rows={4}
-                                            />
+                                            <div className="relative">
+                                                <Textarea
+                                                    id="description"
+                                                    placeholder="Provide detailed information about the issue..."
+                                                    value={formData.description}
+                                                    onChange={(e) =>
+                                                        handleInputChange(
+                                                            "description",
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    rows={4}
+                                                />
+                                                {isAutoCategorizing && (
+                                                    <div className="absolute top-2 right-2">
+                                                        <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
+                                                    </div>
+                                                )}
+                                            </div>
+                                            {suggestedCategory && formData.category !== suggestedCategory && (
+                                                <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                                                    <div className="flex items-center gap-2">
+                                                        <CheckCircle className="w-4 h-4 text-green-600" />
+                                                        <span className="text-sm">
+                                                            Suggested category: <strong>{suggestedCategory}</strong>
+                                                            {categoryConfidence > 0 && (
+                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                    ({Math.round(categoryConfidence * 100)}% confidence)
+                                                                </span>
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                    <Button
+                                                        type="button"
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={applySuggestedCategory}
+                                                    >
+                                                        Apply
+                                                    </Button>
+                                                </div>
+                                            )}
                                         </TabsContent>
 
                                         <TabsContent
@@ -778,25 +962,53 @@ export default function ReportIssuePage() {
                                                                 Transcript
                                                                 (editable)
                                                             </Label>
-                                                            <Textarea
-                                                                value={
-                                                                    transcript
-                                                                }
-                                                                onChange={(e) =>
-                                                                    setTranscript(
-                                                                        e.target
-                                                                            .value
-                                                                    )
-                                                                }
-                                                                rows={4}
-                                                                placeholder="Live transcript will appear here…"
-                                                            />
+                                                            <div className="relative">
+                                                                <Textarea
+                                                                    value={transcript}
+                                                                    onChange={(e) =>
+                                                                        setTranscript(
+                                                                            e.target
+                                                                                .value
+                                                                        )
+                                                                    }
+                                                                    rows={4}
+                                                                    placeholder="Live transcript will appear here…"
+                                                                />
+                                                                {isAutoCategorizing && transcript && (
+                                                                    <div className="absolute top-2 right-2">
+                                                                        <RefreshCw className="w-4 h-4 animate-spin text-blue-600" />
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                             <p className="text-xs text-muted-foreground">
                                                                 The transcript
                                                                 will be sent as
                                                                 your description
                                                                 when submitting.
                                                             </p>
+                                                            {suggestedCategory && transcript && formData.category !== suggestedCategory && (
+                                                                <div className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <CheckCircle className="w-4 h-4 text-green-600" />
+                                                                        <span className="text-sm">
+                                                                            Suggested category: <strong>{suggestedCategory}</strong>
+                                                                            {categoryConfidence > 0 && (
+                                                                                <span className="text-xs text-muted-foreground ml-1">
+                                                                                    ({Math.round(categoryConfidence * 100)}% confidence)
+                                                                                </span>
+                                                                            )}
+                                                                        </span>
+                                                                    </div>
+                                                                    <Button
+                                                                        type="button"
+                                                                        size="sm"
+                                                                        variant="outline"
+                                                                        onClick={applySuggestedCategory}
+                                                                    >
+                                                                        Apply
+                                                                    </Button>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 ) : (
@@ -956,6 +1168,11 @@ export default function ReportIssuePage() {
                                                 ))}
                                             </SelectContent>
                                         </Select>
+                                        {autoCategorizeEnabled && formData.category && (
+                                            <p className="text-xs text-green-600">
+                                                ✓ Category verified by AI
+                                            </p>
+                                        )}
                                     </div>
 
                                     <div className="responsive-form-field space-y-2">
@@ -1160,8 +1377,8 @@ export default function ReportIssuePage() {
                                             inconvenient
                                         </li>
                                         <li>
-                                            Provide accurate contact information
-                                            for follow-up
+                                            Let AI help suggest the right category
+                                            based on your description
                                         </li>
                                         <li>
                                             Check if similar issues have already
