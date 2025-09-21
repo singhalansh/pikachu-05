@@ -41,7 +41,6 @@ import {
     CheckCircle,
     MoreHorizontal,
     Building2,
-    Shield,
     ThumbsUp,
     Filter,
     X,
@@ -448,151 +447,193 @@ export default function AdminIssuesPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
-            {/* Enhanced Header */}
-            <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
-                <div className="container mx-auto px-4 py-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
+        <div className="min-h-screen bg-gray-50">
+            <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 md:py-6 lg:py-8">
+                {/* Action Buttons */}
+                <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div className="flex flex-col xs:flex-row xs:items-center gap-2 sm:gap-3">
                             <Link href="/admin/dashboard">
-                                <Button variant="outline" size="sm">
+                            <Button variant="outline" size="sm" className="w-full xs:w-auto border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
-                                    Dashboard
+                                <span className="hidden xs:inline">Dashboard</span>
+                                <span className="xs:hidden">Back to Dashboard</span>
                                 </Button>
                             </Link>
-                            <div>
-                                <h1 className="text-3xl font-bold text-gray-900">
-                                    Issue Management
-                                </h1>
-                                <p className="text-gray-600 mt-1">
-                                    Track, assign, and manage all civic issues
-                                </p>
+                        <Link href="/admin/issues/map">
+                            <Button className="w-full xs:w-auto bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 hover:scale-105">
+                                <MapPin className="w-4 h-4 mr-2" />
+                                <span className="hidden xs:inline">Map View</span>
+                                <span className="xs:hidden">View on Map</span>
+                            </Button>
+                        </Link>
                             </div>
-                        </div>
-                        <div className="flex items-center space-x-3">
                             {selectedIssues.length > 0 && (
-                                <Button variant="secondary" size="sm">
+                        <Button variant="secondary" size="sm" className="w-full xs:w-auto bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200 hover:scale-105">
                                     <Users className="w-4 h-4 mr-2" />
-                                    Bulk Actions ({selectedIssues.length})
+                            <span className="hidden xs:inline">Bulk Actions ({selectedIssues.length})</span>
+                            <span className="xs:hidden">Actions ({selectedIssues.length})</span>
                                 </Button>
                             )}
-                            <Link href="/admin/issues/map">
-                                <Button>
-                                    <MapPin className="w-4 h-4 mr-2" />
-                                    Map View
-                                </Button>
-                            </Link>
-                        </div>
                     </div>
 
-                    {/* Summary Stats */}
-                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-6">
-                        <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
-                            <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-blue-700">
-                                    {statusCounts.all}
-                                </div>
-                                <div className="text-sm text-blue-600">
+                {/* Stats Overview */}
+                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
+                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-pulse flex-shrink-0"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide truncate">
                                     Total Issues
+                                        </p>
+                                    </div>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-blue-600">
+                                        {statusCounts.all.toLocaleString()}
+                                    </p>
+                                </div>
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                                    <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-600" />
+                                </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-yellow-50 to-amber-100 border-amber-200">
-                            <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-amber-700">
+                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-amber-500 rounded-full animate-pulse flex-shrink-0"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide truncate">
+                                            Pending
+                                        </p>
+                                    </div>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-amber-600">
                                     {statusCounts.submitted}
+                                    </p>
                                 </div>
-                                <div className="text-sm text-amber-600">
-                                    New
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-amber-100 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-amber-600" />
+                                </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200">
-                            <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-orange-700">
+
+                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full animate-pulse flex-shrink-0"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide truncate">
+                                            Assigned
+                                        </p>
+                                    </div>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-blue-600">
                                     {statusCounts.assigned}
+                                    </p>
                                 </div>
-                                <div className="text-sm text-orange-600">
-                                    Assigned
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                                    <User className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-blue-600" />
+                                </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200">
-                            <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-purple-700">
+
+                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-500 rounded-full animate-pulse flex-shrink-0"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide truncate">
+                                            In Progress
+                                        </p>
+                                    </div>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-purple-600">
                                     {statusCounts.in_progress}
+                                    </p>
                                 </div>
-                                <div className="text-sm text-purple-600">
-                                    In Progress
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-purple-100 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                                    <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-purple-600" />
+                                </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-emerald-50 to-green-100 border-emerald-200">
-                            <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-emerald-700">
+
+                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-emerald-500 rounded-full animate-pulse flex-shrink-0"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide truncate">
+                                            Resolved
+                                        </p>
+                                    </div>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-emerald-600">
                                     {statusCounts.resolved}
+                                    </p>
                                 </div>
-                                <div className="text-sm text-emerald-600">
-                                    Resolved
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-emerald-100 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-emerald-600" />
+                                </div>
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-slate-50 to-gray-100 border-slate-200">
-                            <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-slate-700">
+
+                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center space-x-1 sm:space-x-2 mb-1 sm:mb-2">
+                                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-gray-500 rounded-full animate-pulse flex-shrink-0"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide truncate">
+                                            Closed
+                                        </p>
+                                    </div>
+                                    <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-gray-600">
                                     {statusCounts.closed}
+                                    </p>
                                 </div>
-                                <div className="text-sm text-slate-600">
-                                    Closed
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gray-100 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-gray-600" />
+                                </div>
                                 </div>
                             </CardContent>
                         </Card>
-                    </div>
-                </div>
             </div>
 
-            <div className="container mx-auto px-4 py-6">
-                {/* Enhanced Filters */}
-                <Card className="mb-6 shadow-sm">
-                    <CardContent className="p-6">
-                        {/* Search and Filter Toggle */}
-                        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
-                            <div className="relative flex-1 max-w-lg">
-                                <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                {/* Search and Filters */}
+                <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in mb-4 sm:mb-6">
+                    <CardContent className="p-3 sm:p-4 md:p-6">
+                        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                            {/* Search */}
+                            <div className="flex-1 min-w-0">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                                 <Input
-                                    placeholder="Search issues, locations, or reporter names..."
+                                        placeholder="Search issues by title, location, ID, or reporter..."
                                     value={searchTerm}
-                                    onChange={(e) =>
-                                        setSearchTerm(e.target.value)
-                                    }
-                                    className="pl-10 h-12"
-                                />
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="pl-10 border-gray-200 focus:border-blue-500 focus:ring-blue-500 w-full"
+                                    />
+                                </div>
                             </div>
 
-                            <div className="flex items-center gap-2">
+                            {/* Filter Toggle */}
+                            <div className="flex items-center gap-2 flex-shrink-0">
                                 <Button
-                                    variant={
-                                        showFilters ? "default" : "outline"
-                                    }
+                                    variant="outline"
                                     size="sm"
                                     onClick={() => setShowFilters(!showFilters)}
+                                    className="border-gray-200 text-gray-600 hover:bg-gray-50 transition-all duration-200 hover:scale-105 w-full sm:w-auto"
                                 >
                                     <Filter className="w-4 h-4 mr-2" />
-                                    Filters
+                                    <span className="hidden xs:inline">Filters</span>
+                                    <span className="xs:hidden">Filter</span>
                                     {hasActiveFilters && (
-                                        <Badge
-                                            variant="secondary"
-                                            className="ml-2"
-                                        >
-                                            {
-                                                [
-                                                    searchTerm,
-                                                    statusFilter !== "all",
-                                                    priorityFilter !== "all",
-                                                    categoryFilter !== "all",
-                                                ].filter(Boolean).length
-                                            }
-                                        </Badge>
+                                        <div className="w-2 h-2 bg-blue-500 rounded-full ml-2"></div>
                                     )}
                                 </Button>
 
@@ -601,105 +642,74 @@ export default function AdminIssuesPage() {
                                         variant="ghost"
                                         size="sm"
                                         onClick={clearFilters}
+                                        className="text-gray-500 hover:text-gray-700 w-full sm:w-auto"
                                     >
-                                        <X className="w-4 h-4 mr-2" />
-                                        Clear
+                                        <X className="w-4 h-4 mr-1" />
+                                        <span className="hidden xs:inline">Clear</span>
+                                        <span className="xs:hidden">Reset</span>
                                     </Button>
                                 )}
                             </div>
                         </div>
 
-                        {/* Collapsible Filters */}
+                        {/* Filters */}
                         {showFilters && (
-                            <div className="mt-4 pt-4 border-t grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
+                                <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                                        <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 block">
                                         Status
                                     </label>
-                                    <Select
-                                        value={statusFilter}
-                                        onValueChange={setStatusFilter}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="All Status" />
+                                        <Select value={statusFilter} onValueChange={setStatusFilter}>
+                                            <SelectTrigger className="border-gray-200 h-9 sm:h-10">
+                                                <SelectValue placeholder="All Statuses" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">
-                                                All Status
-                                            </SelectItem>
-                                            <SelectItem value="submitted">
-                                                📝 Submitted
-                                            </SelectItem>
-                                            <SelectItem value="assigned">
-                                                👤 Assigned
-                                            </SelectItem>
-                                            <SelectItem value="in_progress">
-                                                ⚡ In Progress
-                                            </SelectItem>
-                                            <SelectItem value="resolved">
-                                                ✅ Resolved
-                                            </SelectItem>
-                                            <SelectItem value="closed">
-                                                🔒 Closed
-                                            </SelectItem>
+                                                <SelectItem value="all">All Statuses</SelectItem>
+                                                <SelectItem value="submitted">Submitted</SelectItem>
+                                                <SelectItem value="assigned">Assigned</SelectItem>
+                                                <SelectItem value="in_progress">In Progress</SelectItem>
+                                                <SelectItem value="resolved">Resolved</SelectItem>
+                                                <SelectItem value="closed">Closed</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                                        <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 block">
                                         Priority
                                     </label>
-                                    <Select
-                                        value={priorityFilter}
-                                        onValueChange={setPriorityFilter}
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="All Priority" />
+                                        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                                            <SelectTrigger className="border-gray-200 h-9 sm:h-10">
+                                                <SelectValue placeholder="All Priorities" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">
-                                                All Priority
-                                            </SelectItem>
-                                            <SelectItem value="high">
-                                                🔴 High
-                                            </SelectItem>
-                                            <SelectItem value="medium">
-                                                🟡 Medium
-                                            </SelectItem>
-                                            <SelectItem value="low">
-                                                🟢 Low
-                                            </SelectItem>
+                                                <SelectItem value="all">All Priorities</SelectItem>
+                                                <SelectItem value="high">High</SelectItem>
+                                                <SelectItem value="medium">Medium</SelectItem>
+                                                <SelectItem value="low">Low</SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
 
-                                <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                                    <div className="xs:col-span-2 lg:col-span-1">
+                                        <label className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 block">
                                         Category
                                     </label>
-                                    <Select
-                                        value={categoryFilter}
-                                        onValueChange={setCategoryFilter}
-                                    >
-                                        <SelectTrigger>
+                                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                                            <SelectTrigger className="border-gray-200 h-9 sm:h-10">
                                             <SelectValue placeholder="All Categories" />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">
-                                                All Categories
-                                            </SelectItem>
-                                            {categories.map((category) => (
-                                                <SelectItem
-                                                    key={category}
-                                                    value={category}
-                                                >
-                                                    {getCategoryIcon(category)}{" "}
+                                                <SelectItem value="all">All Categories</SelectItem>
+                                                {Array.from(new Set(allIssues.map(issue => issue.category))).map(category => (
+                                                    <SelectItem key={category} value={category}>
                                                     {getCategoryLabel(category)}
                                                 </SelectItem>
                                             ))}
                                         </SelectContent>
                                     </Select>
+                                    </div>
                                 </div>
                             </div>
                         )}
@@ -708,770 +718,141 @@ export default function AdminIssuesPage() {
 
                 {/* Loading State */}
                 {loading && (
-                    <Card className="shadow-sm">
-                        <CardContent className="p-12 text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                            <p className="text-lg">Loading issues...</p>
-                        </CardContent>
-                    </Card>
+                    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                        <div className="text-center">
+                            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+                            <p className="text-gray-600 font-medium animate-pulse">
+                                Loading issues...
+                            </p>
+                        </div>
+                    </div>
                 )}
 
                 {/* Error State */}
                 {error && (
-                    <Card className="shadow-sm">
-                        <CardContent className="p-12 text-center">
-                            <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                            <h3 className="text-xl font-semibold mb-2">
-                                Error Loading Issues
-                            </h3>
-                            <p className="text-gray-600 mb-4">{error}</p>
-                            <Button onClick={() => window.location.reload()}>
+                    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+                        <div className="text-center animate-fade-in">
+                            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <AlertTriangle className="w-8 h-8 text-red-500" />
+                            </div>
+                            <p className="text-red-600 mb-4 font-medium">{error}</p>
+                            <Button 
+                                onClick={() => window.location.reload()} 
+                                className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 transform hover:scale-105"
+                            >
                                 Retry
                             </Button>
-                        </CardContent>
-                    </Card>
+                        </div>
+                    </div>
                 )}
 
-                {/* Enhanced Status Tabs */}
+                {/* Issues List */}
                 {!loading && !error && (
-                    <Tabs
-                        value={statusFilter}
-                        onValueChange={setStatusFilter}
-                        className="space-y-6"
-                    >
-                        <div className="overflow-x-auto">
-                            <TabsList className="grid w-full grid-cols-6 h-12">
-                                <TabsTrigger value="all" className="text-sm">
-                                    All ({statusCounts.all})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="submitted"
-                                    className="text-sm"
-                                >
-                                    📝 New ({statusCounts.submitted})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="assigned"
-                                    className="text-sm"
-                                >
-                                    👤 Assigned ({statusCounts.assigned})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="in_progress"
-                                    className="text-sm"
-                                >
-                                    ⚡ Progress ({statusCounts.in_progress})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="resolved"
-                                    className="text-sm"
-                                >
-                                    ✅ Resolved ({statusCounts.resolved})
-                                </TabsTrigger>
-                                <TabsTrigger value="closed" className="text-sm">
-                                    🔒 Closed ({statusCounts.closed})
-                                </TabsTrigger>
-                            </TabsList>
-                        </div>
-
-                        <TabsContent value={statusFilter} className="space-y-6">
-                            <Card
-                                className="shadow-sm"
-                                style={{ overflow: "visible" }}
-                            >
-                                <CardHeader className="pb-4">
-                                    <div className="flex justify-between items-center">
-                                        <div>
-                                            <CardTitle className="text-xl">
+                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                        <CardHeader className="pb-3 sm:pb-4">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
+                                <div className="min-w-0 flex-1">
+                                    <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                                                 Issues ({filteredIssues.length})
                                             </CardTitle>
-                                            <CardDescription>
-                                                {statusFilter === "all"
-                                                    ? "All issues sorted by community votes"
-                                                    : `Issues with status: ${statusFilter.replace(
-                                                          "_",
-                                                          " "
-                                                      )}`}
+                                    <CardDescription className="text-xs sm:text-sm text-gray-500 mt-1 truncate">
+                                        {hasActiveFilters ? 'Filtered results' : 'All reported issues'}
                                             </CardDescription>
-                                        </div>
-                                        <div className="flex items-center text-sm text-gray-500">
-                                            <TrendingUp className="w-4 h-4 mr-1" />
-                                            Sorted by upvotes
                                         </div>
                                     </div>
                                 </CardHeader>
-                                <CardContent
-                                    className="p-0"
-                                    style={{ overflow: "visible" }}
-                                >
-                                    {/* Enhanced Desktop Table */}
-                                    <div className="hidden lg:block">
-                                        <div
-                                            className="overflow-x-auto"
-                                            style={{ overflowY: "visible" }}
+                        <CardContent className="pt-0">
+                            {filteredIssues.length === 0 ? (
+                                <div className="text-center py-8 sm:py-12">
+                                    <div className="animate-bounce">
+                                        <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 sm:mb-3 text-gray-400" />
+                                                                            </div>
+                                    <p className="font-medium text-gray-500 text-sm sm:text-base">No issues found</p>
+                                    <p className="text-xs mt-1 text-gray-400 px-4">
+                                        {hasActiveFilters ? 'Try adjusting your filters' : 'Issues will appear here once citizens start reporting them'}
+                                    </p>
+                                                                        </div>
+                            ) : (
+                                <div className="space-y-3 sm:space-y-4">
+                                    {filteredIssues.map((issue, index) => (
+                                        <div 
+                                            key={issue.id} 
+                                            className="p-3 sm:p-4 md:p-6 border border-gray-100 rounded-lg sm:rounded-xl hover:border-gray-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 animate-fade-in"
                                         >
-                                            <Table
-                                                className="relative"
-                                                style={{ overflow: "visible" }}
-                                            >
-                                                <TableHeader>
-                                                    <TableRow className="bg-gray-50">
-                                                        <TableHead className="w-12">
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={
-                                                                    selectedIssues.length ===
-                                                                        filteredIssues.length &&
-                                                                    filteredIssues.length >
-                                                                        0
-                                                                }
-                                                                onChange={(
-                                                                    e
-                                                                ) => {
-                                                                    if (
-                                                                        e.target
-                                                                            .checked
-                                                                    ) {
-                                                                        setSelectedIssues(
-                                                                            filteredIssues.map(
-                                                                                (
-                                                                                    issue
-                                                                                ) =>
-                                                                                    issue.id
-                                                                            )
-                                                                        );
-                                                                    } else {
-                                                                        setSelectedIssues(
-                                                                            []
-                                                                        );
-                                                                    }
-                                                                }}
-                                                                className="rounded"
-                                                            />
-                                                        </TableHead>
-                                                        <TableHead className="min-w-[350px] font-semibold">
-                                                            Issue Details
-                                                        </TableHead>
-                                                        <TableHead className="w-28 font-semibold">
-                                                            Status
-                                                        </TableHead>
-                                                        <TableHead className="w-24 font-semibold">
-                                                            Priority
-                                                        </TableHead>
-                                                        <TableHead className="w-28 font-semibold">
-                                                            AI Urgency
-                                                        </TableHead>
-                                                        <TableHead className="w-32 font-semibold">
-                                                            Category
-                                                        </TableHead>
-                                                        <TableHead className="min-w-[150px] font-semibold">
-                                                            Assignment
-                                                        </TableHead>
-                                                        <TableHead className="min-w-[120px] font-semibold">
-                                                            Reporter
-                                                        </TableHead>
-                                                        <TableHead className="w-20 font-semibold text-center">
-                                                            <ThumbsUp className="w-4 h-4 mx-auto" />
-                                                        </TableHead>
-                                                        <TableHead className="w-20 font-semibold text-center">
-                                                            Actions
-                                                        </TableHead>
-                                                    </TableRow>
-                                                </TableHeader>
-                                                <TableBody>
-                                                    {filteredIssues.map(
-                                                        (issue, index) => (
-                                                            <TableRow
-                                                                key={issue.id}
-                                                                className={`hover:bg-gray-50 ${
-                                                                    index === 0
-                                                                        ? "bg-blue-50/50 border-l-4 border-l-blue-500"
-                                                                        : ""
-                                                                }`}
-                                                            >
-                                                                <TableCell>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={selectedIssues.includes(
-                                                                            issue.id
-                                                                        )}
-                                                                        onChange={(
-                                                                            e
-                                                                        ) => {
-                                                                            if (
-                                                                                e
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                setSelectedIssues(
-                                                                                    [
-                                                                                        ...selectedIssues,
-                                                                                        issue.id,
-                                                                                    ]
-                                                                                );
-                                                                            } else {
-                                                                                setSelectedIssues(
-                                                                                    selectedIssues.filter(
-                                                                                        (
-                                                                                            id
-                                                                                        ) =>
-                                                                                            id !==
-                                                                                            issue.id
-                                                                                    )
-                                                                                );
-                                                                            }
-                                                                        }}
-                                                                        className="rounded"
-                                                                    />
-                                                                </TableCell>
-                                                                <TableCell className="py-4">
-                                                                    <div className="space-y-2">
-                                                                        <Link
-                                                                            href={`/admin/issues/${issue.id}`}
-                                                                        >
-                                                                            <div className="font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer line-clamp-1">
-                                                                                {index ===
-                                                                                    0 && (
-                                                                                    <span className="inline-flex items-center mr-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
-                                                                                        <TrendingUp className="w-3 h-3 mr-1" />
-                                                                                        Most
-                                                                                        Voted
-                                                                                    </span>
-                                                                                )}
-                                                                                {
-                                                                                    issue.title
-                                                                                }
-                                                                            </div>
-                                                                        </Link>
-                                                                        <div className="flex items-center text-sm text-gray-500">
-                                                                            <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                                                                            <span
-                                                                                className="truncate"
-                                                                                title={
-                                                                                    issue.location_address
-                                                                                }
-                                                                            >
-                                                                                {
-                                                                                    issue.location_address
-                                                                                }
-                                                                            </span>
-                                                                        </div>
-                                                                        <div
-                                                                            className="text-xs text-gray-400 cursor-pointer hover:text-blue-500 transition-colors font-mono"
-                                                                            onClick={() =>
-                                                                                handleUserIdClick(
-                                                                                    issue.id
-                                                                                )
-                                                                            }
-                                                                            title="Click to show/hide full ID"
-                                                                        >
-                                                                            ID:{" "}
-                                                                            {issue.id.slice(
-                                                                                0,
-                                                                                8
-                                                                            )}
-                                                                            ...
-                                                                        </div>
-                                                                        {expandedUserIds.has(
-                                                                            issue.id
-                                                                        ) && (
-                                                                            <div className="text-xs text-blue-600 font-mono bg-blue-50 px-2 py-1 rounded border mt-1">
-                                                                                {
-                                                                                    issue.id
-                                                                                }
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <Badge
-                                                                        className={`${getStatusColor(
-                                                                            issue.status
-                                                                        )} shadow-sm`}
-                                                                    >
-                                                                        {getStatusIcon(
-                                                                            issue.status
-                                                                        )}
-                                                                        <span className="ml-1 capitalize hidden sm:inline">
-                                                                            {issue.status.replace(
-                                                                                "_",
-                                                                                " "
-                                                                            )}
-                                                                        </span>
+                                            <div className="flex flex-col gap-3 sm:gap-4">
+                                                <div className="flex flex-col xs:flex-row xs:items-start justify-between gap-2 sm:gap-3">
+                                                    <h3 className="font-medium text-gray-900 text-sm sm:text-base leading-tight flex-1 min-w-0">
+                                                        <span className="line-clamp-2">{issue.title}</span>
+                                                    </h3>
+                                                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap flex-shrink-0">
+                                                        <Badge className={`${getStatusColor(issue.status)} text-xs font-medium px-2 py-1`}>
+                                                            {issue.status.replace("-", " ")}
                                                                     </Badge>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <Badge
-                                                                        className={`${getPriorityColor(
-                                                                            issue.priority
-                                                                        )} border`}
-                                                                        variant="outline"
-                                                                    >
-                                                                        {issue.priority
-                                                                            .charAt(
-                                                                                0
-                                                                            )
-                                                                            .toUpperCase() +
-                                                                            issue.priority.slice(
-                                                                                1
-                                                                            )}
-                                                                    </Badge>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <AIUrgencyBadge
-                                                                        urgency={
-                                                                            issue.ai_urgency
-                                                                        }
-                                                                        confidence={
-                                                                            issue.ai_confidence
-                                                                        }
-                                                                        className="shadow-sm"
-                                                                    />
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <div className="flex items-center space-x-1">
-                                                                        <span>
-                                                                            {getCategoryIcon(
-                                                                                issue.category
-                                                                            )}
-                                                                        </span>
-                                                                        <Badge
-                                                                            variant="outline"
-                                                                            className="text-xs border-gray-200"
-                                                                        >
-                                                                            {getCategoryLabel(
-                                                                                issue.category
-                                                                            )}
+                                                        <Badge className={`${getPriorityColor(issue.priority)} text-xs font-medium px-2 py-1`}>
+                                                            {issue.priority}
                                                                         </Badge>
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    {issue.assigned_profile ? (
-                                                                        <div className="space-y-1">
-                                                                            <div className="font-medium text-sm text-gray-900">
-                                                                                {
-                                                                                    issue
-                                                                                        .assigned_profile
-                                                                                        .full_name
-                                                                                }
-                                                                            </div>
-                                                                            <div className="text-xs text-gray-500">
-                                                                                {
-                                                                                    issue
-                                                                                        .department
-                                                                                        ?.name
-                                                                                }
-                                                                            </div>
-                                                                        </div>
-                                                                    ) : issue.department ? (
-                                                                        <div className="space-y-1">
-                                                                            <div className="text-sm font-medium text-amber-700">
-                                                                                Department
-                                                                            </div>
-                                                                            <div className="text-xs text-gray-500">
-                                                                                {
-                                                                                    issue
-                                                                                        .department
-                                                                                        .name
-                                                                                }
-                                                                            </div>
-                                                                        </div>
-                                                                    ) : (
-                                                                        <span className="text-gray-400 text-sm italic">
-                                                                            Unassigned
-                                                                        </span>
-                                                                    )}
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <div className="space-y-1">
-                                                                        <div className="text-sm flex items-center text-gray-600">
-                                                                            <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
-                                                                            {new Date(
-                                                                                issue.created_at
-                                                                            ).toLocaleDateString()}
-                                                                        </div>
-                                                                        <div className="text-xs text-gray-500 flex items-center">
-                                                                            <User className="w-3 h-3 mr-1 flex-shrink-0" />
-                                                                            <span
-                                                                                className="truncate"
-                                                                                title={
-                                                                                    issue
-                                                                                        .profiles
-                                                                                        ?.full_name ||
-                                                                                    "Unknown"
-                                                                                }
-                                                                            >
-                                                                                {issue
-                                                                                    .profiles
-                                                                                    ?.full_name ||
-                                                                                    "Unknown"}
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell>
-                                                                    <div className="flex items-center justify-center">
-                                                                        <div className="flex items-center space-x-1 px-2 py-1 bg-green-50 rounded-full">
-                                                                            <ThumbsUp className="w-4 h-4 text-green-600" />
-                                                                            <span className="font-semibold text-green-700">
-                                                                                {issue.upvotes ||
-                                                                                    0}
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                </TableCell>
-                                                                <TableCell
-                                                                    className="relative"
-                                                                    style={{
-                                                                        zIndex: 30,
-                                                                    }}
-                                                                >
-                                                                    <div className="flex justify-center relative">
-                                                                        <SimpleAdminActions
-                                                                            issue={{
-                                                                                id: issue.id,
-                                                                                status: issue.status,
-                                                                                title: issue.title,
-                                                                            }}
-                                                                            onAction={
-                                                                                handleIssueAction
-                                                                            }
-                                                                            processing={
-                                                                                processingIssue ===
-                                                                                issue.id
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </TableCell>
-                                                            </TableRow>
-                                                        )
-                                                    )}
-                                                </TableBody>
-                                            </Table>
                                         </div>
                                     </div>
 
-                                    {/* Enhanced Mobile Card View */}
-                                    <div className="block lg:hidden px-4 pb-4">
-                                        <div className="space-y-4">
-                                            {filteredIssues.map(
-                                                (issue, index) => (
-                                                    <Card
-                                                        key={issue.id}
-                                                        className={`relative shadow-sm hover:shadow-md transition-shadow ${
-                                                            index === 0
-                                                                ? "border-l-4 border-l-blue-500 bg-blue-50/30"
-                                                                : ""
-                                                        }`}
-                                                    >
-                                                        <CardContent className="p-4">
-                                                            <div className="flex items-start justify-between mb-3">
-                                                                <div className="flex items-start space-x-3 flex-1">
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={selectedIssues.includes(
-                                                                            issue.id
-                                                                        )}
-                                                                        onChange={(
-                                                                            e
-                                                                        ) => {
-                                                                            if (
-                                                                                e
-                                                                                    .target
-                                                                                    .checked
-                                                                            ) {
-                                                                                setSelectedIssues(
-                                                                                    [
-                                                                                        ...selectedIssues,
-                                                                                        issue.id,
-                                                                                    ]
-                                                                                );
-                                                                            } else {
-                                                                                setSelectedIssues(
-                                                                                    selectedIssues.filter(
-                                                                                        (
-                                                                                            id
-                                                                                        ) =>
-                                                                                            id !==
-                                                                                            issue.id
-                                                                                    )
-                                                                                );
-                                                                            }
-                                                                        }}
-                                                                        className="rounded mt-1"
-                                                                    />
-                                                                    <div className="flex-1 min-w-0">
-                                                                        {index ===
-                                                                            0 && (
-                                                                            <div className="mb-2">
-                                                                                <Badge className="bg-blue-100 text-blue-700 text-xs">
-                                                                                    <TrendingUp className="w-3 h-3 mr-1" />
-                                                                                    Most
-                                                                                    Voted
-                                                                                </Badge>
-                                                                            </div>
-                                                                        )}
-                                                                        <Link
-                                                                            href={`/admin/issues/${issue.id}`}
-                                                                        >
-                                                                            <h3 className="font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer mb-1">
-                                                                                {
-                                                                                    issue.title
-                                                                                }
-                                                                            </h3>
-                                                                        </Link>
-                                                                        <div
-                                                                            className="text-xs text-gray-400 cursor-pointer hover:text-blue-500 transition-colors font-mono mb-2"
-                                                                            onClick={() =>
-                                                                                handleUserIdClick(
-                                                                                    issue.id
-                                                                                )
-                                                                            }
-                                                                            title="Click to show/hide full ID"
-                                                                        >
-                                                                            ID:{" "}
-                                                                            {issue.id.slice(
-                                                                                0,
-                                                                                8
-                                                                            )}
-                                                                            ...
-                                                                        </div>
-                                                                        {expandedUserIds.has(
-                                                                            issue.id
-                                                                        ) && (
-                                                                            <div className="text-xs text-blue-600 font-mono bg-blue-50 px-2 py-1 rounded border mb-2">
-                                                                                {
-                                                                                    issue.id
-                                                                                }
-                                                                            </div>
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                                <div className="flex items-center space-x-2">
-                                                                    <div className="flex items-center space-x-1 px-2 py-1 bg-green-50 rounded-full">
-                                                                        <ThumbsUp className="w-3 h-3 text-green-600" />
-                                                                        <span className="text-xs font-semibold text-green-700">
-                                                                            {issue.upvotes ||
-                                                                                0}
-                                                                        </span>
-                                                                    </div>
-                                                                    <div
-                                                                        className="relative"
-                                                                        style={{
-                                                                            zIndex: 30,
-                                                                        }}
-                                                                    >
-                                                                        <SimpleAdminActions
-                                                                            issue={{
-                                                                                id: issue.id,
-                                                                                status: issue.status,
-                                                                                title: issue.title,
-                                                                            }}
-                                                                            onAction={
-                                                                                handleIssueAction
-                                                                            }
-                                                                            processing={
-                                                                                processingIssue ===
-                                                                                issue.id
-                                                                            }
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
+                                                    {issue.description}
+                                                </p>
 
-                                                            {/* Mobile Info Grid */}
-                                                            <div className="grid grid-cols-2 gap-3 text-sm">
-                                                                <div>
-                                                                    <div className="text-xs text-gray-500 mb-1">
-                                                                        Status
-                                                                    </div>
-                                                                    <Badge
-                                                                        className={`${getStatusColor(
-                                                                            issue.status
-                                                                        )} text-xs`}
-                                                                    >
-                                                                        {getStatusIcon(
-                                                                            issue.status
-                                                                        )}
-                                                                        <span className="ml-1 capitalize">
-                                                                            {issue.status.replace(
-                                                                                "_",
-                                                                                " "
-                                                                            )}
+                                                <div className="flex flex-col xs:flex-row xs:items-center gap-2 sm:gap-3 text-xs text-gray-500">
+                                                    <span className="flex items-center min-w-0">
+                                                        <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                                                        <span className="truncate">
+                                                            {issue.location_address.length > 40 
+                                                                ? issue.location_address.substring(0, 40) + "..." 
+                                                                : issue.location_address}
                                                                         </span>
-                                                                    </Badge>
-                                                                </div>
-                                                                <div>
-                                                                    <div className="text-xs text-gray-500 mb-1">
-                                                                        Priority
-                                                                    </div>
-                                                                    <Badge
-                                                                        className={`${getPriorityColor(
-                                                                            issue.priority
-                                                                        )} border text-xs`}
-                                                                        variant="outline"
-                                                                    >
-                                                                        {issue.priority
-                                                                            .charAt(
-                                                                                0
-                                                                            )
-                                                                            .toUpperCase() +
-                                                                            issue.priority.slice(
-                                                                                1
-                                                                            )}
-                                                                    </Badge>
-                                                                </div>
-                                                                <div>
-                                                                    <div className="text-xs text-gray-500 mb-1">
-                                                                        AI
-                                                                        Urgency
-                                                                    </div>
-                                                                    <AIUrgencyBadge
-                                                                        urgency={
-                                                                            issue.ai_urgency
-                                                                        }
-                                                                        confidence={
-                                                                            issue.ai_confidence
-                                                                        }
-                                                                        className="text-xs"
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <div className="text-xs text-gray-500 mb-1">
-                                                                        Category
-                                                                    </div>
-                                                                    <div className="flex items-center space-x-1">
-                                                                        <span>
-                                                                            {getCategoryIcon(
-                                                                                issue.category
-                                                                            )}
                                                                         </span>
-                                                                        <Badge
-                                                                            variant="outline"
-                                                                            className="text-xs"
-                                                                        >
-                                                                            {getCategoryLabel(
-                                                                                issue.category
-                                                                            )}
-                                                                        </Badge>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div className="mt-3 pt-3 border-t space-y-2">
-                                                                <div className="flex items-center justify-between text-sm">
-                                                                    <span className="text-gray-500">
-                                                                        Assigned
-                                                                        to
+                                                    <span className="flex items-center flex-shrink-0">
+                                                        <Calendar className="w-3 h-3 mr-1" />
+                                                        {new Date(issue.created_at).toLocaleDateString()}
                                                                     </span>
-                                                                    <span>
-                                                                        {issue.assigned_profile ? (
-                                                                            <div className="text-right">
-                                                                                <div className="font-medium text-gray-900">
-                                                                                    {
-                                                                                        issue
-                                                                                            .assigned_profile
-                                                                                            .full_name
-                                                                                    }
-                                                                                </div>
-                                                                                <div className="text-xs text-gray-500">
-                                                                                    {
-                                                                                        issue
-                                                                                            .department
-                                                                                            ?.name
-                                                                                    }
-                                                                                </div>
-                                                                            </div>
-                                                                        ) : issue.department ? (
-                                                                            <div className="text-right">
-                                                                                <div className="text-amber-700 font-medium">
-                                                                                    Department
-                                                                                </div>
-                                                                                <div className="text-xs text-gray-500">
-                                                                                    {
-                                                                                        issue
-                                                                                            .department
-                                                                                            .name
-                                                                                    }
-                                                                                </div>
-                                                                            </div>
-                                                                        ) : (
-                                                                            <span className="text-gray-400 italic">
-                                                                                Unassigned
+                                                    {issue.profiles && (
+                                                        <span className="flex items-center min-w-0">
+                                                            <User className="w-3 h-3 mr-1 flex-shrink-0" />
+                                                            <span className="truncate">{issue.profiles.full_name}</span>
                                                                             </span>
                                                                         )}
-                                                                    </span>
-                                                                </div>
-                                                                <div className="flex items-center justify-between text-sm">
-                                                                    <span className="text-gray-500">
-                                                                        Reported
-                                                                        by
-                                                                    </span>
-                                                                    <div className="text-right">
-                                                                        <div className="flex items-center text-gray-600">
-                                                                            <Calendar className="w-3 h-3 mr-1" />
-                                                                            {new Date(
-                                                                                issue.created_at
-                                                                            ).toLocaleDateString()}
-                                                                        </div>
-                                                                        <div className="flex items-center text-gray-500 text-xs">
-                                                                            <User className="w-3 h-3 mr-1" />
-                                                                            {issue
-                                                                                .profiles
-                                                                                ?.full_name ||
-                                                                                "Unknown"}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
                                                             </div>
 
-                                                            <div className="mt-3 pt-3 border-t">
-                                                                <div className="flex items-center text-sm text-gray-500">
-                                                                    <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
-                                                                    <span className="truncate">
-                                                                        {
-                                                                            issue.location_address
-                                                                        }
+                                                <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 sm:gap-3">
+                                                    <div className="flex items-center gap-3 sm:gap-4 text-xs text-gray-500">
+                                                        <span className="flex items-center">
+                                                            <ThumbsUp className="w-3 h-3 mr-1" />
+                                                            {issue.upvotes || 0} votes
                                                                     </span>
-                                                                </div>
-                                                            </div>
-                                                        </CardContent>
-                                                    </Card>
-                                                )
-                                            )}
-                                        </div>
+                                                        {issue.department && (
+                                                            <span className="flex items-center min-w-0">
+                                                                <Building2 className="w-3 h-3 mr-1 flex-shrink-0" />
+                                                                <span className="truncate">{issue.department.name}</span>
+                                                            </span>
+                                                        )}
                                     </div>
 
-                                    {/* Empty State */}
-                                    {filteredIssues.length === 0 && (
-                                        <div className="text-center py-12 px-4">
-                                            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                                <AlertTriangle className="w-8 h-8 text-gray-400" />
-                                            </div>
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                                No Issues Found
-                                            </h3>
-                                            <p className="text-gray-500 mb-4">
-                                                No issues match your current
-                                                filters. Try adjusting your
-                                                search criteria or clearing
-                                                filters.
-                                            </p>
-                                            {hasActiveFilters && (
                                                 <Button
                                                     variant="outline"
-                                                    onClick={clearFilters}
-                                                >
-                                                    <X className="w-4 h-4 mr-2" />
-                                                    Clear All Filters
+                                                        size="sm"
+                                                        className="text-xs border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105 w-full xs:w-auto"
+                                                        asChild
+                                                    >
+                                                        <Link href={`/admin/issues/${issue.id}`}>
+                                                            <Eye className="w-3 h-3 mr-1" />
+                                                            <span className="hidden xs:inline">View</span>
+                                                            <span className="xs:hidden">View Details</span>
+                                                        </Link>
                                                 </Button>
-                                            )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
                                         </div>
                                     )}
                                 </CardContent>
                             </Card>
-                        </TabsContent>
-                    </Tabs>
                 )}
             </div>
         </div>
