@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,20 +14,20 @@ import { ArrowLeft, Send, Bell, Users, AlertTriangle, CheckCircle, Calendar, Meg
 import { useToast } from "@/hooks/use-toast"
 
 interface AdminNotification {
-  id: string;
-  type: "new_issue" | "maintenance" | "traffic" | "community" | "emergency" | "service";
-  title: string;
-  message: string;
-  priority: "low" | "medium" | "high" | "urgent";
-  timestamp: string;
-  read: boolean;
+  id: string
+  type: "new_issue" | "maintenance" | "traffic" | "community" | "emergency" | "service"
+  title: string
+  message: string
+  priority: "low" | "medium" | "high" | "urgent"
+  timestamp: string
+  read: boolean
   data?: {
-    issueId?: string;
-    category?: string;
-    location?: string;
-    reportedBy?: string;
-    reportedAt?: string;
-  };
+    issueId?: string
+    category?: string
+    location?: string
+    reportedBy?: string
+    reportedAt?: string
+  }
 }
 
 const getNotificationTypeIcon = (type: string) => {
@@ -93,243 +92,181 @@ export default function AdminNotificationsPage() {
   const [adminNotifications, setAdminNotifications] = useState<AdminNotification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-  
+
   const { toast } = useToast()
 
-  // Fetch notifications from API
-  const fetchNotifications = async () => {
-    try {
-      console.log('Fetching admin notifications...')
-      const response = await fetch('/api/admin/notifications', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Fetched notifications:', data);
-        setAdminNotifications(data.notifications || []);
-        setUnreadCount(data.unreadCount || 0);
-      } else {
-        console.error('Failed to fetch notifications:', response.status, response.statusText);
-      }
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Initial fetch
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
-
-  // Poll for new notifications every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchNotifications();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  // Update unread count when notifications change
-  useEffect(() => {
-    const count = adminNotifications.filter(notif => !notif.read).length;
-    setUnreadCount(count);
-  }, [adminNotifications]);
-
+  // Input change handler
   const handleInputChange = (field: string, value: string) => {
     setNotificationForm((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleSendNotification = async (e: React.FormEvent) => {
+  // Send notification handler
+  const handleSendNotification = async (e: FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
+    if (!notificationForm.title || !notificationForm.message || !notificationForm.type) {
+      toast({ title: "Error", description: "Please fill all required fields", variant: "destructive" })
+      return
+    }
 
+    setIsSubmitting(true)
     try {
-      const response = await fetch('/api/admin/notifications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: notificationForm.type,
-          title: notificationForm.title,
-          message: notificationForm.message,
-          priority: notificationForm.priority,
-          data: {
-            audience: notificationForm.audience,
-            targetLocation: notificationForm.targetLocation
-          }
-        })
-      });
+      const response = await fetch("/api/admin/notifications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(notificationForm),
+      })
 
       if (response.ok) {
-        toast({
-          title: "Notification Sent Successfully!",
-          description: `Your ${notificationForm.type} notification has been sent.`,
-        });
-
-        // Reset form
-        setNotificationForm({
-          title: "",
-          message: "",
-          type: "",
-          audience: "all",
-          targetLocation: "",
-          priority: "medium",
-        });
-
-        // Refresh notifications
-        fetchNotifications();
+        toast({ title: "Notification sent!", description: "It will appear in the notifications list." })
+        setNotificationForm({ title: "", message: "", type: "", audience: "all", targetLocation: "", priority: "medium" })
+        fetchNotifications()
       } else {
-        throw new Error('Failed to send notification');
+        toast({ title: "Failed", description: "Could not send notification", variant: "destructive" })
       }
     } catch (error) {
-      toast({
-        title: "Failed to send notification",
-        description: "Please try again.",
-        variant: "destructive"
-      });
+      console.error(error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
   }
 
+  // Save notifications to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem("adminNotifications", JSON.stringify(adminNotifications))
+  }, [adminNotifications])
+
+  // Load notifications from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("adminNotifications")
+    if (saved) setAdminNotifications(JSON.parse(saved))
+  }, [])
+
+  // Fetch notifications
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch("/api/admin/notifications")
+      let apiNotifications: AdminNotification[] = []
+
+      if (response.ok) {
+        const data = await response.json()
+        apiNotifications = data.notifications || []
+      }
+
+      const saved = localStorage.getItem("adminNotifications")
+      let merged: AdminNotification[] = apiNotifications
+
+      if (saved) {
+        const local = JSON.parse(saved) as AdminNotification[]
+        merged = apiNotifications.map((n) => {
+          const localNotif = local.find((l) => l.id === n.id)
+          return localNotif ? { ...n, read: localNotif.read } : n
+        })
+        const localOnly = local.filter((l) => !apiNotifications.some((a) => a.id === l.id))
+        merged = [...merged, ...localOnly]
+      }
+
+      setAdminNotifications(merged)
+      setUnreadCount(merged.filter((n) => !n.read).length)
+      localStorage.setItem("adminNotifications", JSON.stringify(merged))
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchNotifications()
+    const interval = setInterval(fetchNotifications, 5000) // auto-refresh every 5 sec
+    return () => clearInterval(interval)
+  }, [])
+
   const markAsRead = async (id: string) => {
     try {
-      const response = await fetch('/api/admin/notifications', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, action: 'mark_read' })
-      });
-      
+      const response = await fetch("/api/admin/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action: "mark_read" }),
+      })
       if (response.ok) {
-        setAdminNotifications(prev => 
-          prev.map(notif => 
-            notif.id === id ? { ...notif, read: true } : notif
-          )
-        );
+        setAdminNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
       }
     } catch (error) {
-      console.error('Failed to mark notification as read:', error);
+      console.error(error)
     }
   }
 
   const markAllAsRead = async () => {
     try {
-      const response = await fetch('/api/admin/notifications', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'mark_all_read' })
-      });
-      
+      const response = await fetch("/api/admin/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "mark_all_read" }),
+      })
       if (response.ok) {
-        setAdminNotifications(prev => 
-          prev.map(notif => ({ ...notif, read: true }))
-        );
+        setAdminNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
       }
     } catch (error) {
-      console.error('Failed to mark all notifications as read:', error);
+      console.error(error)
     }
   }
 
   const dismissNotification = async (id: string) => {
     try {
-      const response = await fetch('/api/admin/notifications', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, action: 'dismiss' })
-      });
-      
+      const response = await fetch("/api/admin/notifications", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action: "dismiss" }),
+      })
       if (response.ok) {
-        setAdminNotifications(prev => prev.filter(notif => notif.id !== id));
+        setAdminNotifications((prev) => prev.filter((n) => n.id !== id))
       }
     } catch (error) {
-      console.error('Failed to dismiss notification:', error);
+      console.error(error)
     }
   }
 
   const formatTimeAgo = (timestamp: string) => {
-    const now = new Date();
-    const time = new Date(timestamp);
-    const diffInMinutes = Math.floor((now.getTime() - time.getTime()) / (1000 * 60));
-    
-    if (diffInMinutes < 1) return "Just now";
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours}h ago`;
-    
-    const diffInDays = Math.floor(diffInHours / 24);
-    return `${diffInDays}d ago`;
+    const now = new Date()
+    const time = new Date(timestamp)
+    const diffInMinutes = Math.floor((now.getTime() - time.getTime()) / 60000)
+    if (diffInMinutes < 1) return "Just now"
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`
+    const diffInHours = Math.floor(diffInMinutes / 60)
+    if (diffInHours < 24) return `${diffInHours}h ago`
+    const diffInDays = Math.floor(diffInHours / 24)
+    return `${diffInDays}d ago`
   }
-
-  // Test notification function for debugging
-  const sendTestNotification = async () => {
-    try {
-      const response = await fetch('/api/admin/notifications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'new_issue',
-          title: 'TEST: New Issue Reported',
-          message: 'This is a test notification to verify the system is working',
-          priority: 'medium',
-          data: {
-            issueId: 'TEST-123',
-            category: 'Test Category',
-            location: 'Test Location',
-            reportedBy: 'test@example.com'
-          }
-        })
-      });
-
-      if (response.ok) {
-        toast({
-          title: "Test notification sent!",
-          description: "Check if it appears in the notifications list.",
-        });
-        fetchNotifications();
-      }
-    } catch (error) {
-      console.error('Test notification failed:', error);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/admin/dashboard">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
-                </Link>
-              </Button>
-              <div>
-                <h1 className="text-2xl font-bold">Notification Center</h1>
-                <p className="text-muted-foreground">Send updates and manage incoming notifications</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              {unreadCount > 0 && (
-                <>
-                  <Badge variant="destructive" className="animate-pulse">
-                    {unreadCount} new
-                  </Badge>
-                  <Button size="sm" variant="outline" onClick={markAllAsRead}>
-                    Mark all read
-                  </Button>
-                </>
-              )}
-              <Button size="sm" variant="outline" onClick={sendTestNotification}>
-                Send Test Notification
-              </Button>
-            </div>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <Button variant="ghost" size="sm" asChild>
+            <Link href="/admin/dashboard">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Link>
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold">Notification Center</h1>
+            <p className="text-muted-foreground">Manage and send notifications</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {unreadCount > 0 && (
+              <>
+                <Badge variant="destructive" className="animate-pulse">
+                  {unreadCount} new
+                </Badge>
+                <Button size="sm" variant="outline" onClick={markAllAsRead}>
+                  Mark all read
+                </Button>
+              </>
+            )}
+            <Button size="sm" variant="outline" onClick={fetchNotifications}>
+              Refresh
+            </Button>
           </div>
         </div>
       </div>
@@ -337,134 +274,64 @@ export default function AdminNotificationsPage() {
       <div className="container mx-auto px-4 py-6 max-w-6xl">
         <Tabs defaultValue="incoming" className="space-y-6">
           <TabsList>
-            <TabsTrigger value="incoming" className="relative">
-              <BellRing className="w-4 h-4 mr-2" />
-              Incoming Notifications
-              {unreadCount > 0 && (
-                <Badge variant="destructive" className="ml-2 h-5 w-5 rounded-full p-0 text-xs">
-                  {unreadCount}
-                </Badge>
-              )}
+            <TabsTrigger value="incoming" className="relative flex items-center gap-2">
+              <BellRing className="w-4 h-4" /> Incoming
+              {unreadCount > 0 && <Badge variant="destructive">{unreadCount}</Badge>}
             </TabsTrigger>
-            <TabsTrigger value="send">
-              <Send className="w-4 h-4 mr-2" />
-              Send Notification
+            <TabsTrigger value="send" className="flex items-center gap-2">
+              <Send className="w-4 h-4" /> Send
             </TabsTrigger>
           </TabsList>
 
-          {/* Incoming Notifications Tab */}
-          <TabsContent value="incoming" className="space-y-4">
+          <TabsContent value="incoming">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>Recent Notifications</span>
-                  <div className="text-sm text-muted-foreground">
-                    {isLoading ? 'Loading...' : `Auto-refreshes every 5 seconds`}
-                  </div>
-                </CardTitle>
-                <CardDescription>
-                  Real-time notifications about new issue reports and system updates
-                </CardDescription>
+                <CardTitle>Recent Notifications</CardTitle>
+                <CardDescription>Real-time updates and alerts</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {isLoading ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <Bell className="w-12 h-12 mx-auto mb-4 opacity-50 animate-pulse" />
-                    <p>Loading notifications...</p>
+                    Loading notifications...
                   </div>
                 ) : adminNotifications.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
                     <Bell className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No notifications at this time</p>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="mt-2"
-                      onClick={sendTestNotification}
-                    >
-                      Send Test Notification
-                    </Button>
+                    No notifications
                   </div>
                 ) : (
-                  adminNotifications.map((notification) => (
-                    <div 
-                      key={notification.id} 
-                      className={`flex items-start gap-4 p-4 border rounded-lg transition-all ${
-                        !notification.read ? 'bg-blue-50 border-blue-200' : 'hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex-shrink-0 mt-1">
-                        {getNotificationTypeIcon(notification.type)}
-                      </div>
+                  adminNotifications.map((n) => (
+                    <div key={n.id} className={`flex items-start gap-4 p-4 border rounded-lg ${!n.read ? "bg-blue-50 border-blue-200" : "hover:bg-gray-50"}`}>
+                      <div className="flex-shrink-0 mt-1">{getNotificationTypeIcon(n.type)}</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
-                              <h4 className={`font-semibold ${!notification.read ? 'text-blue-900' : ''}`}>
-                                {notification.title}
-                              </h4>
-                              {!notification.read && (
-                                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                              )}
+                              <h4 className={`font-semibold ${!n.read ? "text-blue-900" : ""}`}>{n.title}</h4>
+                              {!n.read && <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>}
                             </div>
-                            <p className="text-sm text-muted-foreground mb-2">
-                              {notification.message}
-                            </p>
-                            
-                            {/* Additional details for issue notifications */}
-                            {notification.type === "new_issue" && notification.data && (
+                            <p className="text-sm text-muted-foreground mb-2">{n.message}</p>
+                            {n.type === "new_issue" && n.data && (
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs bg-white/50 p-2 rounded border">
-                                <div className="flex items-center gap-1">
-                                  <span className="font-medium">ID:</span>
-                                  <code className="bg-gray-100 px-1 rounded">{notification.data.issueId}</code>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <MapPin className="w-3 h-3" />
-                                  <span>{notification.data.location}</span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <span className="font-medium">From:</span>
-                                  <span>{notification.data.reportedBy}</span>
-                                </div>
+                                <div>ID: <code>{n.data.issueId}</code></div>
+                                <div className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {n.data.location}</div>
+                                <div>From: {n.data.reportedBy}</div>
                               </div>
                             )}
                           </div>
                           <div className="flex items-center gap-2 ml-4">
-                            <Badge className={getTypeColor(notification.type)} variant="secondary">
-                              {notification.type.replace('_', ' ')}
-                            </Badge>
-                            <Badge 
-                              variant="outline" 
-                              className={getPriorityColor(notification.priority)}
-                            >
-                              {notification.priority}
-                            </Badge>
+                            <Badge className={getTypeColor(n.type)}>{n.type.replace("_", " ")}</Badge>
+                            <Badge variant="outline" className={getPriorityColor(n.priority)}>{n.priority}</Badge>
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                            <span className="flex items-center">
-                              <Clock className="w-4 h-4 mr-1" />
-                              {formatTimeAgo(notification.timestamp)}
-                            </span>
-                          </div>
+                          <span className="flex items-center gap-1 text-sm text-muted-foreground">
+                            <Clock className="w-4 h-4" /> {formatTimeAgo(n.timestamp)}
+                          </span>
                           <div className="flex items-center gap-2">
-                            {!notification.read && (
-                              <Button 
-                                size="sm" 
-                                variant="ghost"
-                                onClick={() => markAsRead(notification.id)}
-                              >
-                                Mark Read
-                              </Button>
-                            )}
-                            <Button 
-                              size="sm" 
-                              variant="ghost"
-                              onClick={() => dismissNotification(notification.id)}
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
+                            {!n.read && <Button size="sm" variant="ghost" onClick={() => markAsRead(n.id)}>Mark Read</Button>}
+                            <Button size="sm" variant="ghost" onClick={() => dismissNotification(n.id)}><X className="w-4 h-4" /></Button>
                           </div>
                         </div>
                       </div>
@@ -475,97 +342,58 @@ export default function AdminNotificationsPage() {
             </Card>
           </TabsContent>
 
-          {/* Send Notification Tab */}
-          <TabsContent value="send" className="space-y-6">
+          <TabsContent value="send">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Megaphone className="w-5 h-5 mr-2 text-purple-600" />
-                  Compose Notification
+                <CardTitle className="flex items-center gap-2">
+                  <Megaphone className="w-5 h-5 text-purple-600" /> Compose Notification
                 </CardTitle>
-                <CardDescription>
-                  Send important updates, alerts, and announcements to citizens in your municipality.
-                </CardDescription>
+                <CardDescription>Send updates and alerts</CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSendNotification} className="space-y-6">
+                <form onSubmit={handleSendNotification} className="space-y-4">
                   <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
+                    <div>
                       <Label htmlFor="type">Notification Type *</Label>
-                      <Select
-                        value={notificationForm.type}
-                        onValueChange={(value) => handleInputChange("type", value)}
-                      >
+                      <Select value={notificationForm.type} onValueChange={(v) => handleInputChange("type", v)}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select notification type" />
+                          <SelectValue placeholder="Select type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="maintenance">Maintenance Alert</SelectItem>
-                          <SelectItem value="traffic">Traffic Update</SelectItem>
-                          <SelectItem value="community">Community News</SelectItem>
-                          <SelectItem value="emergency">Emergency Alert</SelectItem>
-                          <SelectItem value="service">Service Update</SelectItem>
+                          <SelectItem value="maintenance">Maintenance</SelectItem>
+                          <SelectItem value="traffic">Traffic</SelectItem>
+                          <SelectItem value="community">Community</SelectItem>
+                          <SelectItem value="emergency">Emergency</SelectItem>
+                          <SelectItem value="service">Service</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
-
-                    <div className="space-y-2">
+                    <div>
                       <Label htmlFor="priority">Priority Level</Label>
-                      <Select
-                        value={notificationForm.priority}
-                        onValueChange={(value) => handleInputChange("priority", value)}
-                      >
+                      <Select value={notificationForm.priority} onValueChange={(v) => handleInputChange("priority", v)}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select priority" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="low">Low Priority</SelectItem>
-                          <SelectItem value="medium">Medium Priority</SelectItem>
-                          <SelectItem value="high">High Priority</SelectItem>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
                           <SelectItem value="urgent">Urgent</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Notification Title *</Label>
-                    <Input
-                      id="title"
-                      placeholder="Enter a clear, descriptive title"
-                      value={notificationForm.title}
-                      onChange={(e) => handleInputChange("title", e.target.value)}
-                      required
-                    />
+                  <div>
+                    <Label htmlFor="title">Title *</Label>
+                    <Input value={notificationForm.title} onChange={(e) => handleInputChange("title", e.target.value)} required />
                   </div>
-
-                  <div className="space-y-2">
+                  <div>
                     <Label htmlFor="message">Message *</Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Write your notification message. Be clear and concise."
-                      value={notificationForm.message}
-                      onChange={(e) => handleInputChange("message", e.target.value)}
-                      rows={4}
-                      required
-                    />
+                    <Textarea value={notificationForm.message} onChange={(e) => handleInputChange("message", e.target.value)} rows={4} required />
                   </div>
-
-                  <div className="flex gap-4 pt-4">
-                    <Button type="submit" className="flex-1" disabled={isSubmitting}>
-                      {isSubmitting ? (
-                        <>
-                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="w-4 h-4 mr-2" />
-                          Send Notification
-                        </>
-                      )}
-                    </Button>
-                  </div>
+                  <Button type="submit" className="flex items-center gap-2" disabled={isSubmitting}>
+                    {isSubmitting ? <>Sending...</> : <><Send className="w-4 h-4" /> Send Notification</>}
+                  </Button>
                 </form>
               </CardContent>
             </Card>
