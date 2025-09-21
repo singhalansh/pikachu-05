@@ -37,14 +37,17 @@ import {
     FileText,
     BarChart3,
     Loader2,
+    Settings,
+    ChevronDown,
+    MoreHorizontal,
+    ArrowUpRight,
+    ArrowDownRight,
 } from "lucide-react";
 import AnalyticsCharts from "@/components/analytics-charts";
 import { createClient } from "@/lib/supabase/client";
-import { UserAvatar } from "@/components/ui/user-avatar";
-import { getUserDisplayName } from "@/lib/utils/avatar";
 import { isIssueForDepartment, getDepartmentName } from "@/lib/departments";
 
-// Types for our data
+// Types for our data (unchanged)
 type Issue = {
     id: string;
     title: string;
@@ -90,32 +93,32 @@ type DepartmentPerformance = {
     efficiency: number;
 };
 
-// Helper functions
+// Helper functions (unchanged)
 const getStatusColor = (status: string) => {
     switch (status) {
         case "submitted":
-            return "bg-status-submitted text-white";
+            return "bg-amber-100 text-amber-800 border-amber-200";
         case "in-review":
-            return "bg-status-review text-white";
+            return "bg-blue-100 text-blue-800 border-blue-200";
         case "in-progress":
-            return "bg-status-progress text-white";
+            return "bg-purple-100 text-purple-800 border-purple-200";
         case "resolved":
-            return "bg-status-resolved text-white";
+            return "bg-emerald-100 text-emerald-800 border-emerald-200";
         default:
-            return "bg-muted text-muted-foreground";
+            return "bg-gray-100 text-gray-800 border-gray-200";
     }
 };
 
 const getPriorityColor = (priority: string) => {
     switch (priority) {
         case "high":
-            return "bg-destructive text-destructive-foreground";
+            return "bg-red-100 text-red-800 border-red-200";
         case "medium":
-            return "bg-status-review text-white";
+            return "bg-yellow-100 text-yellow-800 border-yellow-200";
         case "low":
-            return "bg-muted text-muted-foreground";
+            return "bg-green-100 text-green-800 border-green-200";
         default:
-            return "bg-muted text-muted-foreground";
+            return "bg-gray-100 text-gray-800 border-gray-200";
     }
 };
 
@@ -142,7 +145,6 @@ export default function AdminDashboard() {
         DepartmentPerformance[]
     >([]);
     const [recentIssues, setRecentIssues] = useState<Issue[]>([]);
-    const [notifications, setNotifications] = useState(0);
 
     // Additional data for analytics charts
     const [analyticsMonthlyData, setAnalyticsMonthlyData] = useState<any[]>([]);
@@ -158,11 +160,8 @@ export default function AdminDashboard() {
     const supabase = createClient();
 
     // Current user state
-    const [currentUser, setCurrentUser] = useState<any>(null);
-    const [currentUserProfile, setCurrentUserProfile] = useState<any>(null);
     const [userDepartment, setUserDepartment] = useState<string | null>(null);
     const [userDepartmentName, setUserDepartmentName] = useState<string>("");
-    const [userRole, setUserRole] = useState<string>("");
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -178,22 +177,10 @@ export default function AdminDashboard() {
 
             // Check if user has staff role (any role other than citizen)
             const role = user.user_metadata?.role || user.role || "citizen";
-            setUserRole(role);
             if (role === "citizen") {
                 router.push("/citizen/dashboard");
                 return;
             }
-
-            setCurrentUser(user);
-
-            // Fetch user profile
-            const { data: profile } = await supabase
-                .from("profiles")
-                .select("*")
-                .eq("id", user.id)
-                .single();
-
-            setCurrentUserProfile(profile);
 
             // Get user's department from metadata
             const department = user.user_metadata?.department;
@@ -224,7 +211,6 @@ export default function AdminDashboard() {
                 trendsResult,
                 departmentsResult,
                 recentResult,
-                notificationsResult,
                 analyticsMonthlyResult,
                 analyticsCategoryResult,
                 analyticsResponseTimeResult,
@@ -235,7 +221,6 @@ export default function AdminDashboard() {
                 fetchMonthlyTrends(),
                 fetchDepartmentPerformance(),
                 fetchRecentIssues(),
-                fetchNotificationCount(),
                 fetchAnalyticsMonthlyData(),
                 fetchAnalyticsCategoryData(),
                 fetchAnalyticsResponseTimeData(),
@@ -247,7 +232,6 @@ export default function AdminDashboard() {
             setMonthlyTrends(trendsResult);
             setDepartmentPerformance(departmentsResult);
             setRecentIssues(recentResult);
-            setNotifications(notificationsResult);
             setAnalyticsMonthlyData(analyticsMonthlyResult);
             setAnalyticsCategoryData(analyticsCategoryResult);
             setAnalyticsResponseTimeData(analyticsResponseTimeResult);
@@ -362,10 +346,10 @@ export default function AdminDashboard() {
         if (error) throw error;
 
         const categoryColors: { [key: string]: string } = {
-            pothole: "#8b5cf6",
-            streetlight: "#06b6d4",
+            pothole: "#3b82f6",
+            streetlight: "#f59e0b",
             garbage: "#10b981",
-            "water-leakage": "#f59e0b",
+            "water-leakage": "#8b5cf6",
             traffic: "#ef4444",
             other: "#6b7280",
         };
@@ -535,20 +519,6 @@ export default function AdminDashboard() {
         return filteredIssues.slice(0, 5);
     };
 
-    const fetchNotificationCount = async (): Promise<number> => {
-        // Count unread notifications (new issues, urgent issues, etc.)
-        const { data: newIssues, error } = await supabase
-            .from("issues")
-            .select("id")
-            .eq("status", "submitted")
-            .gte(
-                "created_at",
-                new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-            );
-
-        if (error) return 0;
-        return newIssues?.length || 0;
-    };
 
     // Additional analytics data fetching functions
     const fetchAnalyticsMonthlyData = async () => {
@@ -748,10 +718,10 @@ export default function AdminDashboard() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
-                    <p className="text-muted-foreground">
+                    <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600 font-medium animate-pulse">
                         Loading dashboard...
                     </p>
                 </div>
@@ -761,340 +731,251 @@ export default function AdminDashboard() {
 
     if (error) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
-                <div className="text-center">
-                    <AlertTriangle className="w-8 h-8 text-red-500 mx-auto mb-4" />
-                    <p className="text-red-600 mb-4">{error}</p>
-                    <Button onClick={loadDashboardData}>Retry</Button>
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+                <div className="text-center animate-fadeIn">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <AlertTriangle className="w-8 h-8 text-red-500" />
+                    </div>
+                    <p className="text-red-600 mb-4 font-medium">{error}</p>
+                    <Button 
+                        onClick={loadDashboardData} 
+                        className="bg-blue-600 hover:bg-blue-700 transition-all duration-200 transform hover:scale-105"
+                    >
+                        Retry
+                    </Button>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background">
-            {/* Header */}
-            <div className="border-b bg-card">
-                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-                        <div className="flex items-center space-x-3 sm:space-x-4">
-                            <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-accent flex-shrink-0" />
-                            <div>
-                                <h1 className="text-xl sm:text-2xl font-bold">
-                                    Municipal Dashboard
-                                    {userDepartmentName && (
-                                        <span className="ml-2 text-sm font-normal text-muted-foreground">
-                                            - {userDepartmentName}
-                                        </span>
-                                    )}
-                                </h1>
-                                <p className="text-sm sm:text-base text-muted-foreground">
-                                    {userDepartment
-                                        ? `Department-specific issue management and analytics`
-                                        : `Civic issue management and analytics`}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                                className="h-10 justify-start sm:justify-center bg-transparent"
-                            >
-                                <Link href="/admin/notifications">
-                                    <Bell className="w-4 h-4 mr-2" />
-                                    <span className="sm:hidden">
-                                        Notifications
-                                    </span>
-                                    <span className="hidden sm:inline">
-                                        Notifications
-                                    </span>
-                                    {notifications > 0 && (
-                                        <Badge
-                                            variant="destructive"
-                                            className="ml-auto sm:ml-2 px-1 py-0 text-xs"
-                                        >
-                                            {notifications}
-                                        </Badge>
-                                    )}
-                                </Link>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                                className="h-10 justify-start sm:justify-center bg-transparent"
-                            >
-                                <Link href="/admin/reports">
-                                    <FileText className="w-4 h-4 mr-2" />
-                                    Reports
-                                </Link>
-                            </Button>
-                            <Button
-                                size="sm"
-                                asChild
-                                className="h-10 justify-start sm:justify-center"
-                            >
-                                <Link href="/admin/issues">
-                                    <BarChart3 className="w-4 h-4 mr-2" />
-                                    Manage Issues
-                                </Link>
-                            </Button>
+        <div className="min-h-screen bg-gray-50">
 
-                            {/* User Profile */}
-                            {currentUser && (
-                                <div className="flex items-center space-x-3 pl-3 border-l">
-                                    <UserAvatar
-                                        user={currentUser}
-                                        profile={currentUserProfile}
-                                        size="sm"
-                                    />
-                                    <div className="hidden sm:block">
-                                        <p className="text-sm font-medium">
-                                            {getUserDisplayName(
-                                                currentUser,
-                                                currentUserProfile
-                                            )}
-                                        </p>
-                                        <p className="text-xs text-muted-foreground">
-                                            {userRole
-                                                .replace("_", " ")
-                                                .replace(/\b\w/g, (l) =>
-                                                    l.toUpperCase()
-                                                )}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+                {/* Overview Stats - Animated Cards */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-4 sm:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex-1">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide">
+                                            Total Issues
                                         </p>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-                {/* Overview Stats */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                    <Card>
-                        <CardContent className="p-3 sm:p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
-                                        Total Issues
-                                    </p>
-                                    <p className="text-lg sm:text-2xl font-bold">
+                                    <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-blue-600">
                                         {overviewStats.totalIssues.toLocaleString()}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        <span className="text-status-resolved">
+                                    <div className="flex items-center space-x-1">
+                                        <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
+                                        <span className="text-xs sm:text-sm font-medium text-emerald-600">
                                             +{overviewStats.newThisWeek}
-                                        </span>{" "}
-                                        this week
-                                    </p>
+                                        </span>
+                                        <span className="text-xs sm:text-sm text-gray-500">this week</span>
+                                    </div>
                                 </div>
-                                <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground flex-shrink-0" />
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardContent className="p-3 sm:p-4">
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-4 sm:p-6">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
-                                        Pending
-                                    </p>
-                                    <p className="text-lg sm:text-2xl font-bold status-submitted">
+                                <div className="flex-1">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide">
+                                            Pending
+                                        </p>
+                                    </div>
+                                    <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-amber-600">
                                         {overviewStats.pendingIssues}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">
+                                    <p className="text-xs sm:text-sm text-gray-500">
                                         Awaiting assignment
                                     </p>
                                 </div>
-                                <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-status-submitted flex-shrink-0" />
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardContent className="p-3 sm:p-4">
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-4 sm:p-6">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
-                                        In Progress
-                                    </p>
-                                    <p className="text-lg sm:text-2xl font-bold status-progress">
+                                <div className="flex-1">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide">
+                                            In Progress
+                                        </p>
+                                    </div>
+                                    <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-purple-600">
                                         {overviewStats.inProgressIssues}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">
+                                    <p className="text-xs sm:text-sm text-gray-500">
                                         Being worked on
                                     </p>
                                 </div>
-                                <Eye className="w-6 h-6 sm:w-8 sm:h-8 text-status-progress flex-shrink-0" />
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-purple-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <Eye className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardContent className="p-3 sm:p-4">
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 animate-fade-in group">
+                        <CardContent className="p-4 sm:p-6">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
-                                        Resolved
-                                    </p>
-                                    <p className="text-lg sm:text-2xl font-bold status-resolved">
+                                <div className="flex-1">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                                        <p className="text-xs sm:text-sm font-medium text-gray-600 uppercase tracking-wide">
+                                            Resolved
+                                        </p>
+                                    </div>
+                                    <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 transition-all duration-300 group-hover:text-emerald-600">
                                         {overviewStats.resolvedIssues}
                                     </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        <span className="text-status-resolved">
+                                    <div className="flex items-center space-x-1">
+                                        <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500" />
+                                        <span className="text-xs sm:text-sm font-medium text-emerald-600">
                                             +{overviewStats.resolvedThisWeek}
-                                        </span>{" "}
-                                        this week
-                                    </p>
+                                        </span>
+                                        <span className="text-xs sm:text-sm text-gray-500">this week</span>
+                                    </div>
                                 </div>
-                                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-status-resolved flex-shrink-0" />
+                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600" />
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
                 </div>
 
-                {/* Performance Metrics */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
-                    <Card>
-                        <CardHeader className="pb-3 sm:pb-4">
-                            <CardTitle className="flex items-center text-base sm:text-lg">
-                                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-accent" />
+                {/* Performance Metrics - Responsive Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="flex items-center text-lg font-semibold text-gray-900">
+                                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-3 shadow-lg">
+                                    <TrendingUp className="w-4 h-4 text-white" />
+                                </div>
                                 Key Metrics
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-3 sm:space-y-4">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm">
-                                    Avg. Resolution Time
-                                </span>
-                                <span className="font-semibold">
-                                    {overviewStats.averageResolutionTime} days
-                                </span>
+                        <CardContent className="space-y-4 sm:space-y-6">
+                            <div className="flex items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-blue-50 hover:to-blue-100 transition-all duration-300">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Avg. Resolution Time</p>
+                                    <p className="text-xl sm:text-2xl font-bold text-gray-900">{overviewStats.averageResolutionTime}</p>
+                                    <p className="text-xs text-gray-500">days</p>
+                                </div>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm">
-                                    Citizen Satisfaction
-                                </span>
-                                <span className="font-semibold">
-                                    {overviewStats.citizenSatisfaction}%
-                                </span>
+                            
+                            <div className="flex items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-green-50 hover:to-green-100 transition-all duration-300">
+                                <div>
+                                    <p className="text-sm font-medium text-gray-600">Citizen Satisfaction</p>
+                                    <p className="text-xl sm:text-2xl font-bold text-gray-900">{overviewStats.citizenSatisfaction}%</p>
+                                </div>
                             </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                    <span>Resolution Rate</span>
-                                    <span>
+                            
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium text-gray-700">Resolution Rate</span>
+                                    <span className="text-sm font-semibold text-gray-900">
                                         {overviewStats.totalIssues > 0
-                                            ? Math.round(
-                                                  (overviewStats.resolvedIssues /
-                                                      overviewStats.totalIssues) *
-                                                      100
-                                              )
-                                            : 0}
-                                        %
+                                            ? Math.round((overviewStats.resolvedIssues / overviewStats.totalIssues) * 100)
+                                            : 0}%
                                     </span>
                                 </div>
                                 <Progress
-                                    value={
-                                        overviewStats.totalIssues > 0
-                                            ? (overviewStats.resolvedIssues /
-                                                  overviewStats.totalIssues) *
-                                              100
-                                            : 0
-                                    }
-                                    className="h-2"
+                                    value={overviewStats.totalIssues > 0
+                                        ? (overviewStats.resolvedIssues / overviewStats.totalIssues) * 100
+                                        : 0}
+                                    className="h-2 bg-gray-200 transition-all duration-500"
                                 />
                             </div>
-                            <div className="space-y-2">
-                                <div className="flex justify-between text-sm">
-                                    <span>Response Time</span>
-                                    <span>
+                            
+                            <div className="space-y-3">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm font-medium text-gray-700">Response Rate</span>
+                                    <span className="text-sm font-semibold text-gray-900">
                                         {overviewStats.totalIssues > 0
-                                            ? Math.round(
-                                                  ((overviewStats.inProgressIssues +
-                                                      overviewStats.resolvedIssues) /
-                                                      overviewStats.totalIssues) *
-                                                      100
-                                              )
-                                            : 0}
-                                        %
+                                            ? Math.round(((overviewStats.inProgressIssues + overviewStats.resolvedIssues) / overviewStats.totalIssues) * 100)
+                                            : 0}%
                                     </span>
                                 </div>
                                 <Progress
-                                    value={
-                                        overviewStats.totalIssues > 0
-                                            ? ((overviewStats.inProgressIssues +
-                                                  overviewStats.resolvedIssues) /
-                                                  overviewStats.totalIssues) *
-                                              100
-                                            : 0
-                                    }
-                                    className="h-2"
+                                    value={overviewStats.totalIssues > 0
+                                        ? ((overviewStats.inProgressIssues + overviewStats.resolvedIssues) / overviewStats.totalIssues) * 100
+                                        : 0}
+                                    className="h-2 bg-gray-200 transition-all duration-500"
                                 />
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardHeader className="pb-3 sm:pb-4">
-                            <CardTitle className="text-base sm:text-lg">
-                                Issues by Category
-                            </CardTitle>
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                        <CardHeader className="pb-4">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="text-lg font-semibold text-gray-900">
+                                    Issues by Category
+                                </CardTitle>
+                                <Button variant="ghost" size="sm" className="text-gray-400 hover:text-gray-600 transition-colors duration-200">
+                                    <MoreHorizontal className="w-4 h-4" />
+                                </Button>
+                            </div>
                         </CardHeader>
                         <CardContent>
                             {categoryData.length > 0 ? (
                                 <>
-                                    <div className="h-48 sm:h-64">
-                                        <ResponsiveContainer
-                                            width="100%"
-                                            height="100%"
-                                        >
+                                    <div className="h-40 sm:h-48 mb-4 sm:mb-6">
+                                        <ResponsiveContainer width="100%" height="100%">
                                             <PieChart>
                                                 <Pie
                                                     data={categoryData}
                                                     cx="50%"
                                                     cy="50%"
-                                                    innerRadius={30}
-                                                    outerRadius={60}
+                                                    innerRadius={window.innerWidth < 640 ? 35 : 45}
+                                                    outerRadius={window.innerWidth < 640 ? 65 : 75}
                                                     paddingAngle={2}
                                                     dataKey="value"
                                                 >
-                                                    {categoryData.map(
-                                                        (entry, index) => (
-                                                            <Cell
-                                                                key={`cell-${index}`}
-                                                                fill={
-                                                                    entry.color
-                                                                }
-                                                            />
-                                                        )
-                                                    )}
+                                                    {categoryData.map((entry, index) => (
+                                                        <Cell key={`cell-${index}`} fill={entry.color} />
+                                                    ))}
                                                 </Pie>
-                                                <Tooltip />
+                                                <Tooltip 
+                                                    contentStyle={{
+                                                        backgroundColor: 'white',
+                                                        border: '1px solid #e5e7eb',
+                                                        borderRadius: '8px',
+                                                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                                                    }}
+                                                />
                                             </PieChart>
                                         </ResponsiveContainer>
                                     </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2 mt-3 sm:mt-4">
+                                    <div className="space-y-2 sm:space-y-3">
                                         {categoryData.map((item, index) => (
-                                            <div
-                                                key={index}
-                                                className="flex items-center text-xs sm:text-sm"
-                                            >
-                                                <div
-                                                    className="w-3 h-3 rounded-full mr-2 flex-shrink-0"
-                                                    style={{
-                                                        backgroundColor:
-                                                            item.color,
-                                                    }}
-                                                />
-                                                <span className="truncate flex-1">
-                                                    {item.name}
-                                                </span>
-                                                <span className="ml-2 font-medium">
+                                            <div key={index} className="flex items-center justify-between py-1 hover:bg-gray-50 rounded-lg px-2 transition-all duration-200">
+                                                <div className="flex items-center space-x-3">
+                                                    <div
+                                                        className="w-3 h-3 rounded-full animate-pulse"
+                                                        style={{ backgroundColor: item.color }}
+                                                    />
+                                                    <span className="text-sm font-medium text-gray-700">
+                                                        {item.name}
+                                                    </span>
+                                                </div>
+                                                <span className="text-sm font-semibold text-gray-900 bg-gray-100 px-2 py-1 rounded-full">
                                                     {item.value}
                                                 </span>
                                             </div>
@@ -1102,8 +983,8 @@ export default function AdminDashboard() {
                                     </div>
                                 </>
                             ) : (
-                                <div className="h-48 sm:h-64 flex items-center justify-center text-muted-foreground">
-                                    <div className="text-center">
+                                <div className="h-40 sm:h-48 flex items-center justify-center text-gray-400">
+                                    <div className="text-center animate-pulse">
                                         <AlertTriangle className="w-8 h-8 mx-auto mb-2" />
                                         <p>No category data available</p>
                                     </div>
@@ -1112,38 +993,35 @@ export default function AdminDashboard() {
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardHeader className="pb-3 sm:pb-4">
-                            <CardTitle className="text-base sm:text-lg">
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="text-lg font-semibold text-gray-900">
                                 Department Performance
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="space-y-3">
+                        <CardContent className="space-y-3 sm:space-y-4">
                             {departmentPerformance.length > 0 ? (
                                 departmentPerformance.map((dept, index) => (
-                                    <div key={index} className="space-y-2">
-                                        <div className="flex justify-between text-xs sm:text-sm">
-                                            <span className="font-medium truncate pr-2">
+                                    <div key={index} className="p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl hover:from-purple-50 hover:to-purple-100 transition-all duration-300 transform hover:scale-105">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-medium text-gray-900 text-sm truncate">
                                                 {dept.department}
                                             </span>
-                                            <span className="flex-shrink-0">
+                                            <span className="text-lg sm:text-xl font-bold text-gray-900">
                                                 {dept.efficiency}%
                                             </span>
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                            <span className="flex-shrink-0">
-                                                {dept.completed}/{dept.assigned}{" "}
-                                                completed
-                                            </span>
-                                            <Progress
-                                                value={dept.efficiency}
-                                                className="h-1 flex-1"
-                                            />
+                                        <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                                            <span>{dept.completed}/{dept.assigned} completed</span>
                                         </div>
+                                        <Progress
+                                            value={dept.efficiency}
+                                            className="h-2 bg-gray-200 transition-all duration-500"
+                                        />
                                     </div>
                                 ))
                             ) : (
-                                <div className="text-center text-muted-foreground py-4">
+                                <div className="text-center text-gray-400 py-8 animate-pulse">
                                     <p>No department data available</p>
                                 </div>
                             )}
@@ -1151,49 +1029,80 @@ export default function AdminDashboard() {
                     </Card>
                 </div>
 
-                {/* Charts and Recent Activity */}
-                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
-                    <Card>
-                        <CardHeader className="pb-3 sm:pb-4">
-                            <CardTitle className="text-base sm:text-lg">
-                                Monthly Trends
-                            </CardTitle>
-                            <CardDescription className="text-sm">
-                                Issues reported vs resolved over time
-                            </CardDescription>
+                {/* Charts and Recent Activity - Enhanced Mobile Layout */}
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                        <CardHeader className="pb-4 border-b border-gray-100">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <CardTitle className="text-lg font-semibold text-gray-900">
+                                        Monthly Trends
+                                    </CardTitle>
+                                    <CardDescription className="text-sm text-gray-500 mt-1">
+                                        Issues reported vs resolved over time
+                                    </CardDescription>
+                                </div>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="border-gray-200 text-gray-600 hover:bg-gray-50 transition-all duration-200 hover:scale-105 w-full sm:w-auto"
+                                >
+                                    <span className="hidden sm:inline">Last 7 months</span>
+                                    <span className="sm:hidden">7 months</span>
+                                    <ChevronDown className="w-4 h-4 ml-2" />
+                                </Button>
+                            </div>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="pt-6">
                             {monthlyTrends.length > 0 ? (
                                 <div className="h-64 sm:h-80">
-                                    <ResponsiveContainer
-                                        width="100%"
-                                        height="100%"
-                                    >
+                                    <ResponsiveContainer width="100%" height="100%">
                                         <LineChart data={monthlyTrends}>
-                                            <CartesianGrid strokeDasharray="3 3" />
-                                            <XAxis dataKey="month" />
-                                            <YAxis />
-                                            <Tooltip />
+                                            <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                                            <XAxis 
+                                                dataKey="month" 
+                                                axisLine={false}
+                                                tickLine={false}
+                                                tick={{ fill: '#6b7280', fontSize: window.innerWidth < 640 ? 11 : 12 }}
+                                            />
+                                            <YAxis 
+                                                axisLine={false}
+                                                tickLine={false}
+                                                tick={{ fill: '#6b7280', fontSize: window.innerWidth < 640 ? 11 : 12 }}
+                                            />
+                                            <Tooltip 
+                                                contentStyle={{
+                                                    backgroundColor: 'white',
+                                                    border: '1px solid #e5e7eb',
+                                                    borderRadius: '8px',
+                                                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                                                    fontSize: '14px'
+                                                }}
+                                            />
                                             <Line
                                                 type="monotone"
                                                 dataKey="reported"
-                                                stroke="#8b5cf6"
-                                                strokeWidth={2}
+                                                stroke="#3b82f6"
+                                                strokeWidth={3}
                                                 name="Reported"
+                                                dot={{ fill: '#3b82f6', strokeWidth: 0, r: 4 }}
+                                                activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2, fill: 'white' }}
                                             />
                                             <Line
                                                 type="monotone"
                                                 dataKey="resolved"
                                                 stroke="#10b981"
-                                                strokeWidth={2}
+                                                strokeWidth={3}
                                                 name="Resolved"
+                                                dot={{ fill: '#10b981', strokeWidth: 0, r: 4 }}
+                                                activeDot={{ r: 6, stroke: '#10b981', strokeWidth: 2, fill: 'white' }}
                                             />
                                         </LineChart>
                                     </ResponsiveContainer>
                                 </div>
                             ) : (
-                                <div className="h-64 sm:h-80 flex items-center justify-center text-muted-foreground">
-                                    <div className="text-center">
+                                <div className="h-64 sm:h-80 flex items-center justify-center text-gray-400">
+                                    <div className="text-center animate-pulse">
                                         <TrendingUp className="w-8 h-8 mx-auto mb-2" />
                                         <p>No trend data available</p>
                                     </div>
@@ -1202,99 +1111,86 @@ export default function AdminDashboard() {
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardHeader className="pb-3 sm:pb-4">
-                            <CardTitle className="text-base sm:text-lg">
-                                Recent Issues
-                            </CardTitle>
-                            <CardDescription className="text-sm">
-                                Latest reports requiring attention
-                            </CardDescription>
+                     <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                        <CardHeader className="pb-4 border-b border-gray-100">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <CardTitle className="text-lg font-semibold text-gray-900">
+                                        Recent Issues
+                                    </CardTitle>
+                                    <CardDescription className="text-sm text-gray-500 mt-1">
+                                        Latest reports requiring attention
+                                    </CardDescription>
+                                </div>
+                                <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 w-full sm:w-auto"
+                                    asChild
+                                >
+                                    <Link href="/admin/issues">
+                                        View all
+                                    </Link>
+                                </Button>
+                            </div>
                         </CardHeader>
-                        <CardContent className="space-y-3 sm:space-y-4">
+                        <CardContent className="pt-4">
                             {recentIssues.length > 0 ? (
-                                <>
-                                    {recentIssues.map((issue) => (
-                                        <div
-                                            key={issue.id}
-                                            className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border"
-                                        >
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-                                                    <h4 className="font-medium text-sm truncate flex-1">
-                                                        {issue.title}
-                                                    </h4>
-                                                    <Badge
-                                                        className={`${getStatusColor(
-                                                            issue.status
-                                                        )} self-start sm:self-center text-xs`}
-                                                        variant="secondary"
-                                                    >
-                                                        {issue.status.replace(
-                                                            "-",
-                                                            " "
-                                                        )}
-                                                    </Badge>
-                                                </div>
-                                                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
-                                                    <span className="flex items-center">
-                                                        <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
-                                                        <span className="truncate">
-                                                            {issue.location_address ||
-                                                                "No location"}
-                                                        </span>
-                                                    </span>
-                                                    <span className="flex items-center">
-                                                        <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
-                                                        {new Date(
-                                                            issue.created_at
-                                                        ).toLocaleDateString()}
-                                                    </span>
-                                                    <Badge
-                                                        className={getPriorityColor(
-                                                            issue.priority ||
-                                                                "medium"
-                                                        )}
-                                                        variant="outline"
-                                                    >
-                                                        {issue.priority ||
-                                                            "medium"}
-                                                    </Badge>
-                                                </div>
+                                <div className="space-y-3 sm:space-y-4 max-h-96 overflow-y-auto">
+                                    {recentIssues.map((issue, index) => (
+                                         <div 
+                                             key={issue.id} 
+                                             className="p-3 sm:p-4 border border-gray-100 rounded-xl hover:border-gray-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1 animate-fade-in"
+                                         >
+                                            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
+                                                <h4 className="font-medium text-gray-900 text-sm leading-tight flex-1">
+                                                    {issue.title}
+                                                </h4>
+                                                <Badge className={`${getStatusColor(issue.status)} text-xs font-medium px-2 py-1 self-start`}>
+                                                    {issue.status.replace("-", " ")}
+                                                </Badge>
                                             </div>
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                asChild
-                                                className="w-full sm:w-auto h-9 bg-transparent"
-                                            >
-                                                <Link
-                                                    href={`/admin/issues/${issue.id}`}
+                                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-gray-500 mb-3">
+                                                <span className="flex items-center truncate">
+                                                    <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                                                    {issue.location_address ? 
+                                                        (window.innerWidth < 640 ? 
+                                                            issue.location_address.substring(0, 20) + "..." :
+                                                            issue.location_address.substring(0, 30) + "..."
+                                                        ) : "No location"}
+                                                </span>
+                                                <span className="flex items-center">
+                                                    <Calendar className="w-3 h-3 mr-1 flex-shrink-0" />
+                                                    {new Date(issue.created_at).toLocaleDateString()}
+                                                </span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                                <Badge className={`${getPriorityColor(issue.priority || "medium")} text-xs`}>
+                                                    {issue.priority || "medium"}
+                                                </Badge>
+                                                <Button
+                                                    variant="outline"
+                                                    size="sm"
+                                                    className="text-xs border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105"
+                                                    asChild
                                                 >
-                                                    View
-                                                </Link>
-                                            </Button>
+                                                    <Link href={`/admin/issues/${issue.id}`}>
+                                                        <span className="hidden sm:inline">View Details</span>
+                                                        <span className="sm:hidden">View</span>
+                                                    </Link>
+                                                </Button>
+                                            </div>
                                         </div>
                                     ))}
-                                    <div className="text-center pt-2">
-                                        <Button
-                                            variant="outline"
-                                            asChild
-                                            className="w-full sm:w-auto bg-transparent"
-                                        >
-                                            <Link href="/admin/issues">
-                                                View All Issues
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </>
+                                </div>
                             ) : (
-                                <div className="text-center text-muted-foreground py-8">
-                                    <AlertTriangle className="w-8 h-8 mx-auto mb-2" />
-                                    <p>No recent issues found</p>
-                                    <p className="text-xs mt-1">
-                                        Issues will appear here once citizens
-                                        start reporting them
+                                <div className="text-center text-gray-400 py-12">
+                                    <div className="animate-bounce">
+                                        <AlertTriangle className="w-8 h-8 mx-auto mb-3" />
+                                    </div>
+                                    <p className="font-medium">No recent issues found</p>
+                                    <p className="text-xs mt-1 text-gray-400">
+                                        Issues will appear here once citizens start reporting them
                                     </p>
                                 </div>
                             )}
@@ -1303,28 +1199,38 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Comprehensive Analytics Charts Section */}
-                <div className="mt-4 sm:mt-6">
-                    <Card>
-                        <CardHeader className="pb-3 sm:pb-4">
-                            <CardTitle className="text-base sm:text-lg">
-                                Detailed Analytics
-                            </CardTitle>
-                            <CardDescription className="text-sm">
-                                Comprehensive data visualization and insights
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent>
+                 <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                    <CardHeader className="pb-4 border-b border-gray-100">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div>
+                                <CardTitle className="text-lg font-semibold text-gray-900">
+                                    Detailed Analytics
+                                </CardTitle>
+                                <CardDescription className="text-sm text-gray-500 mt-1">
+                                    Comprehensive data visualization and insights
+                                </CardDescription>
+                            </div>
+                            <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="border-gray-200 text-gray-600 hover:bg-gray-50 transition-all duration-200 hover:scale-105 w-full sm:w-auto"
+                            >
+                                <Settings className="w-4 h-4 mr-2" />
+                                Configure
+                            </Button>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="pt-6">
+                         <div className="animate-fade-in">
                             <AnalyticsCharts
                                 monthlyData={analyticsMonthlyData}
                                 categoryData={analyticsCategoryData}
                                 responseTimeData={analyticsResponseTimeData}
-                                resolutionTrendData={
-                                    analyticsResolutionTrendData
-                                }
+                                resolutionTrendData={analyticsResolutionTrendData}
                             />
-                        </CardContent>
-                    </Card>
-                </div>
+                        </div>
+                    </CardContent>
+                </Card>
             </div>
         </div>
     );

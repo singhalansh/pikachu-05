@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/auth-context";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -50,6 +51,7 @@ import {
     CheckCircle,
     AlertCircle,
     TrendingUp,
+    ArrowLeft,
 } from "lucide-react";
 import AccountManagement from "@/components/account-management";
 import { getDepartmentName } from "@/lib/departments";
@@ -420,20 +422,27 @@ export default function AdminProfilePage() {
         profileData.full_name || user?.email?.split("@")[0] || "Admin";
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold">Admin Profile</h1>
-                <p className="text-muted-foreground">
-                    Manage your admin account and system settings
-                </p>
-            </div>
+        <div className="min-h-screen bg-gray-50">
+            <div className="max-w-7xl mx-auto px-2 xs:px-3 sm:px-4 md:px-6 lg:px-8 py-2 xs:py-3 sm:py-4 md:py-6 lg:py-8">
+                {/* Action Buttons */}
+                <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 xs:gap-3 sm:gap-4 mb-3 xs:mb-4 sm:mb-6">
+                    <div className="flex flex-col xs:flex-row xs:items-center gap-2 sm:gap-3">
+                        <Link href="/admin/dashboard">
+                            <Button variant="outline" size="sm" className="w-full xs:w-auto border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105 text-xs xs:text-sm">
+                                <ArrowLeft className="w-3 h-3 xs:w-4 xs:h-4 mr-1 xs:mr-2" />
+                                <span className="hidden xs:inline">Dashboard</span>
+                                <span className="xs:hidden">Back to Dashboard</span>
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
 
-            <div className="grid gap-6 lg:grid-cols-3">
-                {/* Profile Overview */}
-                <div className="lg:col-span-1">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <div className="flex flex-col items-center text-center">
+                <div className="grid gap-3 xs:gap-4 sm:gap-6 lg:grid-cols-3">
+                    {/* Profile Overview */}
+                    <div className="lg:col-span-1">
+                        <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                            <CardContent className="pt-4 xs:pt-6">
+                                <div className="flex flex-col items-center text-center">
                                 <div className="relative mb-4">
                                     <Avatar className="w-24 h-24">
                                         {profileData.avatar_url ? (
@@ -479,77 +488,86 @@ export default function AdminProfilePage() {
                                     )}
                                 </div>
 
-                                <h2 className="text-xl font-semibold mb-2">
-                                    {displayName}
-                                </h2>
-                                <p className="text-muted-foreground mb-2">
-                                    {profileData.email}
-                                </p>
-                                <div className="flex gap-2 mb-4">
-                                    <Badge
-                                        variant="secondary"
-                                        className="bg-blue-100 text-blue-800"
-                                    >
-                                        <Shield className="w-3 h-3 mr-1" />
-                                        {userAdminLevel
-                                            ? userAdminLevel
-                                                  .charAt(0)
-                                                  .toUpperCase() +
-                                              userAdminLevel.slice(1)
-                                            : "Senior"}{" "}
-                                        Admin
-                                    </Badge>
-                                    {userDepartmentName && (
-                                        <Badge variant="outline">
-                                            <Building className="w-3 h-3 mr-1" />
-                                            {userDepartmentName}
-                                        </Badge>
-                                    )}
-                                </div>
-
-                                {!isEditing ? (
-                                    <Button
-                                        onClick={() => setIsEditing(true)}
-                                        variant="outline"
-                                        size="sm"
-                                    >
-                                        <Edit className="w-4 h-4 mr-2" />
-                                        Edit Profile
-                                    </Button>
-                                ) : (
-                                    <div className="flex gap-2">
-                                        <Button
-                                            onClick={handleSave}
-                                            disabled={loading}
-                                            size="sm"
+                                    <h2 className="text-lg xs:text-xl font-semibold mb-2 text-gray-900">
+                                        {displayName}
+                                    </h2>
+                                    <p className="text-xs xs:text-sm text-gray-600 mb-2">
+                                        {profileData.email}
+                                    </p>
+                                    <div className="flex flex-col xs:flex-row gap-2 mb-4">
+                                        <Badge
+                                            variant="secondary"
+                                            className="bg-blue-100 text-blue-800 text-xs"
                                         >
-                                            <Save className="w-4 h-4 mr-2" />
-                                            {loading ? "Saving..." : "Save"}
-                                        </Button>
+                                            <Shield className="w-3 h-3 mr-1" />
+                                            {userAdminLevel
+                                                ? userAdminLevel
+                                                      .charAt(0)
+                                                      .toUpperCase() +
+                                                  userAdminLevel.slice(1)
+                                                : "Senior"}{" "}
+                                            Admin
+                                        </Badge>
+                                        {userDepartmentName && (
+                                            <Badge variant="outline" className="text-xs">
+                                                <Building className="w-3 h-3 mr-1" />
+                                                <span className="hidden xs:inline">{userDepartmentName}</span>
+                                                <span className="xs:hidden">{userDepartmentName.split(' ')[0]}</span>
+                                            </Badge>
+                                        )}
+                                    </div>
+
+                                    {!isEditing ? (
                                         <Button
-                                            onClick={() => setIsEditing(false)}
+                                            onClick={() => setIsEditing(true)}
                                             variant="outline"
                                             size="sm"
+                                            className="border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105 text-xs xs:text-sm"
                                         >
-                                            <X className="w-4 h-4 mr-2" />
-                                            Cancel
+                                            <Edit className="w-3 h-3 xs:w-4 xs:h-4 mr-1 xs:mr-2" />
+                                            <span className="hidden xs:inline">Edit Profile</span>
+                                            <span className="xs:hidden">Edit</span>
                                         </Button>
-                                    </div>
-                                )}
+                                    ) : (
+                                        <div className="flex flex-col xs:flex-row gap-2">
+                                            <Button
+                                                onClick={handleSave}
+                                                disabled={loading}
+                                                size="sm"
+                                                className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-blue-200 text-xs xs:text-sm"
+                                            >
+                                                <Save className="w-3 h-3 xs:w-4 xs:h-4 mr-1 xs:mr-2" />
+                                                {loading ? "Saving..." : "Save"}
+                                            </Button>
+                                            <Button
+                                                onClick={() => setIsEditing(false)}
+                                                variant="outline"
+                                                size="sm"
+                                                className="border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105 text-xs xs:text-sm"
+                                            >
+                                                <X className="w-3 h-3 xs:w-4 xs:h-4 mr-1 xs:mr-2" />
+                                                Cancel
+                                            </Button>
+                                        </div>
+                                    )}
                             </div>
                         </CardContent>
                     </Card>
 
-                    {/* Admin Performance Summary */}
-                    <Card className="mt-6">
-                        <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg flex items-center gap-2">
-                                    📊 Admin Performance
-                                    {statsLoading && (
-                                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                                    )}
-                                </CardTitle>
+                        {/* Admin Performance Summary */}
+                        <Card className="mt-4 xs:mt-6 bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                            <CardHeader className="pb-2 xs:pb-3 sm:pb-4">
+                                <div className="flex items-center justify-between">
+                                    <CardTitle className="flex items-center text-sm xs:text-base sm:text-lg font-semibold text-gray-900">
+                                        <div className="w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-2 xs:mr-3 shadow-lg">
+                                            <BarChart3 className="w-3 h-3 xs:w-4 xs:h-4 text-white" />
+                                        </div>
+                                        <span className="hidden xs:inline">Admin Performance</span>
+                                        <span className="xs:hidden">Performance</span>
+                                        {statsLoading && (
+                                            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin ml-2" />
+                                        )}
+                                    </CardTitle>
                                 <Button
                                     variant="ghost"
                                     size="sm"
@@ -566,257 +584,263 @@ export default function AdminProfilePage() {
                                 </Button>
                             </div>
                         </CardHeader>
-                        <CardContent>
-                            {statsLoading ? (
-                                <div className="space-y-3">
-                                    {[1, 2, 3, 4, 5].map((i) => (
-                                        <div
-                                            key={i}
-                                            className="flex justify-between items-center"
-                                        >
-                                            <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
-                                            <div className="h-6 bg-gray-200 rounded w-8 animate-pulse"></div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-blue-50 border border-blue-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-blue-900">
-                                                Issues Managed
-                                            </span>
-                                        </div>
-                                        <Badge className="bg-blue-500 text-white">
-                                            {adminStats.issues_managed}
-                                        </Badge>
+                            <CardContent className="pt-0">
+                                {statsLoading ? (
+                                    <div className="space-y-2 xs:space-y-3">
+                                        {[1, 2, 3, 4, 5].map((i) => (
+                                            <div
+                                                key={i}
+                                                className="flex justify-between items-center"
+                                            >
+                                                <div className="h-3 xs:h-4 bg-gray-200 rounded w-20 xs:w-24 animate-pulse"></div>
+                                                <div className="h-5 xs:h-6 bg-gray-200 rounded w-6 xs:w-8 animate-pulse"></div>
+                                            </div>
+                                        ))}
                                     </div>
+                                ) : (
+                                    <div className="space-y-2 xs:space-y-3 sm:space-y-4">
+                                        <div className="flex justify-between items-center p-2 xs:p-3 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 transition-all duration-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 xs:w-3 xs:h-3 bg-blue-500 rounded-full"></div>
+                                                <span className="text-xs xs:text-sm font-medium text-blue-900">
+                                                    Issues Managed
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-blue-500 text-white text-xs">
+                                                {adminStats.issues_managed}
+                                            </Badge>
+                                        </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 border border-green-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-green-900">
-                                                Issues Resolved
-                                            </span>
+                                        <div className="flex justify-between items-center p-2 xs:p-3 rounded-lg bg-green-50 border border-green-200 hover:bg-green-100 transition-all duration-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 xs:w-3 xs:h-3 bg-green-500 rounded-full"></div>
+                                                <span className="text-xs xs:text-sm font-medium text-green-900">
+                                                    Issues Resolved
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-green-500 text-white text-xs">
+                                                {adminStats.issues_resolved}
+                                            </Badge>
                                         </div>
-                                        <Badge className="bg-green-500 text-white">
-                                            {adminStats.issues_resolved}
-                                        </Badge>
-                                    </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-purple-50 border border-purple-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-purple-900">
-                                                Users Managed
-                                            </span>
+                                        <div className="flex justify-between items-center p-2 xs:p-3 rounded-lg bg-purple-50 border border-purple-200 hover:bg-purple-100 transition-all duration-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 xs:w-3 xs:h-3 bg-purple-500 rounded-full"></div>
+                                                <span className="text-xs xs:text-sm font-medium text-purple-900">
+                                                    Users Managed
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-purple-500 text-white text-xs">
+                                                {adminStats.users_managed}
+                                            </Badge>
                                         </div>
-                                        <Badge className="bg-purple-500 text-white">
-                                            {adminStats.users_managed}
-                                        </Badge>
-                                    </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-orange-50 border border-orange-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-orange-900">
-                                                Departments
-                                            </span>
+                                        <div className="flex justify-between items-center p-2 xs:p-3 rounded-lg bg-orange-50 border border-orange-200 hover:bg-orange-100 transition-all duration-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 xs:w-3 xs:h-3 bg-orange-500 rounded-full"></div>
+                                                <span className="text-xs xs:text-sm font-medium text-orange-900">
+                                                    Departments
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-orange-500 text-white text-xs">
+                                                {adminStats.departments_managed}
+                                            </Badge>
                                         </div>
-                                        <Badge className="bg-orange-500 text-white">
-                                            {adminStats.departments_managed}
-                                        </Badge>
-                                    </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-yellow-50 border border-yellow-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-yellow-900">
-                                                Reports Generated
-                                            </span>
+                                        <div className="flex justify-between items-center p-2 xs:p-3 rounded-lg bg-yellow-50 border border-yellow-200 hover:bg-yellow-100 transition-all duration-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 xs:w-3 xs:h-3 bg-yellow-500 rounded-full"></div>
+                                                <span className="text-xs xs:text-sm font-medium text-yellow-900">
+                                                    Reports Generated
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-yellow-500 text-white text-xs">
+                                                {adminStats.reports_generated}
+                                            </Badge>
                                         </div>
-                                        <Badge className="bg-yellow-500 text-white">
-                                            {adminStats.reports_generated}
-                                        </Badge>
-                                    </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-indigo-50 border border-indigo-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-indigo-900">
-                                                System Uptime
-                                            </span>
+                                        <div className="flex justify-between items-center p-2 xs:p-3 rounded-lg bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 transition-all duration-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-2 h-2 xs:w-3 xs:h-3 bg-indigo-500 rounded-full"></div>
+                                                <span className="text-xs xs:text-sm font-medium text-indigo-900">
+                                                    System Uptime
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-indigo-500 text-white text-xs">
+                                                {adminStats.system_uptime}
+                                            </Badge>
                                         </div>
-                                        <Badge className="bg-indigo-500 text-white">
-                                            {adminStats.system_uptime}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            )}
-
-                            {!statsLoading && (
-                                <div className="mt-4 pt-4 border-t">
-                                    <div className="flex justify-between text-xs text-muted-foreground">
-                                        <span>Success Rate:</span>
-                                        <span className="font-medium text-green-600">
-                                            {adminStats.success_rate}%
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                        <span>Total Actions:</span>
-                                        <span className="font-medium">
-                                            {adminStats.total_admin_actions}
-                                        </span>
-                                    </div>
                                 </div>
                             )}
-                        </CardContent>
-                    </Card>
-                </div>
 
-                {/* Profile Details */}
-                <div className="lg:col-span-2 space-y-6">
-                    {/* Personal Information */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <User className="w-5 h-5" />
-                                Personal Information
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <Label htmlFor="full_name">Full Name</Label>
-                                    {isEditing ? (
-                                        <Input
-                                            id="full_name"
-                                            value={profileData.full_name}
-                                            onChange={(e) =>
-                                                setProfileData((prev) => ({
-                                                    ...prev,
-                                                    full_name: e.target.value,
-                                                }))
-                                            }
-                                            placeholder="Enter your full name"
-                                        />
-                                    ) : (
-                                        <p className="text-muted-foreground">
-                                            {profileData.full_name ||
-                                                "Not provided"}
-                                        </p>
+                                    {!statsLoading && (
+                                        <div className="mt-3 xs:mt-4 pt-3 xs:pt-4 border-t border-gray-200">
+                                            <div className="flex justify-between text-xs text-gray-600">
+                                                <span>Success Rate:</span>
+                                                <span className="font-medium text-green-600">
+                                                    {adminStats.success_rate}%
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between text-xs text-gray-600 mt-1">
+                                                <span>Total Actions:</span>
+                                                <span className="font-medium">
+                                                    {adminStats.total_admin_actions}
+                                                </span>
+                                            </div>
+                                        </div>
                                     )}
-                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="email">Email</Label>
-                                    <p className="text-muted-foreground">
-                                        {profileData.email}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        Email cannot be changed here
-                                    </p>
-                                </div>
-
-                                <div className="space-y-2">
+                    {/* Profile Details */}
+                    <div className="lg:col-span-2 space-y-3 xs:space-y-4 sm:space-y-6">
+                        {/* Personal Information */}
+                        <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                            <CardHeader className="pb-2 xs:pb-3 sm:pb-4">
+                                <CardTitle className="flex items-center text-sm xs:text-base sm:text-lg font-semibold text-gray-900">
+                                    <div className="w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mr-2 xs:mr-3 shadow-lg">
+                                        <User className="w-3 h-3 xs:w-4 xs:h-4 text-white" />
+                                    </div>
+                                    <span className="hidden xs:inline">Personal Information</span>
+                                    <span className="xs:hidden">Personal Info</span>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-0 space-y-3 xs:space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 xs:gap-4">
+                                    <div className="space-y-1 xs:space-y-2">
+                                        <Label htmlFor="full_name" className="text-xs xs:text-sm font-medium text-gray-700">Full Name</Label>
                                     {isEditing ? (
-                                        <PhoneInput
-                                            value={profileData.phone || ""}
-                                            onChange={(value) =>
-                                                setProfileData((prev) => ({
-                                                    ...prev,
-                                                    phone: value,
-                                                }))
-                                            }
-                                            label="Phone Number"
-                                            placeholder="Enter 10-digit mobile number"
-                                        />
-                                    ) : (
-                                        <>
-                                            <Label htmlFor="phone">
-                                                Phone Number
-                                            </Label>
-                                            <p className="text-muted-foreground">
-                                                {profileData.phone
-                                                    ? `+91 ${profileData.phone}`
-                                                    : "Not provided"}
-                                            </p>
-                                        </>
-                                    )}
-                                </div>
-
-                                <div className="space-y-2">
-                                    {isEditing ? (
-                                        <div>
-                                            <Label htmlFor="location">
-                                                Location
-                                            </Label>
-                                            <LocationPicker
-                                                value={
-                                                    profileData.location || ""
-                                                }
-                                                onChange={(
-                                                    location,
-                                                    coordinates
-                                                ) =>
+                                            <Input
+                                                id="full_name"
+                                                value={profileData.full_name}
+                                                onChange={(e) =>
                                                     setProfileData((prev) => ({
                                                         ...prev,
-                                                        location,
-                                                        location_coordinates:
-                                                            coordinates,
+                                                        full_name: e.target.value,
                                                     }))
                                                 }
-                                                placeholder="Enter your city/area"
+                                                placeholder="Enter your full name"
+                                                className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                                             />
-                                        </div>
                                     ) : (
-                                        <>
-                                            <Label htmlFor="location">
-                                                Location
-                                            </Label>
-                                            <p className="text-muted-foreground">
-                                                {profileData.location ||
+                                            <p className="text-xs xs:text-sm text-gray-600">
+                                                {profileData.full_name ||
                                                     "Not provided"}
                                             </p>
-                                        </>
                                     )}
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="department">
-                                        Department
-                                    </Label>
+                                    <div className="space-y-1 xs:space-y-2">
+                                        <Label htmlFor="email" className="text-xs xs:text-sm font-medium text-gray-700">Email</Label>
+                                        <p className="text-xs xs:text-sm text-gray-600">
+                                            {profileData.email}
+                                        </p>
+                                        <p className="text-xs text-gray-500">
+                                            Email cannot be changed here
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-1 xs:space-y-2">
+                                        {isEditing ? (
+                                            <div>
+                                                <Label htmlFor="phone" className="text-xs xs:text-sm font-medium text-gray-700">
+                                                    Phone Number
+                                                </Label>
+                                                <Input
+                                                    id="phone"
+                                                    value={profileData.phone || ""}
+                                                    onChange={(e) =>
+                                                        setProfileData((prev) => ({
+                                                            ...prev,
+                                                            phone: e.target.value,
+                                                        }))
+                                                    }
+                                                    placeholder="Enter 10-digit mobile number"
+                                                    className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Label htmlFor="phone" className="text-xs xs:text-sm font-medium text-gray-700">
+                                                    Phone Number
+                                                </Label>
+                                                <p className="text-xs xs:text-sm text-gray-600">
+                                                    {profileData.phone
+                                                        ? `+91 ${profileData.phone}`
+                                                        : "Not provided"}
+                                                </p>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-1 xs:space-y-2">
+                                        {isEditing ? (
+                                            <div>
+                                                <Label htmlFor="location" className="text-xs xs:text-sm font-medium text-gray-700">
+                                                    Location
+                                                </Label>
+                                                <Input
+                                                    id="location"
+                                                    value={profileData.location || ""}
+                                                    onChange={(e) =>
+                                                        setProfileData((prev) => ({
+                                                            ...prev,
+                                                            location: e.target.value,
+                                                        }))
+                                                    }
+                                                    placeholder="Enter your city/area"
+                                                    className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Label htmlFor="location" className="text-xs xs:text-sm font-medium text-gray-700">
+                                                    Location
+                                                </Label>
+                                                <p className="text-xs xs:text-sm text-gray-600">
+                                                    {profileData.location ||
+                                                        "Not provided"}
+                                                </p>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-1 xs:space-y-2">
+                                        <Label htmlFor="department" className="text-xs xs:text-sm font-medium text-gray-700">
+                                            Department
+                                        </Label>
                                     {isEditing ? (
-                                        <Select
-                                            value={userDepartment || ""}
-                                            onValueChange={(value) => {
-                                                console.log(
-                                                    "Department changed from",
-                                                    userDepartment,
-                                                    "to",
-                                                    value
-                                                );
-                                                setUserDepartment(value);
-                                            }}
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select department" />
-                                            </SelectTrigger>
-                                            <SelectContent className="w-full min-w-[250px] max-w-[350px]">
+                                            <Select
+                                                value={userDepartment || ""}
+                                                onValueChange={(value) => {
+                                                    console.log(
+                                                        "Department changed from",
+                                                        userDepartment,
+                                                        "to",
+                                                        value
+                                                    );
+                                                    setUserDepartment(value);
+                                                }}
+                                            >
+                                                <SelectTrigger className="w-full border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200">
+                                                    <SelectValue placeholder="Select department" />
+                                                </SelectTrigger>
+                                            <SelectContent className="w-full min-w-[250px] max-w-[350px] bg-white border-gray-200 shadow-lg z-50">
                                                 {departments.map((dept) => (
                                                     <SelectItem
                                                         key={dept.id}
                                                         value={dept.id}
+                                                        className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer"
                                                     >
                                                         <div className="flex items-start space-x-2 w-full">
                                                             <Shield className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                                                             <div className="flex flex-col w-full">
-                                                                <span className="font-medium">
+                                                                <span className="font-medium text-gray-900">
                                                                     {dept.name}
                                                                 </span>
                                                                 {dept.description && (
-                                                                    <span className="text-xs text-muted-foreground">
+                                                                    <span className="text-xs text-gray-600">
                                                                         {
                                                                             dept.description
                                                                         }
@@ -829,67 +853,67 @@ export default function AdminProfilePage() {
                                             </SelectContent>
                                         </Select>
                                     ) : (
-                                        <p className="text-muted-foreground">
-                                            {userDepartmentName ||
-                                                "Not assigned"}
-                                        </p>
+                                            <p className="text-xs xs:text-sm text-gray-600">
+                                                {userDepartmentName ||
+                                                    "Not assigned"}
+                                            </p>
                                     )}
                                 </div>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="admin_level">
-                                        Admin Level
-                                    </Label>
+                                    <div className="space-y-1 xs:space-y-2">
+                                        <Label htmlFor="admin_level" className="text-xs xs:text-sm font-medium text-gray-700">
+                                            Admin Level
+                                        </Label>
                                     {isEditing ? (
-                                        <Select
-                                            value={userAdminLevel || "senior"}
-                                            onValueChange={(value) =>
-                                                setUserAdminLevel(value)
-                                            }
-                                        >
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select admin level" />
-                                            </SelectTrigger>
-                                            <SelectContent className="w-full min-w-[200px] max-w-[300px]">
-                                                <SelectItem value="junior">
+                                            <Select
+                                                value={userAdminLevel || "senior"}
+                                                onValueChange={(value) =>
+                                                    setUserAdminLevel(value)
+                                                }
+                                            >
+                                                <SelectTrigger className="w-full border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200">
+                                                    <SelectValue placeholder="Select admin level" />
+                                                </SelectTrigger>
+                                            <SelectContent className="w-full min-w-[200px] max-w-[300px] bg-white border-gray-200 shadow-lg z-50">
+                                                <SelectItem value="junior" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">
                                                     <div className="flex flex-col">
-                                                        <span className="font-medium">
+                                                        <span className="font-medium text-gray-900">
                                                             Junior Admin
                                                         </span>
-                                                        <span className="text-xs text-muted-foreground">
+                                                        <span className="text-xs text-gray-600">
                                                             Basic administrative
                                                             access
                                                         </span>
                                                     </div>
                                                 </SelectItem>
-                                                <SelectItem value="senior">
+                                                <SelectItem value="senior" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">
                                                     <div className="flex flex-col">
-                                                        <span className="font-medium">
+                                                        <span className="font-medium text-gray-900">
                                                             Senior Admin
                                                         </span>
-                                                        <span className="text-xs text-muted-foreground">
+                                                        <span className="text-xs text-gray-600">
                                                             Full administrative
                                                             access
                                                         </span>
                                                     </div>
                                                 </SelectItem>
-                                                <SelectItem value="super">
+                                                <SelectItem value="super" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">
                                                     <div className="flex flex-col">
-                                                        <span className="font-medium">
+                                                        <span className="font-medium text-gray-900">
                                                             Super Admin
                                                         </span>
-                                                        <span className="text-xs text-muted-foreground">
+                                                        <span className="text-xs text-gray-600">
                                                             Advanced system
                                                             access
                                                         </span>
                                                     </div>
                                                 </SelectItem>
-                                                <SelectItem value="system">
+                                                <SelectItem value="system" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">
                                                     <div className="flex flex-col">
-                                                        <span className="font-medium">
+                                                        <span className="font-medium text-gray-900">
                                                             System Admin
                                                         </span>
-                                                        <span className="text-xs text-muted-foreground">
+                                                        <span className="text-xs text-gray-600">
                                                             Complete system
                                                             control
                                                         </span>
@@ -898,54 +922,58 @@ export default function AdminProfilePage() {
                                             </SelectContent>
                                         </Select>
                                     ) : (
-                                        <p className="text-muted-foreground capitalize">
-                                            {userAdminLevel
-                                                ? userAdminLevel
-                                                      .charAt(0)
-                                                      .toUpperCase() +
-                                                  userAdminLevel.slice(1)
-                                                : "Senior"}{" "}
-                                            Admin
-                                        </p>
+                                            <p className="text-xs xs:text-sm text-gray-600 capitalize">
+                                                {userAdminLevel
+                                                    ? userAdminLevel
+                                                          .charAt(0)
+                                                          .toUpperCase() +
+                                                      userAdminLevel.slice(1)
+                                                    : "Senior"}{" "}
+                                                Admin
+                                            </p>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="bio">Bio</Label>
-                                {isEditing ? (
-                                    <Textarea
-                                        id="bio"
-                                        value={profileData.bio}
-                                        onChange={(e) =>
-                                            setProfileData((prev) => ({
-                                                ...prev,
-                                                bio: e.target.value,
-                                            }))
-                                        }
-                                        placeholder="Tell us about your role and responsibilities..."
-                                        rows={3}
-                                    />
-                                ) : (
-                                    <p className="text-muted-foreground">
-                                        {profileData.bio || "No bio provided"}
-                                    </p>
-                                )}
-                            </div>
+                                <div className="space-y-1 xs:space-y-2">
+                                    <Label htmlFor="bio" className="text-xs xs:text-sm font-medium text-gray-700">Bio</Label>
+                                    {isEditing ? (
+                                        <Textarea
+                                            id="bio"
+                                            value={profileData.bio}
+                                            onChange={(e) =>
+                                                setProfileData((prev) => ({
+                                                    ...prev,
+                                                    bio: e.target.value,
+                                                }))
+                                            }
+                                            placeholder="Tell us about your role and responsibilities..."
+                                            rows={3}
+                                            className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+                                        />
+                                    ) : (
+                                        <p className="text-xs xs:text-sm text-gray-600">
+                                            {profileData.bio || "No bio provided"}
+                                        </p>
+                                    )}
+                                </div>
                         </CardContent>
                     </Card>
 
-                    {/* Admin Permissions & Settings */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Shield className="w-5 h-5" />
-                                Admin Permissions & Settings
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                        {/* Admin Permissions & Settings */}
+                        <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                            <CardHeader className="pb-2 xs:pb-3 sm:pb-4">
+                                <CardTitle className="flex items-center text-sm xs:text-base sm:text-lg font-semibold text-gray-900">
+                                    <div className="w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mr-2 xs:mr-3 shadow-lg">
+                                        <Shield className="w-3 h-3 xs:w-4 xs:h-4 text-white" />
+                                    </div>
+                                    <span className="hidden xs:inline">Admin Permissions & Settings</span>
+                                    <span className="xs:hidden">Permissions</span>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-0 space-y-3 xs:space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 xs:gap-4">
+                                <div className="flex items-center justify-between p-3 rounded-lg border border-gray-200">
                                     <div className="flex items-center gap-2">
                                         <Users className="w-4 h-4 text-blue-500" />
                                         <div>
@@ -960,7 +988,7 @@ export default function AdminProfilePage() {
                                     <Badge variant="secondary">Enabled</Badge>
                                 </div>
 
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                                <div className="flex items-center justify-between p-3 rounded-lg border border-gray-200">
                                     <div className="flex items-center gap-2">
                                         <FileText className="w-4 h-4 text-green-500" />
                                         <div>
@@ -975,7 +1003,7 @@ export default function AdminProfilePage() {
                                     <Badge variant="secondary">Enabled</Badge>
                                 </div>
 
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                                <div className="flex items-center justify-between p-3 rounded-lg border border-gray-200">
                                     <div className="flex items-center gap-2">
                                         <BarChart3 className="w-4 h-4 text-purple-500" />
                                         <div>
@@ -990,7 +1018,7 @@ export default function AdminProfilePage() {
                                     <Badge variant="secondary">Enabled</Badge>
                                 </div>
 
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                                <div className="flex items-center justify-between p-3 rounded-lg border border-gray-200">
                                     <div className="flex items-center gap-2">
                                         <Database className="w-4 h-4 text-orange-500" />
                                         <div>
@@ -1008,25 +1036,27 @@ export default function AdminProfilePage() {
                         </CardContent>
                     </Card>
 
-                    {/* Notification Settings */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Bell className="w-5 h-5" />
-                                Notification Preferences
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="font-medium">
-                                        Email Notifications
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Receive updates about system events via
-                                        email
-                                    </p>
-                                </div>
+                        {/* Notification Settings */}
+                        <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+                            <CardHeader className="pb-2 xs:pb-3 sm:pb-4">
+                                <CardTitle className="flex items-center text-sm xs:text-base sm:text-lg font-semibold text-gray-900">
+                                    <div className="w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mr-2 xs:mr-3 shadow-lg">
+                                        <Bell className="w-3 h-3 xs:w-4 xs:h-4 text-white" />
+                                    </div>
+                                    <span className="hidden xs:inline">Notification Preferences</span>
+                                    <span className="xs:hidden">Notifications</span>
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="pt-0 space-y-3 xs:space-y-4">
+                                <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200">
+                                    <div>
+                                        <p className="text-xs xs:text-sm font-medium text-gray-900">
+                                            Email Notifications
+                                        </p>
+                                        <p className="text-xs text-gray-600">
+                                            Receive updates about system events via email
+                                        </p>
+                                    </div>
                                 <Switch
                                     checked={profileData.email_notifications}
                                     onCheckedChange={(checked) =>
@@ -1039,18 +1069,17 @@ export default function AdminProfilePage() {
                                 />
                             </div>
 
-                            <Separator />
+                                <Separator className="my-3" />
 
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="font-medium">
-                                        Push Notifications
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Receive instant notifications for urgent
-                                        issues
-                                    </p>
-                                </div>
+                                <div className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-200">
+                                    <div>
+                                        <p className="text-xs xs:text-sm font-medium text-gray-900">
+                                            Push Notifications
+                                        </p>
+                                        <p className="text-xs text-gray-600">
+                                            Receive instant notifications for urgent issues
+                                        </p>
+                                    </div>
                                 <Switch
                                     checked={profileData.push_notifications}
                                     onCheckedChange={(checked) =>
@@ -1065,8 +1094,9 @@ export default function AdminProfilePage() {
                         </CardContent>
                     </Card>
 
-                    {/* Account Management */}
-                    <AccountManagement userType="admin" />
+                        {/* Account Management */}
+                        <AccountManagement userType="admin" />
+                    </div>
                 </div>
             </div>
         </div>
