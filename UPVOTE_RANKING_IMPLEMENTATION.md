@@ -38,7 +38,7 @@ This implementation adds upvote-based ranking to all issue lists across the appl
 - **Same sorting logic as above**
 
 #### **Citizen My Issues Page**
-- **File**: `app/citizen/my-issues/page.tsx`
+- **File**: `app/citizen/issues/page.tsx`
 - **Change**: Added upvote-based sorting to both `activeIssues` and `resolvedIssues` useMemo hooks
 - **Same sorting logic as above**
 
@@ -60,7 +60,7 @@ Updated all Issue interfaces to include the `upvotes` field:
 
 - `app/citizen/dashboard/page.tsx` - Already had `upvotes?: number | null`
 - `app/admin/issues/page.tsx` - Added `upvotes: number`
-- `app/citizen/my-issues/page.tsx` - Added `upvotes: number`
+- `app/citizen/issues/page.tsx` - Added `upvotes: number`
 - `app/citizen/issues/map/page.tsx` - Added `upvotes: number`
 - `app/admin/issues/map/page.tsx` - Added `upvotes: number`
 - `components/resolved-issues-section.tsx` - Added `upvotes: number`

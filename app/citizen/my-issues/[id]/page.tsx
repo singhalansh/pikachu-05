@@ -6,11 +6,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { 
-  ArrowLeft, 
-  MapPin, 
-  Calendar, 
-  User, 
+import {
+  ArrowLeft,
+  MapPin,
+  Calendar,
+  User,
   Building2,
   AlertCircle,
   Clock,
@@ -130,7 +130,7 @@ export default function IssueDetailPage() {
             {error || 'The issue you are looking for does not exist.'}
           </p>
           <Button asChild>
-            <Link href="/citizen/my-issues">
+            <Link href="/citizen/issues">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to My Issues
             </Link>
@@ -145,12 +145,12 @@ export default function IssueDetailPage() {
       {/* Header */}
       <div className="mb-6">
         <Button variant="ghost" asChild className="mb-4">
-          <Link href="/citizen/my-issues">
+          <Link href="/citizen/issues">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to My Issues
           </Link>
         </Button>
-        
+
         <div className="flex items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold mb-2">{issue.title}</h1>
@@ -160,7 +160,7 @@ export default function IssueDetailPage() {
               <span>Created {new Date(issue.created_at).toLocaleDateString()}</span>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Badge className={priorityColors[issue.priority as keyof typeof priorityColors]}>
               {issue.priority.charAt(0).toUpperCase() + issue.priority.slice(1)} Priority
@@ -185,23 +185,23 @@ export default function IssueDetailPage() {
                 <h3 className="font-medium mb-2">Description</h3>
                 <p className="text-muted-foreground">{issue.description}</p>
               </div>
-              
+
               <Separator />
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-medium mb-1">Category</h4>
                   <p className="text-muted-foreground capitalize">{issue.category.replace('-', ' ')}</p>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-1">Priority</h4>
                   <p className="text-muted-foreground capitalize">{issue.priority}</p>
                 </div>
               </div>
-              
+
               <Separator />
-              
+
               <div>
                 <h4 className="font-medium mb-2 flex items-center gap-2">
                   <MapPin className="w-4 h-4" />
@@ -213,7 +213,7 @@ export default function IssueDetailPage() {
                     Landmark: {issue.landmark}
                   </p>
                 )}
-                
+
                 {/* Map Link */}
                 <Button variant="outline" size="sm" className="mt-2" asChild>
                   <a
@@ -226,7 +226,7 @@ export default function IssueDetailPage() {
                   </a>
                 </Button>
               </div>
-              
+
               {issue.image_url && (
                 <>
                   <Separator />
@@ -262,7 +262,7 @@ export default function IssueDetailPage() {
                     )}
                   </div>
                 )}
-                
+
                 {issue.assigned_profile && (
                   <div>
                     <h4 className="font-medium mb-1 flex items-center gap-2">
@@ -274,7 +274,7 @@ export default function IssueDetailPage() {
                   </div>
                 )}
               </div>
-              
+
               {!issue.department && !issue.assigned_profile && (
                 <div className="text-center py-8 text-muted-foreground">
                   <Clock className="w-8 h-8 mx-auto mb-2 opacity-50" />
@@ -292,7 +292,7 @@ export default function IssueDetailPage() {
             currentStatus={issue.status}
             onStatusUpdate={handleStatusUpdate}
           />
-          
+
           {/* Quick Actions */}
           <Card>
             <CardHeader>
@@ -300,12 +300,12 @@ export default function IssueDetailPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               <Button variant="outline" className="w-full justify-start" asChild>
-                <Link href="/citizen/my-issues">
+                <Link href="/citizen/issues">
                   <FileText className="w-4 h-4 mr-2" />
                   View All My Issues
                 </Link>
               </Button>
-              
+
               <Button variant="outline" className="w-full justify-start" asChild>
                 <Link href="/citizen/report">
                   <AlertCircle className="w-4 h-4 mr-2" />

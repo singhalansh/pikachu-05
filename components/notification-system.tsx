@@ -24,7 +24,7 @@ const mockNotifications: Notification[] = [
     message: "Your reported pothole on Main Street is now being repaired.",
     timestamp: "2024-01-20T10:30:00Z",
     read: false,
-    actionUrl: "/citizen/my-issues",
+    actionUrl: "/citizen/issues",
   },
   {
     id: "2",
@@ -33,7 +33,7 @@ const mockNotifications: Notification[] = [
     message: "The broken streetlight you reported has been fixed.",
     timestamp: "2024-01-19T16:45:00Z",
     read: false,
-    actionUrl: "/citizen/my-issues",
+    actionUrl: "/citizen/issues",
   },
   {
     id: "3",
@@ -117,9 +117,8 @@ export default function NotificationSystem() {
                   notifications.map((notification) => (
                     <div
                       key={notification.id}
-                      className={`p-4 border-b last:border-b-0 hover:bg-muted/50 ${
-                        !notification.read ? "bg-blue-50/50" : ""
-                      }`}
+                      className={`p-4 border-b last:border-b-0 hover:bg-muted/50 ${!notification.read ? "bg-blue-50/50" : ""
+                        }`}
                     >
                       <div className="flex items-start gap-3">
                         {getNotificationIcon(notification.type)}

@@ -375,7 +375,7 @@ export default function IssueCommentsAndVoting({
                       </span>
                       {comment.is_admin && (
                         <Badge variant="secondary" className="text-xs">
-                          Admin
+                          Staff
                         </Badge>
                       )}
                       {comment.is_dispute && (

@@ -216,7 +216,7 @@ export default function NotificationsPage() {
                             <span>{formatTimestamp(notification.timestamp)}</span>
                             {notification.issueId && (
                               <Link
-                                href={`/citizen/my-issues?issue=${notification.issueId}`}
+                                href={`/citizen/issues?issue=${notification.issueId}`}
                                 className="text-accent hover:underline"
                               >
                                 View Issue {notification.issueId}
@@ -254,7 +254,7 @@ export default function NotificationsPage() {
                             <span>{formatTimestamp(notification.timestamp)}</span>
                             {notification.issueId && (
                               <Link
-                                href={`/citizen/my-issues?issue=${notification.issueId}`}
+                                href={`/citizen/issues?issue=${notification.issueId}`}
                                 className="text-accent hover:underline"
                               >
                                 View Issue {notification.issueId}

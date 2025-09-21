@@ -39,6 +39,7 @@ interface Issue {
   location_lng: number;
   landmark?: string;
   image_url?: string;
+  audio_url?: string;
   created_at: string;
   updated_at: string;
   completed_at?: string;
@@ -214,6 +215,18 @@ export default function AdminIssueDetailPage() {
                 <h3 className="font-medium mb-2">Description</h3>
                 <p className="text-muted-foreground">{issue.description}</p>
               </div>
+              
+              {issue.audio_url && (
+                <div>
+                  <h3 className="font-medium mb-2">Audio Recording</h3>
+                  <audio 
+                    src={issue.audio_url} 
+                    controls 
+                    className="w-full" 
+                    preload="metadata"
+                  />
+                </div>
+              )}
               
               <Separator />
               

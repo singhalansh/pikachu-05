@@ -9,14 +9,14 @@ export interface User {
     id: string;
     email: string;
     name: string;
-    role: "citizen" | "admin";
+    role: "citizen" | "department_head" | "supervisor" | "field_worker" | "clerk_operator" | "technician";
 }
 
 export interface CustomJWTPayload {
     userId: string;
     email: string;
     name: string;
-    role: "citizen" | "admin";
+    role: "citizen" | "department_head" | "supervisor" | "field_worker" | "clerk_operator" | "technician";
     exp: number;
 }
 
@@ -26,7 +26,7 @@ const users: User[] = [
         id: "1",
         email: "admin@city.gov",
         name: "Admin User",
-        role: "admin",
+        role: "department_head",
     },
     {
         id: "2",

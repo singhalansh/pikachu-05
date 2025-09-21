@@ -42,6 +42,7 @@ import AnalyticsCharts from "@/components/analytics-charts";
 import { createClient } from "@/lib/supabase/client";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { getUserDisplayName } from "@/lib/utils/avatar";
+import { isIssueForDepartment, getDepartmentName } from "@/lib/departments";
 
 // Types for our data
 type Issue = {
@@ -159,6 +160,9 @@ export default function AdminDashboard() {
     // Current user state
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [currentUserProfile, setCurrentUserProfile] = useState<any>(null);
+    const [userDepartment, setUserDepartment] = useState<string | null>(null);
+    const [userDepartmentName, setUserDepartmentName] = useState<string>("");
+    const [userRole, setUserRole] = useState<string>("");
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -167,12 +171,16 @@ export default function AdminDashboard() {
                 error,
             } = await supabase.auth.getUser();
 
-            if (
-                error ||
-                !user ||
-                (user.user_metadata?.role !== "admin" && user.role !== "admin")
-            ) {
+            if (error || !user) {
                 router.push("/admin/login");
+                return;
+            }
+
+            // Check if user has staff role (any role other than citizen)
+            const role = user.user_metadata?.role || user.role || "citizen";
+            setUserRole(role);
+            if (role === "citizen") {
+                router.push("/citizen/dashboard");
                 return;
             }
 
@@ -186,6 +194,16 @@ export default function AdminDashboard() {
                 .single();
 
             setCurrentUserProfile(profile);
+
+            // Get user's department from metadata
+            const department = user.user_metadata?.department;
+            setUserDepartment(department);
+
+            // Get department name
+            if (department) {
+                const departmentName = await getDepartmentName(department);
+                setUserDepartmentName(departmentName);
+            }
 
             // Load dashboard data
             await loadDashboardData();
@@ -246,7 +264,9 @@ export default function AdminDashboard() {
         // Get all issues
         const { data: allIssues, error } = await supabase
             .from("issues")
-            .select("status, created_at, updated_at");
+            .select(
+                "status, created_at, updated_at, title, description, category"
+            );
 
         if (error) throw error;
 
@@ -255,9 +275,23 @@ export default function AdminDashboard() {
             status: string;
             created_at: string;
             updated_at: string | null;
+            title: string;
+            description: string;
+            category: string;
         };
 
-        const typedIssues = (allIssues || []) as IssueData[];
+        let typedIssues = (allIssues || []) as IssueData[];
+
+        // Filter issues by department if user has a specific department
+        if (userDepartment) {
+            const departmentFilteredIssues = [];
+            for (const issue of typedIssues) {
+                if (await isIssueForDepartment(issue, userDepartment)) {
+                    departmentFilteredIssues.push(issue);
+                }
+            }
+            typedIssues = departmentFilteredIssues;
+        }
 
         const now = new Date();
         const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -482,11 +516,25 @@ export default function AdminDashboard() {
       `
             )
             .order("created_at", { ascending: false })
-            .limit(5);
+            .limit(50); // Get more issues to filter
 
         if (error) throw error;
 
-        return (issues || []) as Issue[];
+        let filteredIssues = (issues || []) as Issue[];
+
+        // Filter issues by department if user has a specific department
+        if (userDepartment) {
+            const departmentFilteredIssues = [];
+            for (const issue of filteredIssues) {
+                if (await isIssueForDepartment(issue, userDepartment)) {
+                    departmentFilteredIssues.push(issue);
+                }
+            }
+            filteredIssues = departmentFilteredIssues;
+        }
+
+        // Return only the first 5 after filtering
+        return filteredIssues.slice(0, 5);
     };
 
     const fetchNotificationCount = async (): Promise<number> => {
@@ -736,9 +784,16 @@ export default function AdminDashboard() {
                             <div>
                                 <h1 className="text-xl sm:text-2xl font-bold">
                                     Municipal Dashboard
+                                    {userDepartmentName && (
+                                        <span className="ml-2 text-sm font-normal text-muted-foreground">
+                                            - {userDepartmentName}
+                                        </span>
+                                    )}
                                 </h1>
                                 <p className="text-sm sm:text-base text-muted-foreground">
-                                    Civic issue management and analytics
+                                    {userDepartment
+                                        ? `Department-specific issue management and analytics`
+                                        : `Civic issue management and analytics`}
                                 </p>
                             </div>
                         </div>
@@ -805,7 +860,11 @@ export default function AdminDashboard() {
                                             )}
                                         </p>
                                         <p className="text-xs text-muted-foreground">
-                                            Admin
+                                            {userRole
+                                                .replace("_", " ")
+                                                .replace(/\b\w/g, (l) =>
+                                                    l.toUpperCase()
+                                                )}
                                         </p>
                                     </div>
                                 </div>

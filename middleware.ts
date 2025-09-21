@@ -12,6 +12,9 @@ const publicRoutes = [
   '/citizen/signup',
   '/auth/callback',
   '/api/auth',
+  '/api/roles', // Allow access to roles API
+  '/api/departments', // Allow access to departments API
+  '/api/test-db-setup', // Allow access to database setup test
   '/_next',
   '/favicon.ico',
 ];
@@ -29,9 +32,11 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Skip middleware for truly public routes and static assets
-  if (pathname === '/' || pathname.startsWith('/_next/') || 
-      pathname.startsWith('/api/auth/') || pathname === '/favicon.ico' ||
-      pathname.startsWith('/auth/callback')) {
+  if (pathname === '/' || pathname.startsWith('/_next/') ||
+      pathname.startsWith('/api/auth/') || pathname.startsWith('/api/roles') ||
+      pathname.startsWith('/api/departments') || pathname.startsWith('/api/test-db-setup') ||
+      pathname === '/favicon.ico' || pathname.startsWith('/auth/callback') ||
+      pathname.includes('/ai-urgency')) { // Allow AI urgency detection
     return NextResponse.next();
   }
   
@@ -44,27 +49,24 @@ export async function middleware(request: NextRequest) {
       // Get user role with fallback logic
       const role = user?.user_metadata?.role || user?.role || 'citizen';
       
-      // Enhanced admin detection - check role first, then email patterns as fallback
-      const isAdmin = role === 'admin' || 
-                     user?.email?.includes('@admin.') || 
-                     user?.email?.includes('@city.gov');
-      const actualRole = isAdmin ? 'admin' : 'citizen';
+      // Check if user has admin/staff role (any role other than citizen)
+      const isStaff = role !== 'citizen';
       
       // Redirect authenticated users away from auth pages to their appropriate dashboard
       if (pathname === '/auth' || pathname === '/login' || pathname === '/signup' || 
           pathname === '/admin/login' || pathname === '/admin/signup' || 
           pathname === '/citizen/login' || pathname === '/citizen/signup') {
-        const dashboardPath = actualRole === 'admin' ? '/admin/dashboard' : '/citizen/dashboard';
+        const dashboardPath = isStaff ? '/admin/dashboard' : '/citizen/dashboard';
         return NextResponse.redirect(new URL(dashboardPath, request.url));
       }
       
       // Role-based access control for protected routes
-      if (pathname.startsWith('/admin') && actualRole !== 'admin') {
+      if (pathname.startsWith('/admin') && !isStaff) {
         return NextResponse.redirect(new URL('/citizen/dashboard', request.url));
       }
       
-      // Allow admins to access citizen routes, but redirect non-citizens/non-admins
-      if (pathname.startsWith('/citizen') && actualRole !== 'citizen' && actualRole !== 'admin') {
+      // Allow staff to access citizen routes, but redirect citizens trying to access admin routes
+      if (pathname.startsWith('/citizen') && isStaff) {
         return NextResponse.redirect(new URL('/admin/dashboard', request.url));
       }
       

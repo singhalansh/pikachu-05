@@ -25,18 +25,35 @@ import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/contexts/auth-context"
 
 type AuthMode = "signin" | "signup"
-type UserRole = "citizen" | "admin"
+type UserRole = "citizen" | "department_head" | "supervisor" | "field_worker" | "clerk_operator" | "technician"
+
+interface Role {
+  id: string;
+  name: string;
+  description: string;
+  level: number;
+}
+
+interface Department {
+  id: string;
+  name: string;
+  description: string;
+}
 
 export default function UnifiedAuthPage() {
-  const [authMode, setAuthMode] = useState<AuthMode>("signin")
+  const [authMode, setAuthMode] = useState<AuthMode>("signup")
   const [selectedRole, setSelectedRole] = useState<UserRole>("citizen")
+  const [selectedDepartment, setSelectedDepartment] = useState<string>("")
+  const [roles, setRoles] = useState<Role[]>([])
+  const [departments, setDepartments] = useState<Department[]>([])
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
-    fullName: ""
+    fullName: "",
+    department: ""
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -46,17 +63,57 @@ export default function UnifiedAuthPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  // Fetch roles and departments
+  useEffect(() => {
+    const fetchRolesAndDepartments = async () => {
+      try {
+        // Fetch roles
+        const rolesResponse = await fetch('/api/roles')
+        if (rolesResponse.ok) {
+          const rolesData = await rolesResponse.json()
+          setRoles(rolesData.roles || [])
+        }
+
+        // Fetch departments
+        const departmentsResponse = await fetch('/api/departments')
+        if (departmentsResponse.ok) {
+          const departmentsData = await departmentsResponse.json()
+          setDepartments(departmentsData.departments || [])
+        }
+      } catch (error) {
+        console.error('Error fetching roles and departments:', error)
+      }
+    }
+
+    fetchRolesAndDepartments()
+  }, [])
+
   // Set initial auth mode and role from URL parameters
   useEffect(() => {
     const modeParam = searchParams.get('mode')
     const roleParam = searchParams.get('role')
+    const isFirstTime = searchParams.get('firstTime') === 'true'
+    const emailParam = searchParams.get('email')
     
-    if (modeParam && (modeParam === 'signin' || modeParam === 'signup')) {
+    // Check if this is a first-time user or coming from account deletion
+    if (isFirstTime || !modeParam) {
+      setAuthMode('signup')
+    } else if (modeParam && (modeParam === 'signin' || modeParam === 'signup')) {
       setAuthMode(modeParam)
     }
     
-    if (roleParam && (roleParam === 'citizen' || roleParam === 'admin')) {
-      setSelectedRole(roleParam)
+    if (roleParam && (roleParam === 'citizen' || roleParam === 'department_head' || roleParam === 'supervisor' || roleParam === 'field_worker' || roleParam === 'clerk_operator' || roleParam === 'technician')) {
+      setSelectedRole(roleParam as UserRole)
+    }
+    
+    // Pre-fill email if provided (for first-time users)
+    if (emailParam && isFirstTime) {
+      setFormData(prev => ({ ...prev, email: emailParam }))
+    }
+    
+    // Pre-fill email if provided (for first-time users)
+    if (emailParam && isFirstTime) {
+      setFormData(prev => ({ ...prev, email: emailParam }))
     }
   }, [searchParams])
 
@@ -69,7 +126,7 @@ export default function UnifiedAuthPage() {
       } else {
         // Redirect based on user role or default to citizen
         const userRole = user.user_metadata?.role || 'citizen'
-        const dashboardPath = userRole === 'admin' ? '/admin/dashboard' : '/citizen/dashboard'
+        const dashboardPath = userRole !== 'citizen' ? '/admin/dashboard' : '/citizen/dashboard'
         router.push(dashboardPath)
       }
     }
@@ -114,7 +171,15 @@ export default function UnifiedAuthPage() {
         }
         // If no redirect, the useEffect will handle role-based redirect
       } else {
-        const { error } = await signUp(formData.email, formData.password, formData.fullName, selectedRole)
+        // Validate role and department selection for non-citizen roles
+        if (selectedRole !== 'citizen') {
+          if (!selectedDepartment) {
+            setError("Please select a department for your role")
+            return
+          }
+        }
+
+        const { error } = await signUp(formData.email, formData.password, formData.fullName, selectedRole, selectedDepartment)
         if (error) throw error
         
         toast({
@@ -140,13 +205,18 @@ export default function UnifiedAuthPage() {
     try {
       // For signup, we'll pass the role via URL parameters
       if (authMode === "signup") {
+        if (selectedRole !== 'citizen' && !selectedDepartment) {
+          setError("Please select a department for your role")
+          return
+        }
+        
         // Create the OAuth URL with role parameter
         const baseUrl = window.location.origin
-        const callbackUrl = `${baseUrl}/auth/callback?role=${selectedRole}&signup=true`
+        const callbackUrl = `${baseUrl}/auth/callback?role=${selectedRole}&department=${selectedDepartment}&signup=true`
         
         console.log('Starting Google OAuth with callback URL:', callbackUrl)
         
-        const { error } = await signInWithGoogle(selectedRole, callbackUrl)
+        const { error } = await signInWithGoogle(selectedRole, callbackUrl, selectedDepartment)
         if (error) throw error
       } else {
         // For signin, use default callback
@@ -231,7 +301,10 @@ export default function UnifiedAuthPage() {
             {authMode === "signup" && (
               <div className="space-y-2">
                 <Label htmlFor="role">Select Your Role</Label>
-                <Select value={selectedRole} onValueChange={(value: UserRole) => setSelectedRole(value)}>
+                <Select value={selectedRole} onValueChange={(value: UserRole) => {
+                  setSelectedRole(value)
+                  setSelectedDepartment("") // Reset department when role changes
+                }}>
                   <SelectTrigger>
                     <SelectValue placeholder="Choose your role" />
                   </SelectTrigger>
@@ -242,12 +315,135 @@ export default function UnifiedAuthPage() {
                         <span>Citizen - Report and track civic issues</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="admin">
+                    <SelectItem value="department_head">
                       <div className="flex items-center space-x-2">
                         <Shield className="w-4 h-4 text-purple-600" />
-                        <span>Administrator - Manage and resolve issues</span>
+                        <span>Department Head - Full administrative access</span>
                       </div>
                     </SelectItem>
+                    <SelectItem value="supervisor">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-green-600" />
+                        <span>Supervisor - Team management and oversight</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="field_worker">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-orange-600" />
+                        <span>Field Worker - On-ground issue resolution</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="clerk_operator">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-cyan-600" />
+                        <span>Clerk/Operator - Administrative tasks</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="technician">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-red-600" />
+                        <span>Technician - Technical specialist</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Department Selection - Only for Admin Signup */}
+            {authMode === "signup" && selectedRole === "admin" && (
+              <div className="space-y-2">
+                <Label htmlFor="department">Select Your Department</Label>
+                <Select 
+                  value={formData.department} 
+                  onValueChange={(value) => handleInputChange("department", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose your department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="public-works">
+                      <div className="flex flex-col">
+                        <span className="font-medium">Public Works</span>
+                        <span className="text-xs text-muted-foreground">Infrastructure and maintenance</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="transportation">
+                      <div className="flex flex-col">
+                        <span className="font-medium">Transportation</span>
+                        <span className="text-xs text-muted-foreground">Roads, traffic, and transit</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="environment">
+                      <div className="flex flex-col">
+                        <span className="font-medium">Environment</span>
+                        <span className="text-xs text-muted-foreground">Environmental services and sustainability</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="health">
+                      <div className="flex flex-col">
+                        <span className="font-medium">Health & Safety</span>
+                        <span className="text-xs text-muted-foreground">Public health and safety services</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="utilities">
+                      <div className="flex flex-col">
+                        <span className="font-medium">Utilities</span>
+                        <span className="text-xs text-muted-foreground">Water, electricity, and gas services</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="general">
+                      <div className="flex flex-col">
+                        <span className="font-medium">General Administration</span>
+                        <span className="text-xs text-muted-foreground">General administrative services</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="supervisor">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-green-600" />
+                        <span>Supervisor - Team management and oversight</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="field_worker">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-orange-600" />
+                        <span>Field Worker - On-ground issue resolution</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="clerk_operator">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-cyan-600" />
+                        <span>Clerk/Operator - Administrative tasks</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="technician">
+                      <div className="flex items-center space-x-2">
+                        <User className="w-4 h-4 text-red-600" />
+                        <span>Technician - Technical specialist</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
+            {/* Department Selection - Only for non-citizen roles during signup */}
+            {authMode === "signup" && selectedRole !== "citizen" && (
+              <div className="space-y-2">
+                <Label htmlFor="department">Select Your Department</Label>
+                <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose your department" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departments.map((dept) => (
+                      <SelectItem key={dept.id} value={dept.id}>
+                        <div className="flex items-center space-x-2">
+                          <Shield className="w-4 h-4 text-blue-600" />
+                          <span>{dept.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

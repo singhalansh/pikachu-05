@@ -168,7 +168,7 @@ DECLARE
   department_name TEXT;
 BEGIN
   -- Set notification link
-  notification_link := '/citizen/my-issues/' || NEW.id;
+  notification_link := '/citizen/issues/' || NEW.id;
   
   -- Get department name if assigned
   IF NEW.department_id IS NOT NULL THEN

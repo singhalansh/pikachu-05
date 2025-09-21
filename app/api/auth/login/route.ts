@@ -27,7 +27,8 @@ export async function POST(request: NextRequest) {
 
         // Enforce admin-only for this endpoint
         const isAdmin =
-            data.user.user_metadata?.role === "admin" || data.user.role === "admin";
+            (data.user.user_metadata?.role && data.user.user_metadata.role !== "citizen") || 
+            (data.user.role && data.user.role !== "citizen");
         if (!isAdmin) {
             return NextResponse.json(
                 { error: "You are not an admin." },
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
             user: {
                 id: data.user.id,
                 email: data.user.email,
-                role: "admin",
+                role: data.user.user_metadata?.role || data.user.role || "citizen",
             },
         });
 

@@ -37,7 +37,7 @@ export async function POST(
   try {
     const supabase = createServerClient();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    
+
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -84,7 +84,7 @@ export async function POST(
     // Create notification for the issue owner (if not commenting on their own issue)
     if (issue.user_id !== user.id) {
       const commenterName = comment.profiles?.full_name || 'Someone';
-      const notificationTitle = is_admin ? 'Admin Response' : 'New Comment';
+      const notificationTitle = is_admin ? 'Staff Response' : 'New Comment';
       const notificationMessage = `${commenterName} commented on your issue "${issue.title}": "${content.substring(0, 100)}${content.length > 100 ? '...' : ''}"`;
 
       await supabase
@@ -93,7 +93,7 @@ export async function POST(
           user_id: issue.user_id,
           title: notificationTitle,
           message: notificationMessage,
-          link: `/citizen/my-issues/${issueId}`,
+          link: `/citizen/issues/${issueId}`,
           issue_id: issueId
         });
     }
