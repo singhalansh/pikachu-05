@@ -175,69 +175,139 @@ export default function MyIssuesPage() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <div className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+        <div className="responsive-container py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" asChild>
+              <Button variant="ghost" size="sm" asChild className="flex-shrink-0">
                 <Link href="/citizen/dashboard">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
+                  <span className="hidden sm:inline">Back to Dashboard</span>
+                  <span className="sm:hidden">Back</span>
                 </Link>
               </Button>
-              <div>
-                <h1 className="text-2xl font-bold">My Issues</h1>
-                <p className="text-muted-foreground">Track the progress of your reported issues</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="responsive-heading-2">My Issues</h1>
+                <p className="responsive-body text-muted-foreground">Track the progress of your reported issues</p>
               </div>
             </div>
-            <Button asChild>
+            <Button asChild className="w-full sm:w-auto responsive-button">
               <Link href="/citizen/report">
                 <Plus className="w-4 h-4 mr-2" />
-                Report New Issue
+                <span className="hidden sm:inline">Report New Issue</span>
+                <span className="sm:hidden">Report Issue</span>
               </Link>
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="responsive-container py-6">
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Issues List */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="active" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="active">Active Issues ({activeIssues.length})</TabsTrigger>
-                <TabsTrigger value="resolved">Resolved ({resolvedIssues.length})</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="active" className="text-xs sm:text-sm">
+                  <span className="hidden sm:inline">Active Issues</span>
+                  <span className="sm:hidden">Active</span>
+                  <span className="ml-1">({activeIssues.length})</span>
+                </TabsTrigger>
+                <TabsTrigger value="resolved" className="text-xs sm:text-sm">
+                  <span className="hidden sm:inline">Resolved</span>
+                  <span className="sm:hidden">Done</span>
+                  <span className="ml-1">({resolvedIssues.length})</span>
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="active" className="space-y-4">
                 {loading && (
-                  <Card><CardContent className="p-6 text-sm text-muted-foreground">Loading your issues...</CardContent></Card>
+                  <Card className="responsive-card"><CardContent className="responsive-card-content text-center">
+                    <div className="responsive-loading">
+                      <div className="text-sm text-muted-foreground">Loading your issues...</div>
+                    </div>
+                  </CardContent></Card>
                 )}
                 {error && (
-                  <Card><CardContent className="p-6 text-sm text-red-600">{error}</CardContent></Card>
+                  <Card className="responsive-card"><CardContent className="responsive-card-content text-center">
+                    <div className="responsive-error">
+                      <div className="text-sm text-red-600">{error}</div>
+                    </div>
+                  </CardContent></Card>
                 )}
                 {!loading && !error && activeIssues.length === 0 ? (
-                  <Card>
-                    <CardContent className="p-8 text-center">
-                      <AlertTriangle className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">No Active Issues</h3>
-                      <p className="text-muted-foreground mb-4">You don't have any active issues at the moment.</p>
-                      <Button asChild>
-                        <Link href="/citizen/report">Report Your First Issue</Link>
-                      </Button>
+                  <Card className="responsive-card">
+                    <CardContent className="responsive-card-content text-center">
+                      <div className="responsive-empty">
+                        <AlertTriangle className="w-8 h-8 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
+                        <h3 className="text-base sm:text-lg font-semibold mb-2">No Active Issues</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground mb-4">You don't have any active issues at the moment.</p>
+                        <Button asChild className="responsive-button">
+                          <Link href="/citizen/report">Report Your First Issue</Link>
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ) : (
                   activeIssues.map((issue) => (
                     <Card
                       key={issue.id}
-                      className={`cursor-pointer transition-all hover:shadow-md ${
+                      className={`responsive-card cursor-pointer transition-all hover:shadow-md ${
                         selectedIssue === issue.id ? "ring-2 ring-accent" : ""
                       }`}
                       onClick={() => setSelectedIssue(issue.id)}
                     >
-                      <CardContent className="p-4">
-                        <div className="flex gap-4">
+                      <CardContent className="responsive-card-content">
+                        {/* Mobile Layout: Stacked */}
+                        <div className="block sm:hidden space-y-3">
+                          {/* Image at top for mobile */}
+                          <div className="w-full h-32 bg-muted rounded-lg overflow-hidden">
+                            <img
+                              src={issue.image_url || "/placeholder.svg"}
+                              alt={issue.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          
+                          {/* Content below image */}
+                          <div className="space-y-2">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold text-sm leading-tight line-clamp-2">{issue.title}</h3>
+                                <p className="text-xs text-muted-foreground mt-1">ID: {issue.id.slice(0, 8)}...</p>
+                              </div>
+                              <Badge className={`${getStatusColor(issue.status.replace('_','-'))} text-xs`}>
+                                {getStatusIcon(issue.status)}
+                                <span className="ml-1 capitalize text-xs">{issue.status.replace(/[_-]/g, " ")}</span>
+                              </Badge>
+                            </div>
+
+                            <div className="space-y-2">
+                              <div className="flex items-center text-xs text-muted-foreground">
+                                <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="truncate">{issue.location_address || 'N/A'}</span>
+                              </div>
+
+                              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                <div className="flex items-center">
+                                  <Calendar className="w-3 h-3 mr-1" />
+                                  {new Date(issue.created_at).toLocaleDateString()}
+                                </div>
+                                <Badge variant="outline" className="text-xs">{getCategoryLabel(issue.category)}</Badge>
+                              </div>
+
+                              <div className="space-y-1">
+                                <div className="flex justify-between text-xs">
+                                  <span>Progress</span>
+                                  <span>{getProgressPercentage(issue.status.replace('_','-'))}%</span>
+                                </div>
+                                <Progress value={getProgressPercentage(issue.status.replace('_','-'))} className="h-1.5" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Desktop Layout: Side by side */}
+                        <div className="hidden sm:flex gap-4">
                           <div className="w-20 h-20 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                             <img
                               src={issue.image_url || "/placeholder.svg"}
@@ -292,13 +362,52 @@ export default function MyIssuesPage() {
                 {resolvedIssues.map((issue) => (
                   <Card
                     key={issue.id}
-                    className={`cursor-pointer transition-all hover:shadow-md ${
+                    className={`responsive-card cursor-pointer transition-all hover:shadow-md ${
                       selectedIssue === issue.id ? "ring-2 ring-accent" : ""
                     }`}
                     onClick={() => setSelectedIssue(issue.id)}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex gap-4">
+                    <CardContent className="responsive-card-content">
+                      {/* Mobile Layout: Stacked */}
+                      <div className="block sm:hidden space-y-3">
+                        {/* Image at top for mobile */}
+                        <div className="w-full h-32 bg-muted rounded-lg overflow-hidden">
+                          <img
+                            src={issue.image_url || "/placeholder.svg"}
+                            alt={issue.title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        
+                        {/* Content below image */}
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-semibold text-sm leading-tight line-clamp-2">{issue.title}</h3>
+                              <p className="text-xs text-muted-foreground mt-1">ID: {issue.id.slice(0, 8)}...</p>
+                            </div>
+                            <Badge className={`${getStatusColor(issue.status)} text-xs`}>
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              <span className="text-xs">Resolved</span>
+                            </Badge>
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex items-center text-xs text-muted-foreground">
+                              <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                              <span className="truncate">{issue.location_address || 'N/A'}</span>
+                            </div>
+
+                            <div className="flex items-center text-xs text-muted-foreground">
+                              <Calendar className="w-3 h-3 mr-1" />
+                              <span>Resolved {new Date(issue.updated_at || issue.created_at).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout: Side by side */}
+                      <div className="hidden sm:flex gap-4">
                         <div className="w-20 h-20 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                           <img
                             src={issue.image_url || "/placeholder.svg"}
@@ -341,24 +450,24 @@ export default function MyIssuesPage() {
           {/* Issue Details */}
           <div className="lg:col-span-1">
             {selectedIssueData ? (
-              <Card className="sticky top-6">
+              <Card className="responsive-card sticky top-6">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
-                    <span>Issue Details</span>
+                    <span className="responsive-heading-3">Issue Details</span>
                     <Badge className={getStatusColor(selectedIssueData.status.replace('_','-'))}>
                       {getStatusIcon(selectedIssueData.status)}
-                      <span className="ml-1 capitalize">{selectedIssueData.status.replace(/[_-]/g, " ")}</span>
+                      <span className="ml-1 capitalize text-xs sm:text-sm">{selectedIssueData.status.replace(/[_-]/g, " ")}</span>
                     </Badge>
                   </CardTitle>
-                  <CardDescription>{selectedIssueData.id}</CardDescription>
+                  <CardDescription className="text-xs sm:text-sm">{selectedIssueData.id}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="responsive-card-content space-y-4">
                   <div>
-                    <h4 className="font-semibold mb-2">{selectedIssueData.title}</h4>
-                    <p className="text-sm text-muted-foreground">{selectedIssueData.description}</p>
+                    <h4 className="font-semibold mb-2 text-sm sm:text-base">{selectedIssueData.title}</h4>
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{selectedIssueData.description}</p>
                   </div>
 
-                  <div className="w-full h-48 bg-muted rounded-lg overflow-hidden">
+                  <div className="w-full h-32 sm:h-48 bg-muted rounded-lg overflow-hidden">
                     <img
                       src={selectedIssueData.image_url || "/placeholder.svg"}
                       alt={selectedIssueData.title}
@@ -366,10 +475,10 @@ export default function MyIssuesPage() {
                     />
                   </div>
 
-                  <div className="space-y-2 text-sm">
+                  <div className="space-y-2 text-xs sm:text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Location:</span>
-                      <span>{selectedIssueData.location_address || 'N/A'}</span>
+                      <span className="text-right max-w-[60%] truncate">{selectedIssueData.location_address || 'N/A'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Category:</span>
@@ -388,11 +497,11 @@ export default function MyIssuesPage() {
                 </CardContent>
               </Card>
             ) : (
-              <Card>
-                <CardContent className="p-8 text-center">
-                  <Eye className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">Select an Issue</h3>
-                  <p className="text-muted-foreground">Click on any issue to view detailed information and timeline.</p>
+              <Card className="responsive-card">
+                <CardContent className="responsive-card-content text-center">
+                  <Eye className="w-8 h-8 sm:w-12 sm:h-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-base sm:text-lg font-semibold mb-2">Select an Issue</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Click on any issue to view detailed information and timeline.</p>
                 </CardContent>
               </Card>
             )}

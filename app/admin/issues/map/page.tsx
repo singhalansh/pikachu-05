@@ -164,10 +164,6 @@ export default function IssuesMapPage() {
             full_name,
             email
           ),
-          assigned_profile:assigned_to (
-            full_name,
-            email
-          )
         `
                 )
                 .not("location_lat", "is", null)
@@ -178,7 +174,43 @@ export default function IssuesMapPage() {
                 throw fetchError;
             }
 
-            setAllIssues((data as Issue[]) || []);
+            const issues = (data as any[]) || [];
+            // Fetch active assignments and attach profiles
+            if (issues.length > 0) {
+                const ids = issues.map((i) => i.id);
+                const { data: assigns } = await supabase
+                    .from("issue_assignments")
+                    .select("issue_id, user_id")
+                    .in("issue_id", ids)
+                    .is("ended_at", null);
+                const map = new (Map as any)();
+                ((assigns as any[]) || []).forEach((a: any) =>
+                    map.set(a.issue_id, a.user_id)
+                );
+                const userIds = Array.from(
+                    new Set(
+                        ((assigns as any[]) || []).map((a: any) => a.user_id)
+                    )
+                );
+                let profMap = new (Map as any)();
+                if (userIds.length > 0) {
+                    const { data: profs } = await supabase
+                        .from("profiles")
+                        .select("id, full_name, email")
+                        .in("id", userIds);
+                    ((profs as any[]) || []).forEach((p: any) =>
+                        profMap.set(p.id, {
+                            full_name: p.full_name || null,
+                            email: p.email,
+                        })
+                    );
+                }
+                issues.forEach((it) => {
+                    const uid = map.get(it.id);
+                    it.assigned_profile = uid ? profMap.get(uid) || null : null;
+                });
+            }
+            setAllIssues((issues as Issue[]) || []);
         } catch (err: any) {
             console.error("Error fetching issues:", err);
             setError(err.message || "Failed to load issues");
@@ -207,24 +239,28 @@ export default function IssuesMapPage() {
             // Calculate combined scores using AI urgency and upvotes
             const getCombinedScore = (issue: Issue) => {
                 const upvotes = issue.upvotes || 0;
-                const urgency = issue.ai_urgency || 'medium';
-                
+                const urgency = issue.ai_urgency || "medium";
+
                 // AI urgency weight: low=1, medium=2, high=3
-                const urgencyWeight = urgency === 'high' ? 3 : urgency === 'medium' ? 2 : 1;
+                const urgencyWeight =
+                    urgency === "high" ? 3 : urgency === "medium" ? 2 : 1;
                 const upvoteScore = Math.log(1 + upvotes);
-                
+
                 // Combined score: 0.7 * AI urgency + 0.3 * log(1 + upvotes)
                 return 0.7 * urgencyWeight + 0.3 * upvoteScore;
             };
-            
+
             const scoreA = getCombinedScore(a);
             const scoreB = getCombinedScore(b);
             const scoreDiff = scoreB - scoreA;
-            
+
             if (scoreDiff !== 0) return scoreDiff;
-            
+
             // Secondary sort: by creation date (descending) for stable sorting
-            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+            return (
+                new Date(b.created_at).getTime() -
+                new Date(a.created_at).getTime()
+            );
         });
 
     const selectedIssueData = allIssues.find(
@@ -389,20 +425,29 @@ export default function IssuesMapPage() {
                     <Card>
                         <CardContent className="p-8 text-center">
                             <div className="space-y-4">
-                                <h3 className="text-lg font-semibold">No Issues Found</h3>
+                                <h3 className="text-lg font-semibold">
+                                    No Issues Found
+                                </h3>
                                 <p className="text-muted-foreground">
-                                    There are no issues in the database yet. The map is showing the default location.
+                                    There are no issues in the database yet. The
+                                    map is showing the default location.
                                 </p>
                                 <p className="text-sm text-muted-foreground">
-                                    Issues need to be reported through the citizen portal first, or you can visit{" "}
-                                    <a href="/admin/issues/debug" className="text-blue-600 hover:underline">
+                                    Issues need to be reported through the
+                                    citizen portal first, or you can visit{" "}
+                                    <a
+                                        href="/admin/issues/debug"
+                                        className="text-blue-600 hover:underline"
+                                    >
                                         the debug page
                                     </a>{" "}
                                     to see the raw data.
                                 </p>
                                 <div className="mt-4">
                                     <Button variant="outline" asChild>
-                                        <Link href="/admin/issues">Back to Issues List</Link>
+                                        <Link href="/admin/issues">
+                                            Back to Issues List
+                                        </Link>
                                     </Button>
                                 </div>
                             </div>
@@ -567,8 +612,16 @@ export default function IssuesMapPage() {
                                     )}
                                 </CardDescription>
                                 <div className="text-xs text-muted-foreground">
-                                    Map center: {mapCenter.lat.toFixed(4)}, {mapCenter.lng.toFixed(4)} | Zoom: {mapZoom}
-                                    {userLocation && <> | Your location: {userLocation.lat.toFixed(4)}, {userLocation.lng.toFixed(4)}</>}
+                                    Map center: {mapCenter.lat.toFixed(4)},{" "}
+                                    {mapCenter.lng.toFixed(4)} | Zoom: {mapZoom}
+                                    {userLocation && (
+                                        <>
+                                            {" "}
+                                            | Your location:{" "}
+                                            {userLocation.lat.toFixed(4)},{" "}
+                                            {userLocation.lng.toFixed(4)}
+                                        </>
+                                    )}
                                 </div>
                             </CardHeader>
                             <CardContent>

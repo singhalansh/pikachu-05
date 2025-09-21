@@ -37,7 +37,6 @@ export interface Database {
                     category: string;
                     user_id: string;
                     department_id: string | null;
-                    assigned_to: string | null;
                     image_url: string | null;
                     audio_url: string | null;
                     location_address: string | null;
@@ -46,6 +45,10 @@ export interface Database {
                     landmark: string | null;
                     ai_urgency: "low" | "medium" | "high" | null;
                     estimated_completion: string | null;
+                    completed_at: string | null;
+                    last_status_update?: string | null;
+                    last_updated_by?: string | null;
+                    upvotes?: number | null;
                     profiles?: {
                         id: string;
                         full_name: string | null;
@@ -72,7 +75,6 @@ export interface Database {
                     category: string;
                     user_id: string;
                     department_id?: string | null;
-                    assigned_to?: string | null;
                     image_url?: string | null;
                     audio_url?: string | null;
                     location_address?: string | null;
@@ -81,6 +83,10 @@ export interface Database {
                     landmark?: string | null;
                     ai_urgency?: "low" | "medium" | "high" | null;
                     estimated_completion?: string | null;
+                    completed_at?: string | null;
+                    last_status_update?: string | null;
+                    last_updated_by?: string | null;
+                    upvotes?: number | null;
                 };
                 Update: {
                     id?: string;
@@ -93,7 +99,6 @@ export interface Database {
                     category?: string;
                     user_id?: string;
                     department_id?: string | null;
-                    assigned_to?: string | null;
                     image_url?: string | null;
                     audio_url?: string | null;
                     location_address?: string | null;
@@ -102,6 +107,39 @@ export interface Database {
                     landmark?: string | null;
                     ai_urgency?: "low" | "medium" | "high" | null;
                     estimated_completion?: string | null;
+                    completed_at?: string | null;
+                    last_status_update?: string | null;
+                    last_updated_by?: string | null;
+                    upvotes?: number | null;
+                };
+            };
+            issue_assignments: {
+                Row: {
+                    id: string;
+                    issue_id: string;
+                    user_id: string;
+                    assigned_by: string | null;
+                    assigned_at: string;
+                    ended_at: string | null;
+                    created_at: string;
+                };
+                Insert: {
+                    id?: string;
+                    issue_id: string;
+                    user_id: string;
+                    assigned_by?: string | null;
+                    assigned_at?: string;
+                    ended_at?: string | null;
+                    created_at?: string;
+                };
+                Update: {
+                    id?: string;
+                    issue_id?: string;
+                    user_id?: string;
+                    assigned_by?: string | null;
+                    assigned_at?: string;
+                    ended_at?: string | null;
+                    created_at?: string;
                 };
             };
             departments: {

@@ -435,7 +435,7 @@ export default function AdminDashboard() {
         // For now, we'll create mock data based on categories
         const { data: issues, error } = await supabase
             .from("issues")
-            .select("category, status, assigned_to");
+            .select("category, status");
 
         if (error) throw error;
 
@@ -443,7 +443,6 @@ export default function AdminDashboard() {
         type DeptIssueData = {
             category: string;
             status: string;
-            assigned_to: string | null;
         };
         const typedIssues = (issues || []) as DeptIssueData[];
 
@@ -466,8 +465,7 @@ export default function AdminDashboard() {
             }
 
             if (
-                issue.assigned_to ||
-                ["in-progress", "resolved"].includes(issue.status)
+                ["in-progress", "resolved", "assigned"].includes(issue.status)
             ) {
                 deptStats[dept].assigned++;
                 if (issue.status === "resolved") {

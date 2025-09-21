@@ -103,17 +103,25 @@ export async function GET(request: NextRequest) {
             adminActionsResult,
         ] = await Promise.all([
             // Issues managed by this admin
-            supabase
-                .from("issues")
+            (supabase as any)
+                .from("issue_assignments")
                 .select("id", { count: "exact", head: true })
-                .eq("assigned_to", user.id),
+                .eq("user_id", user.id)
+                .is("ended_at", null),
 
             // Issues resolved by this admin
-            supabase
+            (supabase as any)
                 .from("issues")
                 .select("id", { count: "exact", head: true })
-                .eq("assigned_to", user.id)
-                .eq("status", "resolved"),
+                .eq("status", "resolved")
+                .filter(
+                    "id",
+                    "in",
+                    `(
+                    select issue_id from issue_assignments ia
+                    where ia.user_id = '${user.id}' and ia.ended_at is null
+                )`
+                ),
 
             // Users managed (total users in system)
             supabase
@@ -132,10 +140,10 @@ export async function GET(request: NextRequest) {
                 .eq("created_by", user.id),
 
             // Reports generated (placeholder - you might have a reports table)
-            supabase
-                .from("issues")
+            (supabase as any)
+                .from("issue_assignments")
                 .select("id", { count: "exact", head: true })
-                .eq("assigned_to", user.id)
+                .eq("user_id", user.id)
                 .gte(
                     "created_at",
                     new Date(

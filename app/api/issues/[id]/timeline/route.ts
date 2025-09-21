@@ -13,7 +13,7 @@ export async function GET(
         const timelineEvents = [];
 
         // 1. Get issue creation event
-        const { data: issue, error: issueError } = await supabase
+        const { data: issue, error: issueError } = await (supabase as any)
             .from("issues")
             .select(
                 `
@@ -23,11 +23,10 @@ export async function GET(
         created_at,
         updated_at,
         department_id,
-        assigned_to,
         estimated_completion,
         profiles:user_id(full_name, email),
         department:department_id(id, name, email, description),
-        assigned_profile:assigned_to(full_name, email)
+        
       `
             )
             .eq("id", issueId)
@@ -57,7 +56,7 @@ export async function GET(
 
         // 2. Get issue updates from issue_updates table
         try {
-            const { data: updates } = await supabase
+            const { data: updates } = await (supabase as any)
                 .from("issue_updates")
                 .select(
                     `
@@ -69,7 +68,7 @@ export async function GET(
                 .order("created_at", { ascending: true });
 
             if (updates) {
-                updates.forEach((update) => {
+                (updates as any[]).forEach((update: any) => {
                     let title = "Status Updated";
                     let description = `Issue status changed to ${update.status?.replace(
                         "_",
@@ -115,9 +114,32 @@ export async function GET(
             console.warn("Could not fetch issue updates:", error);
         }
 
+        // Attach current assigned_profile from mapping
+        let assigned_profile: any = null;
+        try {
+            const { data: active } = await (supabase as any)
+                .from("issue_assignments")
+                .select("user_id")
+                .eq("issue_id", issueId)
+                .is("ended_at", null)
+                .maybeSingle();
+            if (active?.user_id) {
+                const { data: prof } = await (supabase as any)
+                    .from("profiles")
+                    .select("full_name, email")
+                    .eq("id", active.user_id)
+                    .single();
+                if (prof)
+                    assigned_profile = {
+                        full_name: prof.full_name || null,
+                        email: prof.email,
+                    };
+            }
+        } catch {}
+
         // 3. Get workflow states for detailed tracking
         try {
-            const { data: workflowStates } = await supabase
+            const { data: workflowStates } = await (supabase as any)
                 .from("workflow_states")
                 .select(
                     `
@@ -130,7 +152,7 @@ export async function GET(
                 .order("created_at", { ascending: true });
 
             if (workflowStates) {
-                workflowStates.forEach((state) => {
+                (workflowStates as any[]).forEach((state: any) => {
                     if (state.notes || state.estimated_completion) {
                         timelineEvents.push({
                             id: `workflow-${state.id}`,
@@ -158,7 +180,7 @@ export async function GET(
 
         // 4. Get admin notifications for this issue
         try {
-            const { data: adminNotifications } = await supabase
+            const { data: adminNotifications } = await (supabase as any)
                 .from("admin_notifications")
                 .select(
                     `
@@ -170,7 +192,7 @@ export async function GET(
                 .order("created_at", { ascending: true });
 
             if (adminNotifications) {
-                adminNotifications.forEach((notification) => {
+                (adminNotifications as any[]).forEach((notification: any) => {
                     let title = "Admin Action";
                     let description =
                         "An admin has taken action on your issue.";
@@ -258,7 +280,7 @@ export async function GET(
                 user: null,
                 metadata: {
                     department: issue.department,
-                    assigned_profile: issue.assigned_profile,
+                    assigned_profile,
                     estimated_completion: issue.estimated_completion,
                 },
             });
@@ -271,7 +293,7 @@ export async function GET(
                 title: issue.title,
                 status: issue.status,
                 department: issue.department,
-                assigned_profile: issue.assigned_profile,
+                assigned_profile,
                 estimated_completion: issue.estimated_completion,
             },
         });

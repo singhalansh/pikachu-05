@@ -7,9 +7,9 @@ export default function CitizenLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-x-hidden">
       <CitizenNav />
-      <main className="pb-safe">{children}</main>
+      <main className="pb-safe w-full">{children}</main>
     </div>
   )
 }

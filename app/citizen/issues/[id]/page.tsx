@@ -368,16 +368,45 @@ export default function IssueDetailPage() {
                                 <p className="text-muted-foreground leading-relaxed">
                                     {issue?.description || "No description"}
                                 </p>
-                                
+
                                 {issue?.audio_url && (
                                     <div className="mt-4">
-                                        <h3 className="text-sm font-medium mb-2">Audio Recording</h3>
-                                        <audio 
-                                            src={issue.audio_url} 
-                                            controls 
-                                            className="w-full" 
+                                        <h3 className="text-sm font-medium mb-2">
+                                            Audio Recording
+                                        </h3>
+                                        <audio
+                                            src={issue.audio_url}
+                                            controls
+                                            className="w-full"
                                             preload="metadata"
                                         />
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        {/* Assignment info for citizens */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center">
+                                    <User className="w-5 h-5 mr-2" />
+                                    Assignment
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {issue?.assigned_profile ? (
+                                    <div className="text-sm text-muted-foreground">
+                                        <div>
+                                            {issue.assigned_profile.full_name ||
+                                                issue.assigned_profile.email}
+                                        </div>
+                                        <div className="text-xs">
+                                            {issue.assigned_profile.email}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="text-sm text-muted-foreground">
+                                        Not assigned
                                     </div>
                                 )}
                             </CardContent>

@@ -21,7 +21,6 @@ export async function GET(request: NextRequest) {
                     `
           *,
           profiles:user_id(full_name, email),
-          assigned_profile:assigned_to(full_name, email),
           department:department_id(id, name, email, description)
         `
                 )
@@ -57,8 +56,32 @@ export async function GET(request: NextRequest) {
             const votesCount = (votesAgg as any).count || 0;
             const timeline = (timelineRes as any).data || [];
 
+            // Derive assigned_profile from mapping
+            let assigned_profile: {
+                full_name: string | null;
+                email: string;
+            } | null = null;
+            const { data: activeAssign } = await (supabase as any)
+                .from("issue_assignments")
+                .select("user_id")
+                .eq("issue_id", id)
+                .is("ended_at", null)
+                .maybeSingle();
+            if (activeAssign?.user_id) {
+                const { data: prof } = await (supabase as any)
+                    .from("profiles")
+                    .select("full_name, email")
+                    .eq("id", activeAssign.user_id)
+                    .single();
+                if (prof)
+                    assigned_profile = {
+                        full_name: prof.full_name || null,
+                        email: prof.email,
+                    };
+            }
+
             return NextResponse.json({
-                issue,
+                issue: { ...(issue as any), assigned_profile },
                 meta: { commentsCount, votesCount, timeline },
             });
         }
@@ -75,7 +98,6 @@ export async function GET(request: NextRequest) {
                 `
         *,
         profiles:user_id(full_name, email),
-        assigned_profile:assigned_to(full_name, email),
         department:department_id(id, name, email, description),
         comments:comments(count),
         issue_votes:issue_votes(count)
@@ -221,6 +243,42 @@ export async function GET(request: NextRequest) {
 
         // Merge explicit counts (robust across FK metadata) into top-level fields
         const issueList = issues || [];
+        // Attach assigned_profile from mapping table in bulk
+        if (issueList.length > 0) {
+            const ids = issueList.map((i: any) => i.id);
+            const { data: activeAssignments } = await (supabase as any)
+                .from("issue_assignments")
+                .select("issue_id, user_id")
+                .in("issue_id", ids)
+                .is("ended_at", null);
+            const byIssue = new Map<string, string>();
+            (activeAssignments || []).forEach((row: any) =>
+                byIssue.set(row.issue_id, row.user_id)
+            );
+            const userIds = Array.from(
+                new Set((activeAssignments || []).map((r: any) => r.user_id))
+            );
+            let profilesMap = new Map<
+                string,
+                { full_name: string | null; email: string }
+            >();
+            if (userIds.length > 0) {
+                const { data: profs } = await (supabase as any)
+                    .from("profiles")
+                    .select("id, full_name, email")
+                    .in("id", userIds);
+                (profs || []).forEach((p: any) =>
+                    profilesMap.set(p.id, {
+                        full_name: p.full_name || null,
+                        email: p.email,
+                    })
+                );
+            }
+            issueList.forEach((it: any) => {
+                const uid = byIssue.get(it.id);
+                it.assigned_profile = uid ? profilesMap.get(uid) || null : null;
+            });
+        }
         const ids = issueList.map((i: any) => i.id);
         if (ids.length > 0) {
             const [commentsAgg, votesAgg] = await Promise.all([
@@ -373,7 +431,7 @@ export async function POST(request: NextRequest) {
                 : null;
 
         // Insert the issue with automatic department assignment
-        const { data: issue, error } = await supabase
+        const { data: issue, error } = await (supabase as any)
             .from("issues")
             .insert({
                 title,

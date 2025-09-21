@@ -41,6 +41,7 @@ import {
     CheckCircle,
     MoreHorizontal,
     Building2,
+    Shield,
     ThumbsUp,
     Filter,
     X,
@@ -52,104 +53,104 @@ import { useAuth } from "@/contexts/auth-context";
 import AIUrgencyBadge from "@/components/ai-urgency-badge";
 
 interface Issue {
-    id: string;
-    title: string;
-    description: string;
-    category: string;
-    priority: string;
-    status: string;
-    location_address: string;
-    location_lat: number;
-    location_lng: number;
-    landmark?: string;
-    image_url?: string;
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  priority: string;
+  status: string;
+  location_address: string;
+  location_lat: number;
+  location_lng: number;
+  landmark?: string;
+  image_url?: string;
     upvotes: number;
     ai_urgency?: "low" | "medium" | "high";
     ai_confidence?: number;
-    created_at: string;
-    updated_at: string;
-    profiles?: {
-        full_name: string;
-        email: string;
-    };
-    department?: {
-        name: string;
-        email: string;
-    };
-    assigned_profile?: {
-        full_name: string;
-        email: string;
-    };
-    comments_count?: number;
-    votes_count?: number;
+  created_at: string;
+  updated_at: string;
+  profiles?: {
+    full_name: string;
+    email: string;
+  };
+  department?: {
+    name: string;
+    email: string;
+  };
+  assigned_profile?: {
+    full_name: string;
+    email: string;
+  };
+  comments_count?: number;
+  votes_count?: number;
 }
 
 const getStatusColor = (status: string) => {
-    switch (status) {
-        case "submitted":
+  switch (status) {
+    case "submitted":
             return "bg-blue-500 hover:bg-blue-600 text-white";
-        case "assigned":
+    case "assigned":
             return "bg-amber-500 hover:bg-amber-600 text-white";
-        case "in_progress":
+    case "in_progress":
             return "bg-orange-500 hover:bg-orange-600 text-white";
-        case "resolved":
+    case "resolved":
             return "bg-emerald-500 hover:bg-emerald-600 text-white";
-        case "closed":
+    case "closed":
             return "bg-slate-500 hover:bg-slate-600 text-white";
-        default:
+    default:
             return "bg-gray-100 text-gray-700";
-    }
+  }
 };
 
 const getPriorityColor = (priority: string) => {
-    switch (priority) {
-        case "high":
+  switch (priority) {
+    case "high":
             return "bg-red-50 text-red-700 border-red-200";
-        case "medium":
+    case "medium":
             return "bg-yellow-50 text-yellow-700 border-yellow-200";
-        case "low":
+    case "low":
             return "bg-green-50 text-green-700 border-green-200";
-        default:
+    default:
             return "bg-gray-50 text-gray-700 border-gray-200";
-    }
+  }
 };
 
 const getStatusIcon = (status: string) => {
-    switch (status) {
-        case "submitted":
+  switch (status) {
+    case "submitted":
             return <Clock className="w-4 h-4" />;
-        case "assigned":
+    case "assigned":
             return <User className="w-4 h-4" />;
-        case "in_progress":
+    case "in_progress":
             return <AlertTriangle className="w-4 h-4" />;
-        case "resolved":
+    case "resolved":
             return <CheckCircle className="w-4 h-4" />;
-        case "closed":
+    case "closed":
             return <CheckCircle className="w-4 h-4" />;
-        default:
+    default:
             return <Clock className="w-4 h-4" />;
-    }
+  }
 };
 
 const getCategoryLabel = (category: string) => {
-    switch (category) {
-        case "roads":
+  switch (category) {
+    case "roads":
             return "Roads & Infrastructure";
-        case "potholes":
+    case "potholes":
             return "Potholes";
-        case "streetlights":
+    case "streetlights":
             return "Street Lighting";
-        case "garbage":
+    case "garbage":
             return "Waste Management";
-        case "water":
+    case "water":
             return "Water Supply";
-        case "drainage":
+    case "drainage":
             return "Drainage";
-        case "parks":
+    case "parks":
             return "Parks & Recreation";
-        case "traffic":
+    case "traffic":
             return "Traffic Management";
-        default:
+    default:
             return "Other";
     }
 };
@@ -192,29 +193,29 @@ export default function AdminIssuesPage() {
     );
     const [showFilters, setShowFilters] = useState(false);
 
-    // Fetch issues from API
-    useEffect(() => {
-        const fetchIssues = async () => {
-            try {
+  // Fetch issues from API
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
                 setLoading(true);
 
                 const response = await fetch("/api/issues?limit=100", {
                     credentials: "include",
                 });
-                if (response.ok) {
+        if (response.ok) {
                     const data = await response.json();
                     let issues = data.issues || [];
 
                     console.log("Total issues loaded:", issues.length);
 
                     setAllIssues(issues);
-                } else {
+        } else {
                     setError("Failed to fetch issues");
-                }
-            } catch (error) {
+        }
+      } catch (error) {
                 console.error("Error fetching issues:", error);
                 setError("Error loading issues");
-            } finally {
+      } finally {
                 setLoading(false);
             }
         };
@@ -227,12 +228,12 @@ export default function AdminIssuesPage() {
     // Filtered issues
     const filteredIssues = allIssues
         .filter((issue) => {
-            const matchesSearch =
-                issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch =
+      issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 issue.location_address
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase()) ||
-                issue.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      issue.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 (issue.profiles?.full_name || "")
                     .toLowerCase()
                     .includes(searchTerm.toLowerCase());
@@ -264,13 +265,13 @@ export default function AdminIssuesPage() {
             );
         });
 
-    const statusCounts = {
-        all: allIssues.length,
-        submitted: allIssues.filter((i) => i.status === "submitted").length,
-        assigned: allIssues.filter((i) => i.status === "assigned").length,
-        in_progress: allIssues.filter((i) => i.status === "in_progress").length,
-        resolved: allIssues.filter((i) => i.status === "resolved").length,
-        closed: allIssues.filter((i) => i.status === "closed").length,
+  const statusCounts = {
+    all: allIssues.length,
+    submitted: allIssues.filter((i) => i.status === "submitted").length,
+    assigned: allIssues.filter((i) => i.status === "assigned").length,
+    in_progress: allIssues.filter((i) => i.status === "in_progress").length,
+    resolved: allIssues.filter((i) => i.status === "resolved").length,
+    closed: allIssues.filter((i) => i.status === "closed").length,
     };
 
     // Get unique categories from issues
@@ -291,7 +292,7 @@ export default function AdminIssuesPage() {
         priorityFilter !== "all" ||
         categoryFilter !== "all";
 
-    const handleBulkAction = (action: string) => {
+  const handleBulkAction = (action: string) => {
         setSelectedIssues([]);
     };
 
@@ -305,31 +306,31 @@ export default function AdminIssuesPage() {
                 `/api/issues/${issueId}/simple-status`,
                 {
                     method: "PUT",
-                    headers: {
+        headers: {
                         "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        status: newStatus,
+        },
+        body: JSON.stringify({
+          status: newStatus,
                         notes:
                             notes || `Status changed to ${newStatus} by admin`,
-                    }),
+        }),
                 }
             );
 
-            if (response.ok) {
+      if (response.ok) {
                 setAllIssues((prevIssues) =>
                     prevIssues.map((issue) =>
-                        issue.id === issueId
+            issue.id === issueId 
                             ? {
                                   ...issue,
                                   status: newStatus,
                                   updated_at: new Date().toISOString(),
                               }
-                            : issue
-                    )
-                );
-
-                const statusMessages = {
+              : issue
+          )
+        );
+        
+        const statusMessages = {
                     assigned: "Issue accepted and assigned",
                     in_progress: "Work started on issue",
                     resolved: "Issue marked as resolved",
@@ -344,95 +345,95 @@ export default function AdminIssuesPage() {
                 toast.className =
                     "fixed top-4 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2";
                 toast.innerHTML = `<CheckCircle class="w-4 h-4" /> <span>${message}</span>`;
-                document.body.appendChild(toast);
-                setTimeout(() => document.body.removeChild(toast), 3000);
-            } else {
+        document.body.appendChild(toast);
+        setTimeout(() => document.body.removeChild(toast), 3000);
+      } else {
                 throw new Error("Failed to update status");
-            }
-        } catch (error) {
+      }
+    } catch (error) {
             console.error("Error updating status:", error);
             const errorToast = document.createElement("div");
             errorToast.className =
                 "fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2";
             errorToast.innerHTML = `<AlertTriangle class="w-4 h-4" /> <span>Failed to update issue status</span>`;
-            document.body.appendChild(errorToast);
-            setTimeout(() => document.body.removeChild(errorToast), 3000);
-        }
-    };
+      document.body.appendChild(errorToast);
+      setTimeout(() => document.body.removeChild(errorToast), 3000);
+    }
+  };
 
     const handleIssueAction = async (
         action: string,
         issueId: string,
         currentStatus: string
     ) => {
-        if (processingIssue) return;
-
-        try {
-            setProcessingIssue(issueId);
-
-            switch (action) {
+    if (processingIssue) return;
+    
+    try {
+      setProcessingIssue(issueId);
+      
+      switch (action) {
                 case "accept":
                     await handleStatusUpdate(
                         issueId,
                         "assigned",
                         "Issue accepted and assigned to department"
                     );
-                    break;
+          break;
                 case "reject":
                     await handleStatusUpdate(
                         issueId,
                         "closed",
                         "Issue rejected by admin"
                     );
-                    break;
+          break;
                 case "in_progress":
                     await handleStatusUpdate(
                         issueId,
                         "in_progress",
                         "Work started on this issue"
                     );
-                    break;
+          break;
                 case "resolve":
                     await handleStatusUpdate(
                         issueId,
                         "resolved",
                         "Issue has been resolved"
                     );
-                    break;
+          break;
                 case "close":
                     await handleStatusUpdate(
                         issueId,
                         "closed",
                         "Issue closed by admin"
                     );
-                    break;
+          break;
                 case "view":
-                    setProcessingIssue(null);
-                    window.location.href = `/admin/issues/${issueId}`;
-                    return;
+          setProcessingIssue(null);
+          window.location.href = `/admin/issues/${issueId}`;
+          return;
                 case "edit":
-                    setProcessingIssue(null);
-                    window.location.href = `/admin/issues/${issueId}`;
-                    return;
+          setProcessingIssue(null);
+          window.location.href = `/admin/issues/${issueId}`;
+          return;
                 case "assign":
-                    setProcessingIssue(null);
-                    window.location.href = `/admin/issues/${issueId}`;
-                    return;
+          setProcessingIssue(null);
+          window.location.href = `/admin/issues/${issueId}`;
+          return;
                 case "priority":
-                    setProcessingIssue(null);
-                    window.location.href = `/admin/issues/${issueId}`;
-                    return;
-                default:
+          setProcessingIssue(null);
+          window.location.href = `/admin/issues/${issueId}`;
+          return;
+        default:
                     break;
-            }
-
+      }
+      
             await new Promise((resolve) => setTimeout(resolve, 500));
-        } catch (error) {
+    } catch (error) {
             console.error("Error performing action:", error);
-        } finally {
-            setProcessingIssue(null);
-        }
-    };
+    } finally {
+      setProcessingIssue(null);
+    }
+  };
 
     const handleUserIdClick = (issueId: string) => {
         setExpandedUserIds((prev) => {
@@ -444,7 +445,7 @@ export default function AdminIssuesPage() {
             }
             return newSet;
         });
-    };
+  };
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -452,13 +453,13 @@ export default function AdminIssuesPage() {
                 {/* Action Buttons */}
                 <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
                     <div className="flex flex-col xs:flex-row xs:items-center gap-2 sm:gap-3">
-                            <Link href="/admin/dashboard">
+                        <Link href="/admin/dashboard">
                             <Button variant="outline" size="sm" className="w-full xs:w-auto border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105">
-                                    <ArrowLeft className="w-4 h-4 mr-2" />
+                                <ArrowLeft className="w-4 h-4 mr-2" />
                                 <span className="hidden xs:inline">Dashboard</span>
                                 <span className="xs:hidden">Back to Dashboard</span>
-                                </Button>
-                            </Link>
+                            </Button>
+                        </Link>
                         <Link href="/admin/issues/map">
                             <Button className="w-full xs:w-auto bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 hover:scale-105">
                                 <MapPin className="w-4 h-4 mr-2" />
@@ -466,15 +467,15 @@ export default function AdminIssuesPage() {
                                 <span className="xs:hidden">View on Map</span>
                             </Button>
                         </Link>
-                            </div>
-                            {selectedIssues.length > 0 && (
+                    </div>
+                    {selectedIssues.length > 0 && (
                         <Button variant="secondary" size="sm" className="w-full xs:w-auto bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all duration-200 hover:scale-105">
-                                    <Users className="w-4 h-4 mr-2" />
+                            <Users className="w-4 h-4 mr-2" />
                             <span className="hidden xs:inline">Bulk Actions ({selectedIssues.length})</span>
                             <span className="xs:hidden">Actions ({selectedIssues.length})</span>
-                                </Button>
-                            )}
-                    </div>
+                        </Button>
+                    )}
+                </div>
 
                 {/* Stats Overview */}
                 <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-8">
@@ -702,19 +703,20 @@ export default function AdminIssuesPage() {
                                         </SelectTrigger>
                                         <SelectContent>
                                                 <SelectItem value="all">All Categories</SelectItem>
-                                                {Array.from(new Set(allIssues.map(issue => issue.category))).map(category => (
+                                                {categories.map((category) => (
                                                     <SelectItem key={category} value={category}>
-                                                    {getCategoryLabel(category)}
-                                                </SelectItem>
-                                            ))}
+                                                        {getCategoryIcon(category)}{" "}
+                                                        {getCategoryLabel(category)}
+                                                    </SelectItem>
+                                                ))}
                                         </SelectContent>
                                     </Select>
                                     </div>
                                 </div>
                             </div>
                         )}
-                    </CardContent>
-                </Card>
+          </CardContent>
+        </Card>
 
                 {/* Loading State */}
                 {loading && (
@@ -748,11 +750,55 @@ export default function AdminIssuesPage() {
 
                 {/* Issues List */}
                 {!loading && !error && (
-                    <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
-                        <CardHeader className="pb-3 sm:pb-4">
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
-                                <div className="min-w-0 flex-1">
-                                    <CardTitle className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                    <Tabs
+                        value={statusFilter}
+                        onValueChange={setStatusFilter}
+                        className="space-y-6"
+                    >
+                        <div className="overflow-x-auto">
+                            <TabsList className="grid w-full grid-cols-6 h-12">
+                                <TabsTrigger value="all" className="text-sm">
+                                    All ({statusCounts.all})
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="submitted"
+                                    className="text-sm"
+                                >
+                                    📝 New ({statusCounts.submitted})
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="assigned"
+                                    className="text-sm"
+                                >
+                                    👤 Assigned ({statusCounts.assigned})
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="in_progress"
+                                    className="text-sm"
+                                >
+                                    ⚡ Progress ({statusCounts.in_progress})
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    value="resolved"
+                                    className="text-sm"
+                                >
+                                    ✅ Resolved ({statusCounts.resolved})
+                                </TabsTrigger>
+                                <TabsTrigger value="closed" className="text-sm">
+                                    🔒 Closed ({statusCounts.closed})
+                                </TabsTrigger>
+            </TabsList>
+                        </div>
+
+                        <TabsContent value={statusFilter} className="space-y-6">
+                            <Card
+                                className="shadow-sm"
+                                style={{ overflow: "visible" }}
+                            >
+                                <CardHeader className="pb-4">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <CardTitle className="text-xl">
                                                 Issues ({filteredIssues.length})
                                             </CardTitle>
                                     <CardDescription className="text-xs sm:text-sm text-gray-500 mt-1 truncate">
@@ -766,12 +812,12 @@ export default function AdminIssuesPage() {
                                 <div className="text-center py-8 sm:py-12">
                                     <div className="animate-bounce">
                                         <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 sm:mb-3 text-gray-400" />
-                                                                            </div>
+                                    </div>
                                     <p className="font-medium text-gray-500 text-sm sm:text-base">No issues found</p>
                                     <p className="text-xs mt-1 text-gray-400 px-4">
                                         {hasActiveFilters ? 'Try adjusting your filters' : 'Issues will appear here once citizens start reporting them'}
                                     </p>
-                                                                        </div>
+                                </div>
                             ) : (
                                 <div className="space-y-3 sm:space-y-4">
                                     {filteredIssues.map((issue, index) => (
@@ -787,12 +833,12 @@ export default function AdminIssuesPage() {
                                                     <div className="flex items-center gap-1 sm:gap-2 flex-wrap flex-shrink-0">
                                                         <Badge className={`${getStatusColor(issue.status)} text-xs font-medium px-2 py-1`}>
                                                             {issue.status.replace("-", " ")}
-                                                                    </Badge>
+                                                        </Badge>
                                                         <Badge className={`${getPriorityColor(issue.priority)} text-xs font-medium px-2 py-1`}>
                                                             {issue.priority}
-                                                                        </Badge>
-                                        </div>
-                                    </div>
+                                                        </Badge>
+                                                    </div>
+                                                </div>
 
                                                 <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
                                                     {issue.description}
@@ -805,54 +851,58 @@ export default function AdminIssuesPage() {
                                                             {issue.location_address.length > 40 
                                                                 ? issue.location_address.substring(0, 40) + "..." 
                                                                 : issue.location_address}
-                                                                        </span>
-                                                                        </span>
+                                                        </span>
+                                                    </span>
                                                     <span className="flex items-center flex-shrink-0">
                                                         <Calendar className="w-3 h-3 mr-1" />
                                                         {new Date(issue.created_at).toLocaleDateString()}
-                                                                    </span>
+                                                    </span>
                                                     {issue.profiles && (
                                                         <span className="flex items-center min-w-0">
                                                             <User className="w-3 h-3 mr-1 flex-shrink-0" />
                                                             <span className="truncate">{issue.profiles.full_name}</span>
-                                                                            </span>
-                                                                        )}
-                                                            </div>
+                                                        </span>
+                                                    )}
+                                                </div>
 
                                                 <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 sm:gap-3">
                                                     <div className="flex items-center gap-3 sm:gap-4 text-xs text-gray-500">
                                                         <span className="flex items-center">
                                                             <ThumbsUp className="w-3 h-3 mr-1" />
                                                             {issue.upvotes || 0} votes
-                                                                    </span>
+                                                        </span>
                                                         {issue.department && (
                                                             <span className="flex items-center min-w-0">
                                                                 <Building2 className="w-3 h-3 mr-1 flex-shrink-0" />
                                                                 <span className="truncate">{issue.department.name}</span>
                                                             </span>
                                                         )}
-                                    </div>
+                                                    </div>
 
-                                                <Button
-                                                    variant="outline"
-                                                        size="sm"
-                                                        className="text-xs border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105 w-full xs:w-auto"
-                                                        asChild
-                                                    >
-                                                        <Link href={`/admin/issues/${issue.id}`}>
-                                                            <Eye className="w-3 h-3 mr-1" />
-                                                            <span className="hidden xs:inline">View</span>
-                                                            <span className="xs:hidden">View Details</span>
-                                                        </Link>
-                                                </Button>
+                                                    <div className="flex items-center gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="text-xs border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105 w-full xs:w-auto"
+                                                            asChild
+                                                        >
+                                                            <Link href={`/admin/issues/${issue.id}`}>
+                                                                <Eye className="w-3 h-3 mr-1" />
+                                                                <span className="hidden xs:inline">View</span>
+                                                                <span className="xs:hidden">View Details</span>
+                                                            </Link>
+                                                        </Button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     ))}
-                                        </div>
-                                    )}
-                                </CardContent>
+                                </div>
+                            )}
+                        </CardContent>
                             </Card>
+                        </TabsContent>
+                    </Tabs>
                 )}
             </div>
         </div>

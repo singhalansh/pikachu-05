@@ -562,13 +562,13 @@ export default function ReportIssuePage() {
 
     return (
         <div className="min-h-screen bg-background">
-            <div className="container mx-auto px-4 py-8">
-                <div className="max-w-2xl mx-auto">
+            <div className="responsive-container py-8">
+                <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-8">
-                        <h1 className="text-3xl font-bold mb-2">
+                        <h1 className="responsive-heading-1 mb-2">
                             Report an Issue
                         </h1>
-                        <p className="text-muted-foreground">
+                        <p className="responsive-body text-muted-foreground">
                             Help improve your community by reporting issues that
                             need attention
                         </p>
@@ -583,7 +583,7 @@ export default function ReportIssuePage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <form onSubmit={handleSubmit} className="space-y-6">
+                            <form onSubmit={handleSubmit} className="responsive-form">
                                 {/* Title */}
                                 <div className="space-y-2">
                                     <Label htmlFor="title">Issue Title *</Label>
@@ -926,8 +926,8 @@ export default function ReportIssuePage() {
                                 </div>
 
                                 {/* Category and Priority */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
+                                <div className="responsive-form-row">
+                                    <div className="responsive-form-field space-y-2">
                                         <Label htmlFor="category">
                                             Category *
                                         </Label>
@@ -937,7 +937,7 @@ export default function ReportIssuePage() {
                                                 handleInputChange("category", v)
                                             }
                                         >
-                                            <SelectTrigger>
+                                            <SelectTrigger className="responsive-focus">
                                                 <SelectValue placeholder="Select category" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -958,7 +958,7 @@ export default function ReportIssuePage() {
                                         </Select>
                                     </div>
 
-                                    <div className="space-y-2">
+                                    <div className="responsive-form-field space-y-2">
                                         <Label htmlFor="priority">
                                             Priority
                                         </Label>
@@ -971,7 +971,7 @@ export default function ReportIssuePage() {
                                                 )
                                             }
                                         >
-                                            <SelectTrigger>
+                                            <SelectTrigger className="responsive-focus">
                                                 <SelectValue placeholder="Select priority" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -1103,12 +1103,12 @@ export default function ReportIssuePage() {
                                 </div>
 
                                 {/* Submit Button */}
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex flex-col sm:flex-row gap-4 pt-4">
                                     <Button
                                         type="button"
                                         variant="outline"
                                         onClick={() => router.back()}
-                                        className="flex-1"
+                                        className="responsive-button flex-1"
                                     >
                                         Cancel
                                     </Button>
@@ -1125,7 +1125,7 @@ export default function ReportIssuePage() {
                                                 formData.location_lng
                                             )
                                         }
-                                        className="flex-1"
+                                        className="responsive-button flex-1"
                                     >
                                         {isSubmitting
                                             ? "Submitting..."

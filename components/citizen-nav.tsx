@@ -18,6 +18,7 @@ import {
     Flag,
     CheckCircle,
     DollarSign,
+    ChevronRight,
 } from "lucide-react";
 import RealTimeNotifications from "@/components/real-time-notifications";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -34,6 +35,7 @@ import {
     DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
+// Navigation items for desktop
 const navItems = [
     {
         href: "/citizen/dashboard",
@@ -50,11 +52,14 @@ const navItems = [
         label: "My Issues",
         icon: FileText,
     },
+];
+
+// Mobile menu items (profile, funds, etc.)
+const mobileMenuItems = [
     {
-        href: "/citizen/notifications",
-        label: "Notifications",
-        icon: Bell,
-        badge: 3, // Unread count
+        href: "/citizen/profile",
+        label: "Profile",
+        icon: User,
     },
     {
         href: "/citizen/crowdfunding",
@@ -66,7 +71,30 @@ const navItems = [
         label: "Abhiyaan",
         icon: Flag,
     },
+    {
+        href: "/citizen/notifications",
+        label: "Notifications",
+        icon: Bell,
+        badge: 3, // Unread count
+    },
 ];
+
+// Page titles for breadcrumb
+const getPageTitle = (pathname: string) => {
+    const titles: { [key: string]: string } = {
+        "/citizen/dashboard": "Dashboard",
+        "/citizen/report": "Report Issue",
+        "/citizen/issues": "My Issues",
+        "/citizen/notifications": "Notifications",
+        "/citizen/profile": "Profile",
+        "/citizen/crowdfunding": "₹ Funds",
+        "/citizen/Abhiyaan": "Abhiyaan",
+        "/citizen/leaderboard": "Leaderboard",
+        "/citizen/resolved": "Resolved Issues",
+    };
+    
+    return titles[pathname] || "CivicReport";
+};
 
 export default function CitizenNav() {
     const pathname = usePathname();
@@ -103,7 +131,7 @@ export default function CitizenNav() {
                         variant={isActive ? "default" : "ghost"}
                         size={mobile ? "default" : "sm"}
                         asChild
-                        className={`relative ${mobile ? "w-full justify-start h-11" : "h-9"
+                        className={`relative ${mobile ? "w-full justify-start h-11 mobile-menu-item" : "h-9"
                             }`}
                         onClick={onItemClick}
                     >
@@ -131,215 +159,237 @@ export default function CitizenNav() {
     };
 
     return (
-        <div className="border-b bg-card sticky top-0 z-50">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-3">
-                <div className="flex items-center justify-between">
-                    {/* Logo */}
-                    <Link
-                        href="/citizen/dashboard"
-                        className="flex items-center space-x-2"
-                    >
-                        <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                            <Home className="w-5 h-5 text-accent-foreground" />
-                        </div>
-                        <span className="font-semibold text-base sm:text-lg">
-                            CivicReport
-                        </span>
-                    </Link>
-
-                    {/* Desktop Navigation */}
-                    <NavItems />
-
-                    {/* Desktop User Actions */}
-                    <div className="hidden lg:flex lg:items-center lg:space-x-2">
-                        {/* Combined Profile Button with Notifications */}
-                        <div className="flex items-center space-x-2">
-                            <RealTimeNotifications />
-                            <Button
-                                variant="default"
-                                size="sm"
-                                className="h-9 bg-orange-500 hover:bg-orange-600 text-white px-4"
-                                asChild
-                            >
-                                <Link
-                                    href="/citizen/profile"
-                                    className="flex items-center"
-                                >
-                                    <Avatar className="w-6 h-6 mr-2">
-                                        <AvatarImage
-                                            src={
-                                                (user?.user_metadata as any)
-                                                    ?.avatar_url ||
-                                                (user?.user_metadata as any)
-                                                    ?.picture
-                                            }
-                                            alt={displayName}
-                                        />
-                                        <AvatarFallback className="bg-white text-orange-500 text-xs font-bold">
-                                            {String(displayName)
-                                                .substring(0, 2)
-                                                .toUpperCase()}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <span>{displayName}</span>
-                                </Link>
-                            </Button>
-                        </div>
-
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-9 text-destructive hover:text-destructive hover:bg-destructive/10"
-                            onClick={handleLogout}
+        <>
+            {/* Main Navbar */}
+            <div className="border-b bg-card sticky top-0 z-50 mobile-navbar">
+                <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 mobile-navbar-container">
+                    <div className="flex items-center justify-between">
+                        {/* Logo */}
+                        <Link
+                            href="/citizen/dashboard"
+                            className="flex items-center space-x-2 flex-shrink-0"
                         >
-                            <LogOut className="w-4 h-4 mr-2" />
-                            Logout
-                        </Button>
-                    </div>
+                            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                                <Home className="w-5 h-5 text-accent-foreground" />
+                            </div>
+                            <span className="font-semibold text-base sm:text-lg">
+                                CivicReport
+                            </span>
+                        </Link>
 
-                    {/* Mobile Navigation */}
-                    <div className="flex lg:hidden items-center space-x-2">
-                        {/* Combined Profile Button with Notifications - Mobile */}
-                        <div className="flex items-center space-x-2">
-                            <RealTimeNotifications />
-                            <Button
-                                variant="default"
-                                size="sm"
-                                className="h-9 bg-orange-500 hover:bg-orange-600 text-white px-3"
-                                asChild
-                            >
-                                <Link
-                                    href="/citizen/profile"
-                                    className="flex items-center"
-                                >
-                                    <Avatar className="w-5 h-5 mr-1">
-                                        <AvatarImage
-                                            src={
-                                                (user?.user_metadata as any)
-                                                    ?.avatar_url ||
-                                                (user?.user_metadata as any)
-                                                    ?.picture
-                                            }
-                                            alt={displayName}
-                                        />
-                                        <AvatarFallback className="bg-white text-orange-500 text-xs font-bold">
-                                            {String(displayName)
-                                                .substring(0, 2)
-                                                .toUpperCase()}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <span className="text-sm">
-                                        {displayName}
-                                    </span>
-                                </Link>
-                            </Button>
-                        </div>
+                        {/* Desktop Navigation */}
+                        <NavItems />
 
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-9 w-9 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                            onClick={handleLogout}
-                        >
-                            <LogOut className="w-4 h-4" />
-                        </Button>
-                        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                            <SheetTrigger asChild>
+                        {/* Desktop User Actions */}
+                        <div className="hidden lg:flex lg:items-center lg:space-x-2">
+                            {/* Additional Desktop Buttons */}
+                            <div className="flex items-center space-x-1">
                                 <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-9 w-9 p-0"
+                                    className="h-9 text-foreground hover:bg-muted/50"
+                                    asChild
                                 >
-                                    <Menu className="w-5 h-5" />
+                                    <Link href="/citizen/crowdfunding" className="flex items-center">
+                                        <DollarSign className="w-4 h-4 mr-1" />
+                                        <span className="hidden xl:inline">₹ Funds</span>
+                                        <span className="xl:hidden">₹</span>
+                                    </Link>
                                 </Button>
-                            </SheetTrigger>
-                            <SheetContent side="right" className="w-80">
-                                <div className="flex flex-col h-full">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div className="flex items-center space-x-2">
-                                            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                                                <Home className="w-5 h-5 text-accent-foreground" />
+                                
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-9 text-foreground hover:bg-muted/50"
+                                    asChild
+                                >
+                                    <Link href="/citizen/Abhiyaan" className="flex items-center">
+                                        <Flag className="w-4 h-4 mr-1" />
+                                        <span className="hidden xl:inline">Abhiyaan</span>
+                                        <span className="xl:hidden">Flag</span>
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            {/* Combined Profile Button with Notifications */}
+                            <div className="flex items-center space-x-2">
+                                <RealTimeNotifications />
+                                <Button
+                                    variant="default"
+                                    size="sm"
+                                    className="h-9 bg-orange-500 hover:bg-orange-600 text-white px-4"
+                                    asChild
+                                >
+                                    <Link
+                                        href="/citizen/profile"
+                                        className="flex items-center"
+                                    >
+                                        <Avatar className="w-6 h-6 mr-2">
+                                            <AvatarImage
+                                                src={
+                                                    (user?.user_metadata as any)
+                                                        ?.avatar_url ||
+                                                    (user?.user_metadata as any)
+                                                        ?.picture
+                                                }
+                                                alt={displayName}
+                                            />
+                                            <AvatarFallback className="bg-white text-orange-500 text-xs font-bold">
+                                                {String(displayName)
+                                                    .substring(0, 2)
+                                                    .toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <span className="hidden xl:inline">{displayName}</span>
+                                        <span className="xl:hidden">Profile</span>
+                                    </Link>
+                                </Button>
+                            </div>
+
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-9 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                onClick={handleLogout}
+                            >
+                                <LogOut className="w-4 h-4 mr-2" />
+                                <span className="hidden xl:inline">Logout</span>
+                            </Button>
+                        </div>
+
+                        {/* Mobile Navigation - Only Bell Icon and Hamburger Menu */}
+                        <div className="flex lg:hidden items-center space-x-2">
+                            {/* Notifications Bell Icon */}
+                            <RealTimeNotifications />
+                            
+                            {/* Hamburger Menu */}
+                            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                                <SheetTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-9 w-9 p-0 hover:bg-muted/50 transition-colors"
+                                    >
+                                        <Menu className="w-5 h-5" />
+                                    </Button>
+                                </SheetTrigger>
+                                <SheetContent 
+                                    side="right" 
+                                    className="w-80 sm:w-96 transition-all duration-300 ease-in-out"
+                                >
+                                    <div className="flex flex-col h-full">
+                                        {/* Header */}
+                                        <div className="flex items-center justify-between mb-6">
+                                            <div className="flex items-center space-x-2">
+                                                <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                                                    <Home className="w-5 h-5 text-accent-foreground" />
+                                                </div>
+                                                <span className="font-semibold text-lg">
+                                                    CivicReport
+                                                </span>
                                             </div>
-                                            <span className="font-semibold text-lg">
-                                                CivicReport
-                                            </span>
+                                        </div>
+
+                                        {/* Main Navigation Items */}
+                                        <div className="flex-1">
+                                            <div className="space-y-2 mb-6">
+                                                <h3 className="text-sm font-medium text-muted-foreground px-2">
+                                                    Navigation
+                                                </h3>
+                                                <NavItems mobile onItemClick={() => setIsOpen(false)} />
+                                            </div>
+
+                                            {/* Mobile Menu Items */}
+                                            <div className="space-y-2 mb-6">
+                                                <h3 className="text-sm font-medium text-muted-foreground px-2">
+                                                    Account & More
+                                                </h3>
+                                                {mobileMenuItems.map((item) => {
+                                                    const isActive = pathname === item.href;
+                                                    const IconComponent = item.icon;
+                                                    
+                                                    return (
+                                                        <Button
+                                                            key={item.href}
+                                                            variant={isActive ? "default" : "ghost"}
+                                                            className="w-full justify-start h-11 transition-all duration-200 mobile-menu-item"
+                                                            asChild
+                                                            onClick={() => setIsOpen(false)}
+                                                        >
+                                                            <Link href={item.href as any}>
+                                                                {IconComponent && <IconComponent className="w-4 h-4 mr-3" />}
+                                                                {item.label}
+                                                                {item.badge && (
+                                                                    <Badge
+                                                                        variant="destructive"
+                                                                        className="ml-auto px-1 py-0 text-xs"
+                                                                    >
+                                                                        {item.badge}
+                                                                    </Badge>
+                                                                )}
+                                                            </Link>
+                                                        </Button>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+
+                                        {/* User Profile Section */}
+                                        <div className="border-t pt-4 space-y-3">
+                                            <div className="flex items-center gap-3 px-2 py-2">
+                                                <Avatar className="w-10 h-10">
+                                                    <AvatarImage
+                                                        src={
+                                                            (user?.user_metadata as any)?.avatar_url ||
+                                                            (user?.user_metadata as any)?.picture
+                                                        }
+                                                        alt={displayName}
+                                                    />
+                                                    <AvatarFallback className="bg-orange-100 text-orange-600">
+                                                        {String(displayName)
+                                                            .substring(0, 2)
+                                                            .toUpperCase()}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="font-medium truncate text-sm">
+                                                        {displayName}
+                                                    </div>
+                                                    <div className="text-xs text-muted-foreground truncate">
+                                                        {user?.email ?? ""}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <Button
+                                                variant="ghost"
+                                                className="w-full justify-start h-11 text-destructive hover:text-destructive hover:bg-destructive/10 transition-colors"
+                                                onClick={handleLogout}
+                                            >
+                                                <LogOut className="w-4 h-4 mr-3" />
+                                                Logout
+                                            </Button>
                                         </div>
                                     </div>
-
-                                    <div className="flex-1">
-                                        <NavItems mobile onItemClick={() => setIsOpen(false)} />
-                                    </div>
-
-                                    <div className="border-t pt-4 space-y-2">
-                                        <div className="flex items-center gap-3 px-3 py-2 mb-2">
-                                            <Avatar className="w-9 h-9">
-                                                <AvatarImage
-                                                    src={
-                                                        (
-                                                            user?.user_metadata as any
-                                                        )?.avatar_url ||
-                                                        (
-                                                            user?.user_metadata as any
-                                                        )?.picture
-                                                    }
-                                                    alt={displayName}
-                                                />
-                                                <AvatarFallback>
-                                                    {String(displayName)
-                                                        .substring(0, 2)
-                                                        .toUpperCase()}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div className="min-w-0">
-                                                <div className="font-medium truncate">
-                                                    {displayName}
-                                                </div>
-                                                <div className="text-xs text-muted-foreground truncate">
-                                                    {user?.email ?? ""}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <Button
-                                            variant="ghost"
-                                            className="w-full justify-start h-11"
-                                            asChild
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            <Link href="/citizen/profile">
-                                                <User className="w-4 h-4 mr-2" />
-                                                Profile
-                                            </Link>
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            className="w-full justify-start h-11"
-                                            asChild
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            <Link href="/citizen/issues">
-                                                <FileText className="w-4 h-4 mr-2" />
-                                                My Issues
-                                            </Link>
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            className="w-full justify-start h-11"
-                                            asChild
-                                            onClick={() => setIsOpen(false)}
-                                        >
-                                            <Link href="/citizen/notifications">
-                                                <Bell className="w-4 h-4 mr-2" />
-                                                Notifications
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </div>
-                            </SheetContent>
-                        </Sheet>
+                                </SheetContent>
+                            </Sheet>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+
+            {/* Mobile Breadcrumb/Page Title */}
+            <div className="lg:hidden border-b bg-muted/30 mobile-navbar-breadcrumb">
+                <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 py-2 mobile-navbar-container">
+                    <div className="flex items-center space-x-2">
+                        <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm font-medium text-foreground">
+                            {getPageTitle(pathname)}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </>
     );
 }
 

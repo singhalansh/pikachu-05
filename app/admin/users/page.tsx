@@ -78,8 +78,7 @@ export default function UsersPage() {
             const { data: profiles, error: profilesError } =
                 await supabase.from("profiles").select(`
                     *,
-                    reported_issues:issues!user_id(count),
-                    resolved_issues:issues!assigned_to(count)
+                    reported_issues:issues!user_id(count)
                 `);
 
             if (profilesError) {
@@ -112,10 +111,8 @@ export default function UsersPage() {
                 joinDate: new Date(profile.created_at).toLocaleDateString(),
                 status: "active", // Default status
                 issuesReported: profile.reported_issues?.[0]?.count || 0,
-                issuesResolved: profile.resolved_issues?.[0]?.count || 0,
-                reputation:
-                    (profile.reported_issues?.[0]?.count || 0) * 10 +
-                    (profile.resolved_issues?.[0]?.count || 0) * 20,
+                issuesResolved: 0,
+                reputation: (profile.reported_issues?.[0]?.count || 0) * 10,
                 avatar: profile.avatar_url || undefined,
             }));
 

@@ -194,84 +194,92 @@ export default function MyIssuesPage() {
   const totalUpvotes = issues.reduce((sum, issue) => sum + (issue.upvotes || 0), 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Enhanced Header with Stats */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 overflow-x-hidden">
+      {/* Enhanced Header with Stats - Mobile Responsive */}
       <div className="border-b bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex items-center justify-between mb-6">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" asChild className="hover:bg-gray-100">
+              <Button variant="ghost" size="sm" asChild className="hover:bg-gray-100 flex-shrink-0">
                 <Link href="/citizen/dashboard">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  Back to Dashboard
+                  <span className="hidden sm:inline">Back to Dashboard</span>
+                  <span className="sm:hidden">Back</span>
                 </Link>
               </Button>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">My Issues</h1>
-                <p className="text-gray-600">Track the progress of your reported issues</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">My Issues</h1>
+                <p className="text-sm sm:text-base text-gray-600 mt-1">Track the progress of your reported issues</p>
               </div>
             </div>
-            <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+            <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white shadow-md w-full sm:w-auto">
               <Link href="/citizen/report">
                 <Plus className="w-4 h-4 mr-2" />
-                Report New Issue
+                <span className="hidden sm:inline">Report New Issue</span>
+                <span className="sm:hidden">Report Issue</span>
               </Link>
             </Button>
           </div>
           
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="p-4">
+          {/* Stats Cards - Mobile Responsive Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <Card className="bg-blue-50 border-blue-200 transition-all duration-200 hover:shadow-md">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                    <FileText className="w-5 h-5 text-blue-600" />
+                  <div className="p-2 bg-blue-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                    <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-blue-600">Total Issues</p>
-                    <p className="text-2xl font-bold text-blue-900">{issues.length}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm font-medium text-blue-600 truncate">
+                      <span className="hidden sm:inline">Total Issues</span>
+                      <span className="sm:hidden">Total</span>
+                    </p>
+                    <p className="text-lg sm:text-2xl font-bold text-blue-900">{issues.length}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-orange-50 border-orange-200">
-              <CardContent className="p-4">
+            <Card className="bg-orange-50 border-orange-200 transition-all duration-200 hover:shadow-md">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center">
-                  <div className="p-2 bg-orange-100 rounded-lg mr-3">
-                    <AlertTriangle className="w-5 h-5 text-orange-600" />
+                  <div className="p-2 bg-orange-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                    <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-orange-600">Active</p>
-                    <p className="text-2xl font-bold text-orange-900">{activeIssues.length}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm font-medium text-orange-600 truncate">Active</p>
+                    <p className="text-lg sm:text-2xl font-bold text-orange-900">{activeIssues.length}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-green-50 border-green-200">
-              <CardContent className="p-4">
+            <Card className="bg-green-50 border-green-200 transition-all duration-200 hover:shadow-md">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center">
-                  <div className="p-2 bg-green-100 rounded-lg mr-3">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
+                  <div className="p-2 bg-green-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-green-600">Resolved</p>
-                    <p className="text-2xl font-bold text-green-900">{resolvedIssues.length}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm font-medium text-green-600 truncate">Resolved</p>
+                    <p className="text-lg sm:text-2xl font-bold text-green-900">{resolvedIssues.length}</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="bg-purple-50 border-purple-200">
-              <CardContent className="p-4">
+            <Card className="bg-purple-50 border-purple-200 transition-all duration-200 hover:shadow-md col-span-2 sm:col-span-2 lg:col-span-1">
+              <CardContent className="p-3 sm:p-4">
                 <div className="flex items-center">
-                  <div className="p-2 bg-purple-100 rounded-lg mr-3">
-                    <TrendingUp className="w-5 h-5 text-purple-600" />
+                  <div className="p-2 bg-purple-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                    <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-purple-600">Total Upvotes</p>
-                    <p className="text-2xl font-bold text-purple-900">{totalUpvotes}</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm font-medium text-purple-600 truncate">
+                      <span className="hidden sm:inline">Total Upvotes</span>
+                      <span className="sm:hidden">Upvotes</span>
+                    </p>
+                    <p className="text-lg sm:text-2xl font-bold text-purple-900">{totalUpvotes}</p>
                   </div>
                 </div>
               </CardContent>
@@ -280,21 +288,27 @@ export default function MyIssuesPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Enhanced Issues List */}
           <div className="lg:col-span-2">
-            <Tabs defaultValue="active" className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2 bg-white border shadow-sm">
-                <TabsTrigger value="active" className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">
-                  Active Issues ({activeIssues.length})
+            <Tabs defaultValue="active" className="space-y-4 sm:space-y-6">
+              <TabsList className="grid w-full grid-cols-2 bg-white border shadow-sm h-12 sm:h-auto">
+                <TabsTrigger 
+                  value="active" 
+                  className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-auto"
+                >
+                  <span className="hidden sm:inline">Active Issues ({activeIssues.length})</span>
+                  <span className="sm:hidden">Active ({activeIssues.length})</span>
                 </TabsTrigger>
-                <TabsTrigger value="resolved" className="data-[state=active]:bg-green-50 data-[state=active]:text-green-700">
-                  Resolved ({resolvedIssues.length})
+                <TabsTrigger 
+                  value="resolved" 
+                  className="data-[state=active]:bg-green-50 data-[state=active]:text-green-700 text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-auto"
+                >
+                  <span className="hidden sm:inline">Resolved ({resolvedIssues.length})</span>
+                  <span className="sm:hidden">Done ({resolvedIssues.length})</span>
                 </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="active" className="space-y-4">
+              </TabsList>              <TabsContent value="active" className="space-y-4">
                 {loading && <LoadingSkeleton />}
                 
                 {error && (
@@ -328,12 +342,14 @@ export default function MyIssuesPage() {
                   activeIssues.map((issue) => (
                     <Card
                       key={issue.id}
-                      className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 bg-white border-gray-200"
+                      className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 bg-white border-gray-200 overflow-hidden w-full max-w-full"
                       onClick={() => handleIssueClick(issue.id)}
                     >
-                      <CardContent className="p-6">
-                        <div className="flex gap-4">
-                          <div className="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 border">
+                      <CardContent className="p-0 w-full">
+                        {/* Mobile Layout: Instagram-style stacked layout */}
+                        <div className="block sm:hidden w-full">
+                          {/* Full-width image at top for mobile */}
+                          <div className="w-full h-48 bg-gray-100 overflow-hidden">
                             {issue.image_url ? (
                               <img
                                 src={issue.image_url}
@@ -342,55 +358,57 @@ export default function MyIssuesPage() {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <ImageIcon className="w-8 h-8 text-gray-400" />
+                                <ImageIcon className="w-12 h-12 text-gray-400" />
                               </div>
                             )}
                           </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between mb-3">
-                              <div className="flex-1 min-w-0 pr-4">
-                                <h3 className="font-semibold text-gray-900 text-lg mb-1 line-clamp-2">
+                          
+                          {/* Content stacked below image */}
+                          <div className="p-3 sm:p-4 space-y-3 w-full overflow-hidden">
+                            <div className="flex items-start justify-between gap-2 w-full">
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 line-clamp-2 leading-tight break-words">
                                   {issue.title}
                                 </h3>
-                                <p className="text-sm text-gray-500 font-mono">#{issue.id.slice(0, 8)}</p>
+                                <p className="text-xs text-gray-500 font-mono truncate">#{issue.id.slice(0, 8)}</p>
                               </div>
-                              <div className="flex flex-col items-end gap-2">
-                                <Badge className={getStatusColor(issue.status.replace('_','-'))}>
-                                  {getStatusIcon(issue.status)}
-                                  <span className="ml-2 capitalize">{issue.status.replace(/[_-]/g, " ")}</span>
-                                </Badge>
-                                {issue.upvotes > 0 && (
-                                  <div className="flex items-center text-sm text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
-                                    <TrendingUp className="w-3 h-3 mr-1" />
-                                    {issue.upvotes} upvotes
-                                  </div>
-                                )}
-                              </div>
+                              <Badge className={`${getStatusColor(issue.status.replace('_','-'))} flex-shrink-0 text-xs whitespace-nowrap`}>
+                                {getStatusIcon(issue.status)}
+                                <span className="ml-1 capitalize">{issue.status.replace(/[_-]/g, " ")}</span>
+                              </Badge>
                             </div>
 
-                            <div className="space-y-3">
-                              <div className="flex items-center text-sm text-gray-600">
-                                <MapPin className="w-4 h-4 mr-2 flex-shrink-0 text-gray-400" />
-                                <span className="truncate">{issue.location_address || 'Location not specified'}</span>
+                            {issue.upvotes > 0 && (
+                              <div className="flex items-center text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded-full w-fit">
+                                <TrendingUp className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="whitespace-nowrap">{issue.upvotes} upvotes</span>
+                              </div>
+                            )}
+
+                            <div className="space-y-2 w-full">
+                              <div className="flex items-start text-xs text-gray-600 w-full">
+                                <MapPin className="w-3 h-3 mr-2 flex-shrink-0 text-gray-400 mt-0.5" />
+                                <span className="break-words line-clamp-2 flex-1">{issue.location_address || 'Location not specified'}</span>
                               </div>
 
-                              <div className="flex items-center justify-between text-sm">
-                                <div className="flex items-center text-gray-600">
-                                  <Calendar className="w-4 h-4 mr-2 text-gray-400" />
-                                  {new Date(issue.created_at).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                  })}
+                              <div className="flex items-center justify-between text-xs gap-2 w-full">
+                                <div className="flex items-center text-gray-600 flex-shrink-0">
+                                  <Calendar className="w-3 h-3 mr-1 text-gray-400" />
+                                  <span className="whitespace-nowrap">
+                                    {new Date(issue.created_at).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric'
+                                    })}
+                                  </span>
                                 </div>
-                                <Badge variant="outline" className={getCategoryColor(issue.category)}>
+                                <Badge variant="outline" className={`${getCategoryColor(issue.category)} text-xs flex-shrink-0 whitespace-nowrap`}>
                                   {getCategoryLabel(issue.category)}
                                 </Badge>
                               </div>
 
-                              <div className="space-y-2">
-                                <div className="flex justify-between items-center text-sm">
+                              <div className="space-y-2 w-full">
+                                <div className="flex justify-between items-center text-xs">
                                   <span className="text-gray-600 font-medium">Progress</span>
                                   <span className="text-gray-900 font-semibold">
                                     {getProgressPercentage(issue.status.replace('_','-'))}%
@@ -398,14 +416,90 @@ export default function MyIssuesPage() {
                                 </div>
                                 <Progress 
                                   value={getProgressPercentage(issue.status.replace('_','-'))} 
-                                  className="h-2"
+                                  className="h-1.5 w-full"
                                 />
                               </div>
                             </div>
                           </div>
-                          
-                          <div className="flex-shrink-0 ml-2">
-                            <ArrowUpRight className="w-5 h-5 text-gray-400" />
+                        </div>
+
+                        {/* Desktop/Tablet Layout: Side-by-side layout */}
+                        <div className="hidden sm:block p-6">
+                          <div className="flex gap-4">
+                            <div className="w-24 h-24 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 border">
+                              {issue.image_url ? (
+                                <img
+                                  src={issue.image_url}
+                                  alt={issue.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <ImageIcon className="w-8 h-8 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex-1 min-w-0 pr-4">
+                                  <h3 className="font-semibold text-gray-900 text-lg mb-1 line-clamp-2">
+                                    {issue.title}
+                                  </h3>
+                                  <p className="text-sm text-gray-500 font-mono">#{issue.id.slice(0, 8)}</p>
+                                </div>
+                                <div className="flex flex-col items-end gap-2">
+                                  <Badge className={getStatusColor(issue.status.replace('_','-'))}>
+                                    {getStatusIcon(issue.status)}
+                                    <span className="ml-2 capitalize">{issue.status.replace(/[_-]/g, " ")}</span>
+                                  </Badge>
+                                  {issue.upvotes > 0 && (
+                                    <div className="flex items-center text-sm text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
+                                      <TrendingUp className="w-3 h-3 mr-1" />
+                                      {issue.upvotes} upvotes
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="space-y-3">
+                                <div className="flex items-center text-sm text-gray-600">
+                                  <MapPin className="w-4 h-4 mr-2 flex-shrink-0 text-gray-400" />
+                                  <span className="truncate">{issue.location_address || 'Location not specified'}</span>
+                                </div>
+
+                                <div className="flex items-center justify-between text-sm">
+                                  <div className="flex items-center text-gray-600">
+                                    <Calendar className="w-4 h-4 mr-2 text-gray-400" />
+                                    {new Date(issue.created_at).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric',
+                                      year: 'numeric'
+                                    })}
+                                  </div>
+                                  <Badge variant="outline" className={getCategoryColor(issue.category)}>
+                                    {getCategoryLabel(issue.category)}
+                                  </Badge>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <div className="flex justify-between items-center text-sm">
+                                    <span className="text-gray-600 font-medium">Progress</span>
+                                    <span className="text-gray-900 font-semibold">
+                                      {getProgressPercentage(issue.status.replace('_','-'))}%
+                                    </span>
+                                  </div>
+                                  <Progress 
+                                    value={getProgressPercentage(issue.status.replace('_','-'))} 
+                                    className="h-2"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex-shrink-0 ml-2">
+                              <ArrowUpRight className="w-5 h-5 text-gray-400" />
+                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -431,12 +525,14 @@ export default function MyIssuesPage() {
                   resolvedIssues.map((issue) => (
                     <Card
                       key={issue.id}
-                      className="cursor-pointer transition-all duration-200 hover:shadow-md bg-white border-green-200"
+                      className="cursor-pointer transition-all duration-200 hover:shadow-md bg-white border-green-200 overflow-hidden w-full max-w-full"
                       onClick={() => handleIssueClick(issue.id)}
                     >
-                      <CardContent className="p-6">
-                        <div className="flex gap-4">
-                          <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 border">
+                      <CardContent className="p-0 w-full">
+                        {/* Mobile Layout: Instagram-style stacked layout */}
+                        <div className="block sm:hidden w-full">
+                          {/* Full-width image at top for mobile */}
+                          <div className="w-full h-48 bg-gray-100 overflow-hidden">
                             {issue.image_url ? (
                               <img
                                 src={issue.image_url}
@@ -445,39 +541,42 @@ export default function MyIssuesPage() {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <ImageIcon className="w-6 h-6 text-gray-400" />
+                                <ImageIcon className="w-12 h-12 text-gray-400" />
                               </div>
                             )}
                           </div>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between mb-2">
+                          
+                          {/* Content stacked below image */}
+                          <div className="p-3 sm:p-4 space-y-3 w-full overflow-hidden">
+                            <div className="flex items-start justify-between gap-2 w-full">
                               <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-gray-900 line-clamp-2">{issue.title}</h3>
-                                <p className="text-sm text-gray-500 font-mono">#{issue.id.slice(0, 8)}</p>
+                                <h3 className="font-semibold text-gray-900 text-sm sm:text-base mb-1 line-clamp-2 leading-tight break-words">
+                                  {issue.title}
+                                </h3>
+                                <p className="text-xs text-gray-500 font-mono truncate">#{issue.id.slice(0, 8)}</p>
                               </div>
-                              <div className="flex flex-col items-end gap-2">
-                                <Badge className="bg-green-500 hover:bg-green-600 text-white">
-                                  <CheckCircle className="w-4 h-4 mr-1" />
-                                  Resolved
-                                </Badge>
-                                {issue.upvotes > 0 && (
-                                  <div className="flex items-center text-sm text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
-                                    <TrendingUp className="w-3 h-3 mr-1" />
-                                    {issue.upvotes}
-                                  </div>
-                                )}
-                              </div>
+                              <Badge className="bg-green-500 hover:bg-green-600 text-white text-xs flex-shrink-0 whitespace-nowrap">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Resolved
+                              </Badge>
                             </div>
 
-                            <div className="flex items-center justify-between text-sm text-gray-600">
-                              <div className="flex items-center">
-                                <MapPin className="w-4 h-4 mr-1 text-gray-400" />
-                                <span className="truncate">{issue.location_address || 'N/A'}</span>
+                            {issue.upvotes > 0 && (
+                              <div className="flex items-center text-xs text-orange-600 bg-orange-50 px-2 py-1 rounded-full w-fit">
+                                <TrendingUp className="w-3 h-3 mr-1 flex-shrink-0" />
+                                <span className="whitespace-nowrap">{issue.upvotes} upvotes</span>
                               </div>
-                              <div className="flex items-center">
-                                <Calendar className="w-4 h-4 mr-1 text-gray-400" />
-                                <span className="text-green-600 font-medium">
+                            )}
+
+                            <div className="space-y-2 w-full">
+                              <div className="flex items-start text-xs text-gray-600 w-full">
+                                <MapPin className="w-3 h-3 mr-2 flex-shrink-0 text-gray-400 mt-0.5" />
+                                <span className="break-words line-clamp-2 flex-1">{issue.location_address || 'N/A'}</span>
+                              </div>
+
+                              <div className="flex items-center text-xs text-green-600 w-full">
+                                <Calendar className="w-3 h-3 mr-1 text-gray-400 flex-shrink-0" />
+                                <span className="font-medium break-words">
                                   Resolved {new Date(issue.updated_at || issue.created_at).toLocaleDateString('en-US', {
                                     month: 'short',
                                     day: 'numeric'
@@ -486,9 +585,65 @@ export default function MyIssuesPage() {
                               </div>
                             </div>
                           </div>
-                          
-                          <div className="flex-shrink-0 ml-2">
-                            <ExternalLink className="w-4 h-4 text-gray-400" />
+                        </div>
+
+                        {/* Desktop/Tablet Layout: Side-by-side layout */}
+                        <div className="hidden sm:block p-6">
+                          <div className="flex gap-4">
+                            <div className="w-20 h-20 bg-gray-100 rounded-xl overflow-hidden flex-shrink-0 border">
+                              {issue.image_url ? (
+                                <img
+                                  src={issue.image_url}
+                                  alt={issue.title}
+                                  className="w-full h-full object-cover opacity-75"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center">
+                                  <ImageIcon className="w-6 h-6 text-gray-400" />
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex-1 min-w-0">
+                                  <h3 className="font-semibold text-gray-900 line-clamp-2">{issue.title}</h3>
+                                  <p className="text-sm text-gray-500 font-mono">#{issue.id.slice(0, 8)}</p>
+                                </div>
+                                <div className="flex flex-col items-end gap-2">
+                                  <Badge className="bg-green-500 hover:bg-green-600 text-white">
+                                    <CheckCircle className="w-4 h-4 mr-1" />
+                                    Resolved
+                                  </Badge>
+                                  {issue.upvotes > 0 && (
+                                    <div className="flex items-center text-sm text-orange-600 bg-orange-50 px-2 py-1 rounded-full">
+                                      <TrendingUp className="w-3 h-3 mr-1" />
+                                      {issue.upvotes}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+
+                              <div className="flex items-center justify-between text-sm text-gray-600">
+                                <div className="flex items-center">
+                                  <MapPin className="w-4 h-4 mr-1 text-gray-400" />
+                                  <span className="truncate">{issue.location_address || 'N/A'}</span>
+                                </div>
+                                <div className="flex items-center">
+                                  <Calendar className="w-4 h-4 mr-1 text-gray-400" />
+                                  <span className="text-green-600 font-medium">
+                                    Resolved {new Date(issue.updated_at || issue.created_at).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric'
+                                    })}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <div className="flex-shrink-0 ml-2">
+                              <ExternalLink className="w-4 h-4 text-gray-400" />
+                            </div>
                           </div>
                         </div>
                       </CardContent>

@@ -200,12 +200,12 @@ export default function AdminNotificationsPage() {
                             <SelectTrigger className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-gray-300">
                               <SelectValue placeholder="Select notification type" />
                             </SelectTrigger>
-                            <SelectContent className="border-gray-200 shadow-lg">
-                              <SelectItem value="maintenance" className="hover:bg-blue-50 focus:bg-blue-50">Maintenance Alert</SelectItem>
-                              <SelectItem value="traffic" className="hover:bg-blue-50 focus:bg-blue-50">Traffic Update</SelectItem>
-                              <SelectItem value="community" className="hover:bg-blue-50 focus:bg-blue-50">Community News</SelectItem>
-                              <SelectItem value="emergency" className="hover:bg-blue-50 focus:bg-blue-50">Emergency Alert</SelectItem>
-                              <SelectItem value="service" className="hover:bg-blue-50 focus:bg-blue-50">Service Update</SelectItem>
+                            <SelectContent className="bg-white border-gray-200 shadow-lg z-50">
+                              <SelectItem value="maintenance" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Maintenance Alert</SelectItem>
+                              <SelectItem value="traffic" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Traffic Update</SelectItem>
+                              <SelectItem value="community" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Community News</SelectItem>
+                              <SelectItem value="emergency" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Emergency Alert</SelectItem>
+                              <SelectItem value="service" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Service Update</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -219,11 +219,11 @@ export default function AdminNotificationsPage() {
                             <SelectTrigger className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-gray-300">
                               <SelectValue placeholder="Select priority" />
                             </SelectTrigger>
-                            <SelectContent className="border-gray-200 shadow-lg">
-                              <SelectItem value="low" className="hover:bg-blue-50 focus:bg-blue-50">Low Priority</SelectItem>
-                              <SelectItem value="medium" className="hover:bg-blue-50 focus:bg-blue-50">Medium Priority</SelectItem>
-                              <SelectItem value="high" className="hover:bg-blue-50 focus:bg-blue-50">High Priority</SelectItem>
-                              <SelectItem value="urgent" className="hover:bg-blue-50 focus:bg-blue-50">Urgent</SelectItem>
+                            <SelectContent className="bg-white border-gray-200 shadow-lg z-50">
+                              <SelectItem value="low" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Low Priority</SelectItem>
+                              <SelectItem value="medium" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Medium Priority</SelectItem>
+                              <SelectItem value="high" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">High Priority</SelectItem>
+                              <SelectItem value="urgent" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Urgent</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
@@ -310,12 +310,12 @@ export default function AdminNotificationsPage() {
                               <SelectTrigger className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 hover:border-gray-300">
                                 <SelectValue placeholder="Select target location" />
                               </SelectTrigger>
-                              <SelectContent className="border-gray-200 shadow-lg">
-                                <SelectItem value="downtown" className="hover:bg-blue-50 focus:bg-blue-50">Downtown District (234 users)</SelectItem>
-                                <SelectItem value="riverside" className="hover:bg-blue-50 focus:bg-blue-50">Riverside Area (189 users)</SelectItem>
-                                <SelectItem value="westside" className="hover:bg-blue-50 focus:bg-blue-50">Westside (156 users)</SelectItem>
-                                <SelectItem value="north-end" className="hover:bg-blue-50 focus:bg-blue-50">North End (198 users)</SelectItem>
-                                <SelectItem value="central-park" className="hover:bg-blue-50 focus:bg-blue-50">Central Park Area (145 users)</SelectItem>
+                              <SelectContent className="bg-white border-gray-200 shadow-lg z-50">
+                                <SelectItem value="downtown" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Downtown District (234 users)</SelectItem>
+                                <SelectItem value="riverside" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Riverside Area (189 users)</SelectItem>
+                                <SelectItem value="westside" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Westside (156 users)</SelectItem>
+                                <SelectItem value="north-end" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">North End (198 users)</SelectItem>
+                                <SelectItem value="central-park" className="hover:bg-blue-50 focus:bg-blue-50 cursor-pointer">Central Park Area (145 users)</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>

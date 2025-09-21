@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 // ✅ Correct imports for UI components
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // ✅ Correct supabase client import
 import { createClient } from "@/lib/supabase/client";
@@ -14,13 +15,13 @@ import { useAuth } from "@/contexts/auth-context";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { getUserDisplayName } from "@/lib/utils/avatar";
 import {
-  BarChart3,
-  Bell,
-  FileText,
-  Settings,
-  Shield,
-  Users,
-  LogOut,
+    BarChart3,
+    Bell,
+    FileText,
+    Settings,
+    Shield,
+    Users,
+    LogOut,
   User,
   Flag,
   Menu,
@@ -37,6 +38,22 @@ const navItems = [
   { href: "/admin/crowdfunding", label: "₹ Funds" }, // no icon
   { href: "/admin/abhiyaan", label: "Abhiyaan", icon: Flag },
 ];
+
+// Page titles for breadcrumb
+const getPageTitle = (pathname: string) => {
+  const titles: { [key: string]: string } = {
+    "/admin/dashboard": "Dashboard",
+    "/admin/issues": "Manage Issues",
+    "/admin/notifications": "Notifications",
+    "/admin/reports": "Reports",
+    "/admin/users": "Users",
+    "/admin/profile": "Profile",
+    "/admin/crowdfunding": "₹ Funds",
+    "/admin/abhiyaan": "Abhiyaan",
+  };
+  
+  return titles[pathname] || "Admin Panel";
+};
 
 export default function AdminNav() {
   const pathname = usePathname();

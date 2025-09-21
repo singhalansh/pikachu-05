@@ -181,20 +181,23 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3 xs:space-y-4 sm:space-y-6">
       {/* Password Reset Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Key className="w-5 h-5" />
-            Change Password
+      <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in">
+        <CardHeader className="pb-2 xs:pb-3 sm:pb-4">
+          <CardTitle className="flex items-center text-sm xs:text-base sm:text-lg font-semibold text-gray-900">
+            <div className="w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mr-2 xs:mr-3 shadow-lg">
+              <Key className="w-3 h-3 xs:w-4 xs:h-4 text-white" />
+            </div>
+            <span className="hidden xs:inline">Change Password</span>
+            <span className="xs:hidden">Password</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Update Password</p>
-              <p className="text-sm text-muted-foreground">
+        <CardContent className="pt-0 space-y-3 xs:space-y-4">
+          <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 sm:gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs xs:text-sm font-medium text-gray-900">Update Password</p>
+              <p className="text-xs text-gray-600 mt-1">
                 Change your account password for better security
               </p>
             </div>
@@ -202,27 +205,32 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
               variant="outline" 
               size="sm"
               onClick={() => setShowPasswordReset(true)}
+              className="border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200 hover:scale-105 text-xs xs:text-sm w-full xs:w-auto"
             >
-              <Lock className="w-4 h-4 mr-2" />
-              Change Password
+              <Lock className="w-3 h-3 xs:w-4 xs:h-4 mr-1 xs:mr-2" />
+              <span className="hidden xs:inline">Change Password</span>
+              <span className="xs:hidden">Change</span>
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Account Deletion Section */}
-      <Card className="border-red-200">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-red-600">
-            <Trash2 className="w-5 h-5" />
-            Delete Account
+      <Card className="bg-white border-0 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in border-red-200">
+        <CardHeader className="pb-2 xs:pb-3 sm:pb-4">
+          <CardTitle className="flex items-center text-sm xs:text-base sm:text-lg font-semibold text-red-600">
+            <div className="w-6 h-6 xs:w-8 xs:h-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mr-2 xs:mr-3 shadow-lg">
+              <Trash2 className="w-3 h-3 xs:w-4 xs:h-4 text-white" />
+            </div>
+            <span className="hidden xs:inline">Delete Account</span>
+            <span className="xs:hidden">Delete</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-red-600">Permanently Delete Account</p>
-              <p className="text-sm text-muted-foreground">
+        <CardContent className="pt-0 space-y-3 xs:space-y-4">
+          <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 sm:gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs xs:text-sm font-medium text-red-600">Permanently Delete Account</p>
+              <p className="text-xs text-gray-600 mt-1">
                 This action cannot be undone. All your data will be permanently deleted.
               </p>
             </div>
@@ -230,9 +238,11 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
               variant="destructive" 
               size="sm"
               onClick={() => setShowDeleteDialog(true)}
+              className="text-xs xs:text-sm w-full xs:w-auto"
             >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Delete Account
+              <Trash2 className="w-3 h-3 xs:w-4 xs:h-4 mr-1 xs:mr-2" />
+              <span className="hidden xs:inline">Delete Account</span>
+              <span className="xs:hidden">Delete</span>
             </Button>
           </div>
         </CardContent>
@@ -240,20 +250,22 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
 
       {/* Password Reset Dialog */}
       <Dialog open={showPasswordReset} onOpenChange={setShowPasswordReset}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white border border-gray-200 shadow-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Key className="w-5 h-5" />
+            <DialogTitle className="flex items-center gap-2 text-base sm:text-lg font-semibold text-gray-900">
+              <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <Key className="w-4 h-4 text-white" />
+              </div>
               Change Password
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-sm text-gray-600">
               Choose a new password for your account
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="new-password">New Password</Label>
+              <Label htmlFor="new-password" className="text-sm font-medium text-gray-700">New Password</Label>
               <div className="relative">
                 <Input
                   id="new-password"
@@ -261,6 +273,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter new password"
+                  className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                 />
                 <Button
                   type="button"
@@ -279,7 +292,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm New Password</Label>
+              <Label htmlFor="confirm-password" className="text-sm font-medium text-gray-700">Confirm New Password</Label>
               <div className="relative">
                 <Input
                   id="confirm-password"
@@ -287,6 +300,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm new password"
+                  className="border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
                 />
                 <Button
                   type="button"
@@ -313,12 +327,14 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
                 setNewPassword("");
                 setConfirmPassword("");
               }}
+              className="border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200"
             >
               Cancel
             </Button>
             <Button
               onClick={handlePasswordReset}
               disabled={passwordLoading}
+              className="bg-blue-600 hover:bg-blue-700 text-white transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-blue-200"
             >
               {passwordLoading ? "Updating..." : "Update Password"}
             </Button>
@@ -328,13 +344,15 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
 
       {/* Account Deletion Dialog */}
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md bg-white border border-gray-200 shadow-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-600">
-              <AlertTriangle className="w-5 h-5" />
+            <DialogTitle className="flex items-center gap-2 text-base sm:text-lg font-semibold text-red-600">
+              <div className="w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                <AlertTriangle className="w-4 h-4 text-white" />
+              </div>
               Delete Account
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-sm text-gray-600">
               This action cannot be undone. All your data will be permanently deleted.
             </DialogDescription>
           </DialogHeader>
@@ -353,7 +371,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="delete-password">Enter Password to Confirm</Label>
+              <Label htmlFor="delete-password" className="text-sm font-medium text-gray-700">Enter Password to Confirm</Label>
               <div className="relative">
                 <Input
                   id="delete-password"
@@ -361,6 +379,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
                   value={deletePassword}
                   onChange={(e) => setDeletePassword(e.target.value)}
                   placeholder="Enter your password"
+                  className="border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
                 />
                 <Button
                   type="button"
@@ -370,7 +389,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
                   onClick={() => setShowDeletePassword(!showDeletePassword)}
                 >
                   {showDeletePassword ? (
-                    <EyeOff className="h-4 h-4" />
+                    <EyeOff className="h-4 w-4" />
                   ) : (
                     <Eye className="h-4 w-4" />
                   )}
@@ -379,12 +398,13 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirm-delete">Type "DELETE" to confirm</Label>
+              <Label htmlFor="confirm-delete" className="text-sm font-medium text-gray-700">Type "DELETE" to confirm</Label>
               <Input
                 id="confirm-delete"
                 value={confirmDelete}
                 onChange={(e) => setConfirmDelete(e.target.value)}
                 placeholder="Type DELETE to confirm"
+                className="border-gray-200 focus:border-red-500 focus:ring-2 focus:ring-red-200 transition-all duration-200"
               />
             </div>
           </div>
@@ -397,6 +417,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
                 setDeletePassword("");
                 setConfirmDelete("");
               }}
+              className="border-gray-200 text-gray-700 hover:bg-gray-50 transition-all duration-200"
             >
               Cancel
             </Button>
@@ -404,6 +425,7 @@ export default function AccountManagement({ userType }: AccountManagementProps) 
               variant="destructive"
               onClick={handleAccountDeletion}
               disabled={deleteLoading || !deletePassword || confirmDelete !== "DELETE"}
+              className="bg-red-600 hover:bg-red-700 text-white transition-all duration-200 hover:scale-105 focus:ring-2 focus:ring-red-200"
             >
               {deleteLoading ? "Deleting..." : "Delete Account"}
             </Button>

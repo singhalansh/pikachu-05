@@ -404,121 +404,126 @@ export default function CitizenDashboard() {
     }, [issues, selectedIssue]);
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen bg-background overflow-x-hidden">
             {/* Header */}
-            <div className="border-b bg-card">
-                <div className="container mx-auto px-4 py-4 sm:py-6">
+            <div className="border-b bg-card shadow-sm">
+                <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
                             <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-accent flex-shrink-0" />
-                            <div>
-                                <h1 className="text-xl sm:text-2xl font-bold">
+                            <div className="min-w-0 flex-1">
+                                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-balance">
                                     Civic Issues Dashboard
                                 </h1>
-                                <p className="text-sm sm:text-base text-muted-foreground">
+                                <p className="text-xs sm:text-sm lg:text-base text-muted-foreground">
                                     Track and report community issues
                                 </p>
                             </div>
                         </div>
-                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                            <Button asChild className="w-full sm:w-auto">
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                            <Button asChild className="w-full sm:w-auto h-10 sm:h-11">
                                 <Link href="/citizen/report">
                                     <Plus className="w-4 h-4 mr-2" />
-                                    Report Issue
+                                    <span className="hidden xs:inline">Report Issue</span>
+                                    <span className="xs:hidden">Report</span>
                                 </Link>
                             </Button>
                             <Button
                                 variant="outline"
                                 asChild
-                                className="w-full sm:w-auto bg-transparent"
+                                className="w-full sm:w-auto h-10 sm:h-11 bg-transparent"
                             >
                                 <Link href="/citizen/issues/map">
                                     <Map className="w-4 h-4 mr-2" />
-                                    Map View
+                                    <span className="hidden xs:inline">Map View</span>
+                                    <span className="xs:hidden">Map</span>
                                 </Link>
                             </Button>
                             <Button
                                 variant="outline"
                                 asChild
-                                className="w-full sm:w-auto bg-transparent"
+                                className="w-full sm:w-auto h-10 sm:h-11 bg-transparent"
                             >
-                                <Link href="/citizen/issues">My Issues</Link>
+                                <Link href="/citizen/issues">
+                                    <span className="hidden xs:inline">My Issues</span>
+                                    <span className="xs:hidden">My Issues</span>
+                                </Link>
                             </Button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="container mx-auto px-4 py-4 sm:py-6">
+            <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 mobile-safe-padding">
                 {/* Stats Cards */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                    <Card>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6">
+                    <Card className="hover:shadow-md transition-shadow duration-200">
                         <CardContent className="p-3 sm:p-4">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
                                         Total Issues
                                     </p>
-                                    <p className="text-lg sm:text-2xl font-bold">
+                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold">
                                         {stats.total}
                                     </p>
                                 </div>
-                                <AlertTriangle className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
+                                <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-muted-foreground flex-shrink-0" />
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="hover:shadow-md transition-shadow duration-200">
                         <CardContent className="p-3 sm:p-4">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
                                         In Progress
                                     </p>
-                                    <p className="text-lg sm:text-2xl font-bold status-progress">
+                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold status-progress">
                                         {stats.inProgress}
                                     </p>
                                 </div>
-                                <Clock className="w-6 h-6 sm:w-8 sm:h-8 text-status-progress" />
+                                <Clock className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-status-progress flex-shrink-0" />
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="hover:shadow-md transition-shadow duration-200">
                         <CardContent className="p-3 sm:p-4">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
                                         Resolved
                                     </p>
-                                    <p className="text-lg sm:text-2xl font-bold status-resolved">
+                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold status-resolved">
                                         {stats.resolved}
                                     </p>
                                 </div>
-                                <CheckCircle className="w-6 h-6 sm:w-8 sm:h-8 text-status-resolved" />
+                                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-status-resolved flex-shrink-0" />
                             </div>
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="hover:shadow-md transition-shadow duration-200">
                         <CardContent className="p-3 sm:p-4">
                             <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-xs sm:text-sm text-muted-foreground">
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
                                         This Month
                                     </p>
-                                    <p className="text-lg sm:text-2xl font-bold">
+                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold">
                                         {stats.createdThisMonth}
                                     </p>
                                 </div>
-                                <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-muted-foreground" />
+                                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-muted-foreground flex-shrink-0" />
                             </div>
                         </CardContent>
                     </Card>
                 </div>
 
                 {/* Filters and Search */}
-                <Card className="mb-4 sm:mb-6">
+                <Card className="mb-4 sm:mb-6 shadow-sm">
                     <CardContent className="p-3 sm:p-4">
                         <div className="space-y-3 sm:space-y-4">
                             {/* Search - Full width on mobile */}
@@ -530,7 +535,7 @@ export default function CitizenDashboard() {
                                     onChange={(e) =>
                                         setSearchTerm(e.target.value)
                                     }
-                                    className="pl-10 h-11 sm:h-10"
+                                    className="pl-10 h-11 sm:h-10 text-sm"
                                 />
                             </div>
 
@@ -540,7 +545,7 @@ export default function CitizenDashboard() {
                                     value={statusFilter}
                                     onValueChange={setStatusFilter}
                                 >
-                                    <SelectTrigger className="h-11 sm:h-10 sm:w-40">
+                                    <SelectTrigger className="h-11 sm:h-10 sm:w-40 text-sm">
                                         <SelectValue placeholder="Status" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -566,7 +571,7 @@ export default function CitizenDashboard() {
                                     value={categoryFilter}
                                     onValueChange={setCategoryFilter}
                                 >
-                                    <SelectTrigger className="h-11 sm:h-10 sm:w-40">
+                                    <SelectTrigger className="h-11 sm:h-10 sm:w-40 text-sm">
                                         <SelectValue placeholder="Category" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -605,7 +610,7 @@ export default function CitizenDashboard() {
 
                                 {/* View toggle - Right aligned on desktop, full width on mobile */}
                                 <div className="flex sm:ml-auto">
-                                    <div className="flex items-center space-x-1 bg-muted p-1 rounded-lg">
+                                    <div className="flex items-center space-x-1 bg-muted p-1 rounded-lg w-full sm:w-auto">
                                         <Button
                                             variant={
                                                 viewMode === "list"
@@ -614,7 +619,7 @@ export default function CitizenDashboard() {
                                             }
                                             size="sm"
                                             onClick={() => setViewMode("list")}
-                                            className="h-9 px-3"
+                                            className="h-9 px-3 flex-1 sm:flex-none"
                                         >
                                             <List className="w-4 h-4 mr-1 sm:mr-0" />
                                             <span className="sm:hidden">
@@ -629,7 +634,7 @@ export default function CitizenDashboard() {
                                             }
                                             size="sm"
                                             onClick={() => setViewMode("map")}
-                                            className="h-9 px-3"
+                                            className="h-9 px-3 flex-1 sm:flex-none"
                                         >
                                             <Map className="w-4 h-4 mr-1 sm:mr-0" />
                                             <span className="sm:hidden">
@@ -645,7 +650,7 @@ export default function CitizenDashboard() {
 
                 {/* Content */}
                 {viewMode === "list" ? (
-                    <div className="grid gap-3 sm:gap-4">
+                    <div className="w-full grid gap-3 sm:gap-4">
                         {loading && (
                             <div className="text-sm text-muted-foreground">
                                 Loading issues...
@@ -659,12 +664,123 @@ export default function CitizenDashboard() {
                             filteredIssues.map((issue) => (
                                 <Card
                                     key={issue.id}
-                                    className="hover:shadow-md transition-shadow"
+                                    className="w-full hover:shadow-md transition-all duration-300 ease-in-out overflow-hidden"
                                 >
-                                    <CardContent className="p-4 sm:p-6">
+                                    <CardContent className="p-0 w-full">
+                                        {/* Mobile: Instagram-like feed layout */}
+                                        <div className="block md:hidden w-full">
+                                            {/* Full-width image at top - ensures no horizontal overflow */}
+                                            <div className="w-full h-48 sm:h-56 bg-muted overflow-hidden">
+                                                <img
+                                                    src={
+                                                        issue.image_url ||
+                                                        "/placeholder.svg"
+                                                    }
+                                                    alt={issue.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                            
+                                            {/* Content below image - safe padding that won't cause overflow */}
+                                            <div className="px-4 py-3 space-y-3 w-full">
+                                                {/* Title and urgency badges */}
+                                                <div className="space-y-2">
+                                                    <Link
+                                                        href={`/citizen/issues/${issue.id}`}
+                                                        className="hover:underline block"
+                                                    >
+                                                        <h3 className="font-semibold text-base line-clamp-2 text-balance leading-tight">
+                                                            {issue.title}
+                                                        </h3>
+                                                    </Link>
+                                                    
+                                                    {/* Status and AI urgency badges */}
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <Badge
+                                                            className={`${getStatusColor(
+                                                                issue.status
+                                                            )} text-xs h-6`}
+                                                        >
+                                                            {getStatusIcon(issue.status)}
+                                                            <span className="ml-1 capitalize">
+                                                                {issue.status.replace("-", " ")}
+                                                            </span>
+                                                        </Badge>
+                                                        <AIUrgencyBadge 
+                                                            urgency={issue.ai_urgency}
+                                                            confidence={issue.ai_confidence}
+                                                            className="text-xs"
+                                                        />
+                                                    </div>
+                                                </div>
+
+                                                {/* Description */}
+                                                <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                                                    {issue.description}
+                                                </p>
+
+                                                {/* Location and category */}
+                                                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                                    <div className="flex items-center min-w-0 flex-1">
+                                                        <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
+                                                        <span className="truncate">
+                                                            {issue.location_address || "N/A"}
+                                                        </span>
+                                                    </div>
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="text-xs flex-shrink-0"
+                                                    >
+                                                        {getCategoryLabel(issue.category)}
+                                                    </Badge>
+                                                </div>
+
+                                                {/* Stats and actions */}
+                                                <div className="flex items-center justify-between pt-3 border-t">
+                                                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                                                        <div className="flex items-center">
+                                                            <Calendar className="w-3 h-3 mr-1" />
+                                                            <span>
+                                                                {new Date(issue.created_at).toLocaleDateString(
+                                                                    "en-US",
+                                                                    {
+                                                                        month: "short",
+                                                                        day: "numeric",
+                                                                    }
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center">
+                                                            <ThumbsUp className="w-3 h-3 mr-1" />
+                                                            {(issue as any).votes_count ?? issue.upvotes ?? 0}
+                                                        </div>
+                                                        <div className="flex items-center">
+                                                            <MessageCircle className="w-3 h-3 mr-1" />
+                                                            {(issue as any).comments_count ?? 0}
+                                                        </div>
+                                                    </div>
+
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        asChild
+                                                        className="h-8 px-3 text-xs"
+                                                    >
+                                                        <Link href={`/citizen/issues/${issue.id}`}>
+                                                            View
+                                                        </Link>
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Tablet & Desktop: Side-by-side layout */}
+                                        <div className="hidden md:block w-full">
+                                            <div className="p-4 lg:p-6 w-full">
                                         <div className="flex flex-col gap-4">
-                                            <div className="flex gap-3 sm:gap-4">
-                                                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
+                                                    <div className="flex gap-4">
+                                                        {/* Image on the left */}
+                                                        <div className="w-20 h-20 lg:w-24 lg:h-24 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                                                     <img
                                                         src={
                                                             issue.image_url ||
@@ -675,13 +791,14 @@ export default function CitizenDashboard() {
                                                     />
                                                 </div>
 
+                                                        {/* Content on the right */}
                                                 <div className="flex-1 min-w-0">
                                                     <div className="flex items-start justify-between gap-2 mb-2">
                                                         <Link
                                                             href={`/citizen/issues/${issue.id}`}
                                                             className="hover:underline min-h-[44px] flex items-start"
                                                         >
-                                                            <h3 className="font-semibold text-sm sm:text-base line-clamp-2 text-balance leading-tight">
+                                                                    <h3 className="font-semibold text-base lg:text-lg line-clamp-2 text-balance leading-tight">
                                                                 {issue.title}
                                                             </h3>
                                                         </Link>
@@ -713,26 +830,23 @@ export default function CitizenDashboard() {
                                                         </div>
                                                     </div>
 
-                                                    <p className="text-xs sm:text-sm text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
+                                                            <p className="text-sm text-muted-foreground mb-3 line-clamp-2 leading-relaxed">
                                                         {issue.description}
                                                     </p>
 
-                                                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2">
                                                         <div className="flex items-center gap-3 text-xs text-muted-foreground">
                                                             <div className="flex items-center">
                                                                 <MapPin className="w-3 h-3 mr-1 flex-shrink-0" />
-                                                                <span className="truncate max-w-[140px] sm:max-w-none">
-                                                                    {issue.location_address ||
-                                                                        "N/A"}
+                                                                        <span className="truncate">
+                                                                            {issue.location_address || "N/A"}
                                                                 </span>
                                                             </div>
                                                             <Badge
                                                                 variant="outline"
                                                                 className="text-xs"
                                                             >
-                                                                {getCategoryLabel(
-                                                                    issue.category
-                                                                )}
+                                                                        {getCategoryLabel(issue.category)}
                                                             </Badge>
                                                         </div>
                                                     </div>
@@ -743,35 +857,17 @@ export default function CitizenDashboard() {
                                                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                                     <div className="flex items-center">
                                                         <Calendar className="w-3 h-3 mr-1" />
-                                                        <span className="hidden sm:inline">
-                                                            {new Date(
-                                                                issue.created_at
-                                                            ).toLocaleDateString()}
-                                                        </span>
-                                                        <span className="sm:hidden">
-                                                            {new Date(
-                                                                issue.created_at
-                                                            ).toLocaleDateString(
-                                                                "en-US",
-                                                                {
-                                                                    month: "short",
-                                                                    day: "numeric",
-                                                                }
-                                                            )}
+                                                                <span>
+                                                                    {new Date(issue.created_at).toLocaleDateString()}
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center">
                                                         <ThumbsUp className="w-3 h-3 mr-1" />
-                                                        {(issue as any)
-                                                            .votes_count ??
-                                                            issue.upvotes ??
-                                                            0}
+                                                                {(issue as any).votes_count ?? issue.upvotes ?? 0}
                                                     </div>
                                                     <div className="flex items-center">
                                                         <MessageCircle className="w-3 h-3 mr-1" />
-                                                        {(issue as any)
-                                                            .comments_count ??
-                                                            0}
+                                                                {(issue as any).comments_count ?? 0}
                                                     </div>
                                                 </div>
 
@@ -781,17 +877,12 @@ export default function CitizenDashboard() {
                                                     asChild
                                                     className="h-9 px-3"
                                                 >
-                                                    <Link
-                                                        href={`/citizen/issues/${issue.id}`}
-                                                    >
-                                                        <span className="hidden sm:inline">
+                                                            <Link href={`/citizen/issues/${issue.id}`}>
                                                             View Details
-                                                        </span>
-                                                        <span className="sm:hidden">
-                                                            View
-                                                        </span>
                                                     </Link>
                                                 </Button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </CardContent>
