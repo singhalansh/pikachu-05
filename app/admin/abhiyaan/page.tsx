@@ -66,6 +66,23 @@ export default function AdminAbhiyaanPage() {
         }
     };
 
+    const handleDelete = async (id: string, name: string) => {
+        if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+
+        const { error } = await (supabase as any)
+            .from("abhiyaans")
+            .delete()
+            .eq("id", id);
+
+        if (error) {
+            console.error("Delete error:", error);
+            alert("Failed to delete Abhiyaan");
+        } else {
+            alert("Abhiyaan deleted successfully!");
+            fetchAbhiyaans();
+        }
+    };
+
     return (
         <main className="p-6">
             <h1 className="text-3xl font-bold mb-6">Manage Abhiyaans</h1>
@@ -119,15 +136,22 @@ export default function AdminAbhiyaanPage() {
                     {abhiyaans.map((a) => (
                         <div
                             key={a.id}
-                            className="border rounded-xl p-4 shadow"
+                            className="border rounded-xl p-4 shadow relative"
                         >
                             <h3 className="text-xl font-semibold">{a.name}</h3>
-                            <p>{a.description}</p>
-                            <p className="text-sm">By: {a.creator_name}</p>
+                            <p className="mt-2 text-gray-600">{a.description}</p>
+                            <p className="text-sm mt-2">By: {a.creator_name}</p>
                             <p className="text-sm">Location: {a.location}</p>
                             <p className="text-sm">
                                 Time: {new Date(a.time).toLocaleString()}
                             </p>
+                            <button
+                                onClick={() => handleDelete(a.id, a.name)}
+                                className="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
+                                title="Delete Abhiyaan"
+                            >
+                                Delete
+                            </button>
                         </div>
                     ))}
                 </div>
