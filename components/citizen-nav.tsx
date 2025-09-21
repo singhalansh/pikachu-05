@@ -74,7 +74,7 @@ const mobileMenuItems = [
         icon: DollarSign,
     },
     {
-        href: "/citizen/Abhiyaan",
+        href: "/citizen/abhiyaan",
         label: "Abhiyaan",
         icon: Flag,
     },
@@ -95,7 +95,7 @@ const getPageTitle = (pathname: string) => {
         "/citizen/notifications": "Notifications",
         "/citizen/profile": "Profile",
         "/citizen/crowdfunding": "₹ Funds",
-        "/citizen/Abhiyaan": "Abhiyaan",
+        "/citizen/abhiyaan": "Abhiyaan",
         "/citizen/leaderboard": "Leaderboard",
         "/citizen/resolved": "Resolved Issues",
     };
@@ -210,7 +210,7 @@ export default function CitizenNav() {
                                     className="h-9 text-foreground hover:bg-muted/50"
                                     asChild
                                 >
-                                    <Link href="/citizen/Abhiyaan" className="flex items-center">
+                                    <Link href="/citizen/abhiyaan" className="flex items-center">
                                         <Flag className="w-4 h-4 mr-1" />
                                         <span className="hidden xl:inline">Abhiyaan</span>
                                         <span className="xl:hidden">Flag</span>
