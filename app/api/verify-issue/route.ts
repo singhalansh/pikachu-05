@@ -88,7 +88,7 @@ Return only the category that best matches the issue. match the result word to w
         }
 
         // === Call Gemini APIs ===
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const [categoryResponse, verifyResponse] = await Promise.all([
             fetch(GEMINI_URL, {
