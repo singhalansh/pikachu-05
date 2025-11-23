@@ -44,7 +44,7 @@ export default function AdminNav() {
   return (
     <>
       {/* Main Navbar */}
-      <div className="border-b bg-card sticky top-0 z-50 shadow-sm">
+      <div className="border-b bg-white sticky top-0 z-50 shadow-sm">
         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-2.5 sm:py-3">
           <div className="flex items-center justify-between gap-2 sm:gap-4">
             {/* Logo */}
@@ -277,7 +277,7 @@ export default function AdminNav() {
       </div>
 
       {/* Mobile Breadcrumb/Page Title */}
-      <div className="lg:hidden border-b bg-muted/30">
+      <div className="lg:hidden border-b bg-white">
         <div className="container mx-auto px-3 sm:px-4 md:px-6 py-2">
           <div className="flex items-center space-x-1.5 sm:space-x-2">
             <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />

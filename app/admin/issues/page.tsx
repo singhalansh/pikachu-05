@@ -740,38 +740,27 @@ export default function AdminIssuesPage() {
                         className="space-y-6"
                     >
                         <div className="overflow-x-auto">
-                            <TabsList className="grid w-full grid-cols-6 h-12">
-                                <TabsTrigger value="all" className="text-sm">
-                                    All ({statusCounts.all})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="submitted"
-                                    className="text-sm"
-                                >
-                                    📝 New ({statusCounts.submitted})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="assigned"
-                                    className="text-sm"
-                                >
-                                    👤 Assigned ({statusCounts.assigned})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="in_progress"
-                                    className="text-sm"
-                                >
-                                    ⚡ Progress ({statusCounts.in_progress})
-                                </TabsTrigger>
-                                <TabsTrigger
-                                    value="resolved"
-                                    className="text-sm"
-                                >
-                                    ✅ Resolved ({statusCounts.resolved})
-                                </TabsTrigger>
-                                <TabsTrigger value="closed" className="text-sm">
-                                    🔒 Closed ({statusCounts.closed})
-                                </TabsTrigger>
-            </TabsList>
+                        <TabsList className="grid w-full grid-cols-6 h-12">
+    <TabsTrigger value="all" className="text-sm text-white">
+        All ({statusCounts.all})
+    </TabsTrigger>
+    <TabsTrigger value="submitted" className="text-sm text-white">
+        New ({statusCounts.submitted})
+    </TabsTrigger>
+    <TabsTrigger value="assigned" className="text-sm text-white">
+        Assigned ({statusCounts.assigned})
+    </TabsTrigger>
+    <TabsTrigger value="in_progress" className="text-sm text-white">
+        Progress ({statusCounts.in_progress})
+    </TabsTrigger>
+    <TabsTrigger value="resolved" className="text-sm text-white">
+        Resolved ({statusCounts.resolved})
+    </TabsTrigger>
+    <TabsTrigger value="closed" className="text-sm text-white">
+        Closed ({statusCounts.closed})
+    </TabsTrigger>
+</TabsList>
+
                         </div>
 
                         <TabsContent value={statusFilter} className="space-y-6">
