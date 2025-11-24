@@ -396,14 +396,14 @@ export default function ProfilePage() {
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-blue-50 border border-blue-200">
+                                    <div className="flex justify-between items-center p-2 rounded-lg bg-emerald-50 border border-emerald-200">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-blue-900">
-                                                Total Reported
+                                            <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                                            <span className="text-sm font-medium text-emerald-900">
+                                                Issues Reported
                                             </span>
                                         </div>
-                                        <Badge className="bg-blue-500 text-white">
+                                        <Badge className="bg-emerald-500 text-white">
                                             {issueStats.reported}
                                         </Badge>
                                     </div>
@@ -432,14 +432,14 @@ export default function ProfilePage() {
                                         </Badge>
                                     </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-purple-50 border border-purple-200">
+                                    <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 border border-green-200">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-purple-900">
-                                                Assigned
+                                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                            <span className="text-sm font-medium text-green-900">
+                                                Community Impact
                                             </span>
                                         </div>
-                                        <Badge className="bg-purple-500 text-white">
+                                        <Badge className="bg-green-500 text-white">
                                             {issueStats.assigned}
                                         </Badge>
                                     </div>

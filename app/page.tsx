@@ -35,7 +35,7 @@ export default function HomePage() {
             icon: BarChart3,
             title: "Analytics Dashboard",
             description:
-                "Comprehensive insights and data visualization for administrators and citizens.",
+                "Comprehensive insights and data visualization for istrators and citizens.",
         },
         {
             icon: Users,
@@ -102,7 +102,7 @@ export default function HomePage() {
                                 className="text-[#2E6A56] hover:text-[#1f4a3a] font-medium flex items-center gap-2"
                             >
                                 <LogIn className="w-4 h-4" />
-                                Admin Login
+                                 Login
                             </Link>
                         </div>
                     </div>
@@ -197,7 +197,7 @@ export default function HomePage() {
                                 className="text-[#2E6A56] hover:text-[#1f4a3a] font-medium text-lg flex items-center group transition-all duration-300"
                             >
                                 <Shield className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                                Admin Portal
+                                 Portal
                             </Link>
                         </div>
                     </div>
@@ -272,19 +272,19 @@ export default function HomePage() {
                                             Report civic issues instantly
                                         </span>
                                     </div>
-                                    <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
-                                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                            <Bell className="w-4 h-4 text-blue-600" />
+                                    <div className="flex items-center space-x-3 p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors">
+                                        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                                            <Bell className="w-4 h-4 text-emerald-600" />
                                         </div>
-                                        <span className="text-sm font-medium text-blue-800">
+                                        <span className="text-sm font-medium text-emerald-800">
                                             Track resolution progress
                                         </span>
                                     </div>
-                                    <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
-                                        <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                                            <Users className="w-4 h-4 text-purple-600" />
+                                    <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                            <Users className="w-4 h-4 text-green-600" />
                                         </div>
-                                        <span className="text-sm font-medium text-purple-800">
+                                        <span className="text-sm font-medium text-green-800">
                                             Community engagement
                                         </span>
                                     </div>
@@ -375,7 +375,7 @@ export default function HomePage() {
                                 className="text-emerald-100 hover:text-white font-medium text-lg flex items-center justify-center mx-auto group transition-all duration-300"
                             >
                                 <Lock className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                                Administrator Access
+                                istrator Access
                             </Link>
                         </div>
                     </div>
@@ -417,7 +417,7 @@ export default function HomePage() {
                                     href="/auth?mode=login"
                                     className="block text-gray-400 hover:text-white transition-colors"
                                 >
-                                    Admin Portal
+                                     Portal
                                 </Link>
                             </div>
                         </div>

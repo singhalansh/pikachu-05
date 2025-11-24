@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import AdminSidebar from "@/components/admin-sidebar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -123,19 +124,22 @@ export default function AdminReportsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+      <div className="flex h-screen pt-16 md:pt-0">
+        <AdminSidebar />
+        <div className="flex-1 overflow-auto">
       {/* Header */}
-      <div className="border-b bg-card">
+      <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link href="/admin/reports">
+            <Button variant="outline" size="sm" asChild>
+              <Link href="/admin/dashboard">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                Dashboard
               </Link>
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">Reports & Analytics</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">Reports & Analytics</h1>
               <p className="text-muted-foreground">Generate and download comprehensive reports</p>
             </div>
           </div>
@@ -148,37 +152,37 @@ export default function AdminReportsPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Quick Stats */}
             <div className="grid md:grid-cols-4 gap-4">
-              <Card>
+              <Card className="shadow-md hover:shadow-lg transition-shadow bg-gradient-to-br from-emerald-50 to-emerald-100">
                 <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-accent">{quickStats.totalReports}</div>
-                  <div className="text-sm text-muted-foreground">Total Reports</div>
+                  <div className="text-2xl font-bold text-emerald-700">{quickStats.totalReports}</div>
+                  <div className="text-sm text-emerald-600">Total Reports</div>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="shadow-md hover:shadow-lg transition-shadow bg-gradient-to-br from-green-50 to-green-100">
                 <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-status-progress">{quickStats.thisMonth}</div>
-                  <div className="text-sm text-muted-foreground">This Month</div>
+                  <div className="text-2xl font-bold text-green-700">{quickStats.thisMonth}</div>
+                  <div className="text-sm text-green-600">This Month</div>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="shadow-md hover:shadow-lg transition-shadow bg-gradient-to-br from-blue-50 to-blue-100">
                 <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-status-resolved">{quickStats.avgSize}</div>
-                  <div className="text-sm text-muted-foreground">Avg Size</div>
+                  <div className="text-2xl font-bold text-blue-700">{quickStats.avgSize}</div>
+                  <div className="text-sm text-blue-600">Avg Size</div>
                 </CardContent>
               </Card>
-              <Card>
+              <Card className="shadow-md hover:shadow-lg transition-shadow bg-gradient-to-br from-slate-50 to-gray-100">
                 <CardContent className="p-4 text-center">
-                  <div className="text-2xl font-bold text-muted-foreground">{quickStats.lastExport}</div>
-                  <div className="text-sm text-muted-foreground">Last Export</div>
+                  <div className="text-2xl font-bold text-slate-700">{quickStats.lastExport}</div>
+                  <div className="text-sm text-slate-600">Last Export</div>
                 </CardContent>
               </Card>
             </div>
 
             {/* Generate New Report */}
-            <Card>
+            <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-emerald-50/30">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <BarChart3 className="w-5 h-5 mr-2 text-accent" />
+                  <BarChart3 className="w-5 h-5 mr-2 text-emerald-600" />
                   Generate New Report
                 </CardTitle>
                 <CardDescription>Create custom reports with specific parameters and date ranges</CardDescription>
@@ -282,7 +286,7 @@ export default function AdminReportsPage() {
 
           {/* Available Reports */}
           <div>
-            <Card>
+            <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-green-50/30">
               <CardHeader>
                 <CardTitle>Available Reports</CardTitle>
                 <CardDescription>Previously generated reports ready for download</CardDescription>
@@ -318,6 +322,8 @@ export default function AdminReportsPage() {
               </CardContent>
             </Card>
           </div>
+        </div>
+      </div>
         </div>
       </div>
     </div>

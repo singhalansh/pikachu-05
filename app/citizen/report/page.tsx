@@ -946,7 +946,7 @@ export default function ReportIssuePage() {
                                                     <div className="flex flex-col gap-3 rounded-md p-3 bg-muted/30 shadow-sm">
                                                         <div className="flex items-center justify-between">
                                                             <div className="flex items-center gap-2">
-                                                                <Shield className="w-4 h-4 text-blue-600" />
+                                                                <Shield className="w-4 h-4 text-emerald-600" />
                                                                 <span className="text-sm font-medium">
                                                                     Auto-transcribe
                                                                     speech
@@ -1203,7 +1203,7 @@ export default function ReportIssuePage() {
                                                             </div>
                                                         </div>
 
-                                                        <div className="flex items-center gap-2 text-sm text-blue-600 justify-center">
+                                                        <div className="flex items-center gap-2 text-sm text-emerald-600 justify-center">
                                                             <Mic className="h-4 w-4" />
                                                             Audio will be
                                                             uploaded when you
@@ -1414,7 +1414,7 @@ export default function ReportIssuePage() {
                                     </p>
                                     <ul className="space-y-2 text-gray-700">
                                         <li className="flex items-start gap-2">
-                                            <span className="text-blue-600 font-bold">
+                                            <span className="text-emerald-600 font-bold">
                                                 •
                                             </span>
                                             <span>
@@ -1442,7 +1442,7 @@ export default function ReportIssuePage() {
                                             </span>
                                         </li>
                                         <li className="flex items-start gap-2">
-                                            <span className="text-blue-600 font-bold">
+                                            <span className="text-emerald-600 font-bold">
                                                 •
                                             </span>
                                             <span>

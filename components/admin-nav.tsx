@@ -55,7 +55,7 @@ export default function AdminNav() {
     return (
         <>
             {/* Main Navbar */}
-            <div className="border-b bg-card sticky top-0 z-50 shadow-sm">
+            <div className="border-b bg-white/90 backdrop-blur-md sticky top-0 z-50 shadow-sm">
                 <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-2.5 sm:py-3">
                     <div className="flex items-center justify-between gap-2 sm:gap-4">
                         {/* Logo */}
@@ -63,11 +63,11 @@ export default function AdminNav() {
                             href="/admin/dashboard"
                             className="flex items-center space-x-1.5 sm:space-x-2 flex-shrink-0 min-w-0"
                         >
-                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
-                                <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-accent-foreground" />
+                            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-[#2E6A56] to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
+                                <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                             </div>
-                            <span className="font-semibold text-sm sm:text-base lg:text-lg truncate">
-                                Admin Panel
+                            <span className="font-semibold text-sm sm:text-base lg:text-lg truncate bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                                JANMARG Admin
                             </span>
                         </Link>
 
@@ -82,7 +82,11 @@ export default function AdminNav() {
                                         key={item.href}
                                         variant={isActive ? "default" : "ghost"}
                                         size="sm"
-                                        className="h-9 text-sm"
+                                        className={`h-9 text-sm ${
+                                            isActive
+                                                ? "bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#25584a] hover:to-emerald-700 text-white shadow-md"
+                                                : ""
+                                        }`}
                                         asChild
                                     >
                                         <Link href={item.href as any}>
@@ -101,7 +105,7 @@ export default function AdminNav() {
                             <Button
                                 variant="default"
                                 size="sm"
-                                className="h-9 bg-primary hover:bg-[#1f4a3a] text-primary-foreground px-3 xl:px-4 text-sm"
+                                className="h-9 bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#25584a] hover:to-emerald-700 text-white px-3 xl:px-4 text-sm shadow-md"
                                 asChild
                             >
                                 <Link

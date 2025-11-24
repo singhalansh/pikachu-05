@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
+import AdminSidebar from "@/components/admin-sidebar";
 import {
     Select,
     SelectContent,
@@ -420,9 +421,13 @@ export default function AdminProfilePage() {
         profileData.full_name || user?.email?.split("@")[0] || "Admin";
 
     return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-emerald-50/20 to-white">
+            <div className="flex h-screen pt-16 md:pt-0">
+                <AdminSidebar />
+                <div className="flex-1 overflow-auto">
         <div className="container mx-auto px-4 py-8 max-w-6xl">
             <div className="mb-8">
-                <h1 className="text-3xl font-bold">Admin Profile</h1>
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">Admin Profile</h1>
                 <p className="text-muted-foreground">
                     Manage your admin account and system settings
                 </p>
@@ -431,7 +436,7 @@ export default function AdminProfilePage() {
             <div className="grid gap-6 lg:grid-cols-3">
                 {/* Profile Overview */}
                 <div className="lg:col-span-1">
-                    <Card>
+                    <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
                         <CardContent className="pt-6">
                             <div className="flex flex-col items-center text-center">
                                 <div className="relative mb-4">
@@ -488,7 +493,7 @@ export default function AdminProfilePage() {
                                 <div className="flex gap-2 mb-4">
                                     <Badge
                                         variant="secondary"
-                                        className="bg-blue-100 text-blue-800"
+                                        className="bg-emerald-100 text-emerald-800 border-0"
                                     >
                                         <Shield className="w-3 h-3 mr-1" />
                                         {userAdminLevel
@@ -500,7 +505,7 @@ export default function AdminProfilePage() {
                                         Admin
                                     </Badge>
                                     {userDepartmentName && (
-                                        <Badge variant="outline">
+                                        <Badge className="bg-white border-0 shadow-sm text-slate-700">
                                             <Building className="w-3 h-3 mr-1" />
                                             {userDepartmentName}
                                         </Badge>
@@ -541,10 +546,10 @@ export default function AdminProfilePage() {
                     </Card>
 
                     {/* Admin Performance Summary */}
-                    <Card className="mt-6">
+                    <Card className="mt-6 border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
                         <CardHeader>
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg flex items-center gap-2">
+                                <CardTitle className="text-lg flex items-center gap-2 bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
                                     📊 Admin Performance
                                     {statsLoading && (
                                         <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -581,74 +586,74 @@ export default function AdminProfilePage() {
                                 </div>
                             ) : (
                                 <div className="space-y-4">
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-blue-50 border border-blue-200">
+                                    <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-green-50 shadow-sm">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-blue-900">
+                                            <div className="w-3 h-3 bg-emerald-500 rounded-full shadow-sm"></div>
+                                            <span className="text-sm font-medium text-emerald-900">
                                                 Issues Managed
                                             </span>
                                         </div>
-                                        <Badge className="bg-blue-500 text-white">
+                                        <Badge className="bg-gradient-to-r from-emerald-500 to-green-500 text-white border-0 shadow-sm">
                                             {adminStats.issues_managed}
                                         </Badge>
                                     </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 border border-green-200">
+                                    <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 shadow-sm">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                            <div className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></div>
                                             <span className="text-sm font-medium text-green-900">
                                                 Issues Resolved
                                             </span>
                                         </div>
-                                        <Badge className="bg-green-500 text-white">
+                                        <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 shadow-sm">
                                             {adminStats.issues_resolved}
                                         </Badge>
                                     </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-purple-50 border border-purple-200">
+                                    <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-teal-50 to-cyan-50 shadow-sm">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-purple-900">
+                                            <div className="w-3 h-3 bg-teal-500 rounded-full shadow-sm"></div>
+                                            <span className="text-sm font-medium text-teal-900">
                                                 Users Managed
                                             </span>
                                         </div>
-                                        <Badge className="bg-purple-500 text-white">
+                                        <Badge className="bg-gradient-to-r from-teal-500 to-cyan-500 text-white border-0 shadow-sm">
                                             {adminStats.users_managed}
                                         </Badge>
                                     </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-orange-50 border border-orange-200">
+                                    <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 shadow-sm">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-orange-900">
+                                            <div className="w-3 h-3 bg-amber-500 rounded-full shadow-sm"></div>
+                                            <span className="text-sm font-medium text-amber-900">
                                                 Departments
                                             </span>
                                         </div>
-                                        <Badge className="bg-orange-500 text-white">
+                                        <Badge className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white border-0 shadow-sm">
                                             {adminStats.departments_managed}
                                         </Badge>
                                     </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-yellow-50 border border-yellow-200">
+                                    <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-lime-50 to-green-50 shadow-sm">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-yellow-900">
+                                            <div className="w-3 h-3 bg-lime-500 rounded-full shadow-sm"></div>
+                                            <span className="text-sm font-medium text-lime-900">
                                                 Reports Generated
                                             </span>
                                         </div>
-                                        <Badge className="bg-yellow-500 text-white">
+                                        <Badge className="bg-gradient-to-r from-lime-500 to-green-500 text-white border-0 shadow-sm">
                                             {adminStats.reports_generated}
                                         </Badge>
                                     </div>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-indigo-50 border border-indigo-200">
+                                    <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 shadow-sm">
                                         <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-indigo-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-indigo-900">
+                                            <div className="w-3 h-3 bg-emerald-600 rounded-full shadow-sm"></div>
+                                            <span className="text-sm font-medium text-emerald-900">
                                                 System Uptime
                                             </span>
                                         </div>
-                                        <Badge className="bg-indigo-500 text-white">
+                                        <Badge className="bg-gradient-to-r from-emerald-600 to-teal-500 text-white border-0 shadow-sm">
                                             {adminStats.system_uptime}
                                         </Badge>
                                     </div>
@@ -678,10 +683,10 @@ export default function AdminProfilePage() {
                 {/* Profile Details */}
                 <div className="lg:col-span-2 space-y-6">
                     {/* Personal Information */}
-                    <Card>
+                    <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <User className="w-5 h-5" />
+                                <User className="w-5 h-5 text-emerald-600" />
                                 Personal Information
                             </CardTitle>
                         </CardHeader>
@@ -700,6 +705,7 @@ export default function AdminProfilePage() {
                                                 }))
                                             }
                                             placeholder="Enter your full name"
+                                            className="bg-white border-emerald-200 focus:border-emerald-500"
                                         />
                                     ) : (
                                         <p className="text-muted-foreground">
@@ -800,10 +806,10 @@ export default function AdminProfilePage() {
                                                 setUserDepartment(value);
                                             }}
                                         >
-                                            <SelectTrigger className="w-full">
+                                            <SelectTrigger className="w-full bg-white border-emerald-200 focus:border-emerald-500">
                                                 <SelectValue placeholder="Select department" />
                                             </SelectTrigger>
-                                            <SelectContent className="w-full min-w-[250px] max-w-[350px]">
+                                            <SelectContent className="w-full min-w-[250px] max-w-[350px] bg-white border-emerald-200 shadow-xl">
                                                 {departments.map((dept) => (
                                                     <SelectItem
                                                         key={dept.id}
@@ -847,10 +853,10 @@ export default function AdminProfilePage() {
                                                 setUserAdminLevel(value)
                                             }
                                         >
-                                            <SelectTrigger className="w-full">
+                                            <SelectTrigger className="w-full bg-white border-emerald-200 focus:border-emerald-500">
                                                 <SelectValue placeholder="Select admin level" />
                                             </SelectTrigger>
-                                            <SelectContent className="w-full min-w-[200px] max-w-[300px]">
+                                            <SelectContent className="w-full min-w-[200px] max-w-[300px] bg-white border-emerald-200 shadow-xl">
                                                 <SelectItem value="junior">
                                                     <div className="flex flex-col">
                                                         <span className="font-medium">
@@ -925,6 +931,7 @@ export default function AdminProfilePage() {
                                         }
                                         placeholder="Tell us about your role and responsibilities..."
                                         rows={3}
+                                        className="bg-white border-emerald-200 focus:border-emerald-500"
                                     />
                                 ) : (
                                     <p className="text-muted-foreground">
@@ -936,18 +943,18 @@ export default function AdminProfilePage() {
                     </Card>
 
                     {/* Admin Permissions & Settings */}
-                    <Card>
+                    <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Shield className="w-5 h-5" />
+                                <Shield className="w-5 h-5 text-emerald-600" />
                                 Admin Permissions & Settings
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                                <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-green-50 shadow-sm">
                                     <div className="flex items-center gap-2">
-                                        <Users className="w-4 h-4 text-blue-500" />
+                                        <Users className="w-4 h-4 text-emerald-600" />
                                         <div>
                                             <p className="font-medium">
                                                 User Management
@@ -957,12 +964,12 @@ export default function AdminProfilePage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary">Enabled</Badge>
+                                    <Badge className="bg-emerald-100 text-emerald-700 border-0 font-medium">Enabled</Badge>
                                 </div>
 
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                                <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 shadow-sm">
                                     <div className="flex items-center gap-2">
-                                        <FileText className="w-4 h-4 text-green-500" />
+                                        <FileText className="w-4 h-4 text-green-600" />
                                         <div>
                                             <p className="font-medium">
                                                 Issue Management
@@ -972,12 +979,12 @@ export default function AdminProfilePage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary">Enabled</Badge>
+                                    <Badge className="bg-green-100 text-green-700 border-0 font-medium">Enabled</Badge>
                                 </div>
 
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                                <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-teal-50 to-cyan-50 shadow-sm">
                                     <div className="flex items-center gap-2">
-                                        <BarChart3 className="w-4 h-4 text-purple-500" />
+                                        <BarChart3 className="w-4 h-4 text-teal-600" />
                                         <div>
                                             <p className="font-medium">
                                                 Analytics Access
@@ -987,12 +994,12 @@ export default function AdminProfilePage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary">Enabled</Badge>
+                                    <Badge className="bg-teal-100 text-teal-700 border-0 font-medium">Enabled</Badge>
                                 </div>
 
-                                <div className="flex items-center justify-between p-3 rounded-lg border">
+                                <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 shadow-sm">
                                     <div className="flex items-center gap-2">
-                                        <Database className="w-4 h-4 text-orange-500" />
+                                        <Database className="w-4 h-4 text-amber-600" />
                                         <div>
                                             <p className="font-medium">
                                                 System Settings
@@ -1002,17 +1009,17 @@ export default function AdminProfilePage() {
                                             </p>
                                         </div>
                                     </div>
-                                    <Badge variant="secondary">Enabled</Badge>
+                                    <Badge className="bg-amber-100 text-amber-700 border-0 font-medium">Enabled</Badge>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
 
                     {/* Notification Settings */}
-                    <Card>
+                    <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
-                                <Bell className="w-5 h-5" />
+                                <Bell className="w-5 h-5 text-emerald-600" />
                                 Notification Preferences
                             </CardTitle>
                         </CardHeader>
@@ -1068,6 +1075,9 @@ export default function AdminProfilePage() {
                     {/* Account Management */}
                     <AccountManagement userType="admin" />
                 </div>
+            </div>
+        </div>
+        </div>
             </div>
         </div>
     );

@@ -1,5 +1,4 @@
 import type React from "react"
-import AdminNav from "@/components/admin-nav"
 
 export default function AdminLayout({
   children,
@@ -8,7 +7,6 @@ export default function AdminLayout({
 }) {
   return (
     <div className="min-h-screen bg-background">
-      <AdminNav />
       <main>{children}</main>
     </div>
   )

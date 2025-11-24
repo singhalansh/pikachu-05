@@ -145,14 +145,14 @@ const achievements = [
 const getRankIcon = (rank: number) => {
   switch (rank) {
     case 1:
-      return <Trophy className="w-6 h-6 text-yellow-500" />
+      return <Trophy className="w-6 h-6 text-emerald-600" />
     case 2:
-      return <Medal className="w-6 h-6 text-gray-400" />
+      return <Medal className="w-6 h-6 text-emerald-500" />
     case 3:
-      return <Award className="w-6 h-6 text-amber-600" />
+      return <Award className="w-6 h-6 text-green-600" />
     default:
       return (
-        <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-sm font-bold">{rank}</div>
+        <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-sm font-bold text-emerald-700">{rank}</div>
       )
   }
 }
@@ -160,17 +160,17 @@ const getRankIcon = (rank: number) => {
 const getBadgeColor = (badge: string) => {
   switch (badge) {
     case "Community Champion":
-      return "bg-yellow-500 text-white"
+      return "bg-emerald-600 text-white"
     case "Civic Hero":
-      return "bg-blue-500 text-white"
+      return "bg-[#2E6A56] text-white"
     case "Problem Solver":
-      return "bg-green-500 text-white"
+      return "bg-green-600 text-white"
     case "Active Reporter":
-      return "bg-purple-500 text-white"
+      return "bg-emerald-700 text-white"
     case "Community Helper":
-      return "bg-orange-500 text-white"
+      return "bg-green-500 text-white"
     default:
-      return "bg-muted text-muted-foreground"
+      return "bg-emerald-100 text-emerald-700"
   }
 }
 
@@ -178,19 +178,19 @@ export default function LeaderboardPage() {
   const [timeFilter, setTimeFilter] = useState("all-time")
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
       {/* Header */}
-      <div className="border-b bg-card">
+      <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild>
               <Link href="/citizen/dashboard">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                Dashboard
               </Link>
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">Community Leaderboard</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">Community Leaderboard</h1>
               <p className="text-muted-foreground">Celebrating our most active community contributors</p>
             </div>
           </div>
@@ -202,10 +202,10 @@ export default function LeaderboardPage() {
           {/* Main Leaderboard */}
           <div className="lg:col-span-2 space-y-6">
             {/* Current User Stats */}
-            <Card className="border-accent">
+            <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-200">
               <CardHeader>
                 <CardTitle className="flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-accent" />
+                  <TrendingUp className="w-5 h-5 mr-2 text-emerald-700" />
                   Your Progress
                 </CardTitle>
               </CardHeader>
@@ -243,7 +243,7 @@ export default function LeaderboardPage() {
             </Card>
 
             {/* Top Contributors */}
-            <Card>
+            <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-emerald-50/30">
               <CardHeader>
                 <CardTitle>Top Contributors</CardTitle>
                 <CardDescription>Community members making the biggest impact</CardDescription>
@@ -292,7 +292,7 @@ export default function LeaderboardPage() {
 
           {/* Achievements Sidebar */}
           <div className="space-y-6">
-            <Card>
+            <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-green-50/30">
               <CardHeader>
                 <CardTitle>Achievements</CardTitle>
                 <CardDescription>Unlock badges by contributing to your community</CardDescription>
@@ -301,11 +301,11 @@ export default function LeaderboardPage() {
                 {achievements.map((achievement) => (
                   <div
                     key={achievement.id}
-                    className={`p-3 rounded-lg border ${achievement.earned ? "bg-accent/5 border-accent" : "bg-muted/30"}`}
+                    className={`p-3 rounded-lg border ${achievement.earned ? "bg-emerald-50 border-emerald-200" : "bg-muted/30"}`}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`p-2 rounded-lg ${achievement.earned ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}
+                        className={`p-2 rounded-lg ${achievement.earned ? "bg-gradient-to-br from-[#2E6A56] to-emerald-600 text-white" : "bg-muted text-muted-foreground"}`}
                       >
                         {achievement.icon}
                       </div>
@@ -339,21 +339,21 @@ export default function LeaderboardPage() {
             </Card>
 
             {/* Quick Stats */}
-            <Card>
+            <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-emerald-50/30">
               <CardHeader>
                 <CardTitle>Community Stats</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-accent">1,247</div>
+                  <div className="text-2xl font-bold text-emerald-600">1,247</div>
                   <div className="text-sm text-muted-foreground">Total Issues Reported</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-status-resolved">892</div>
+                  <div className="text-2xl font-bold text-green-600">892</div>
                   <div className="text-sm text-muted-foreground">Issues Resolved</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-status-progress">355</div>
+                  <div className="text-2xl font-bold text-emerald-700">355</div>
                   <div className="text-sm text-muted-foreground">Active Contributors</div>
                 </div>
               </CardContent>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import AdminSidebar from "@/components/admin-sidebar";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -88,30 +89,30 @@ interface Issue {
 const getStatusColor = (status: string) => {
   switch (status) {
     case "submitted":
-            return "bg-blue-500 hover:bg-blue-600 text-white";
+            return "bg-emerald-500 hover:bg-emerald-600 text-white border-0 shadow-sm";
     case "assigned":
-            return "bg-amber-500 hover:bg-amber-600 text-white";
+            return "bg-amber-500 hover:bg-amber-600 text-white border-0 shadow-sm";
     case "in_progress":
-            return "bg-orange-500 hover:bg-orange-600 text-white";
+            return "bg-cyan-500 hover:bg-cyan-600 text-white border-0 shadow-sm";
     case "resolved":
-            return "bg-emerald-500 hover:bg-emerald-600 text-white";
+            return "bg-green-500 hover:bg-green-600 text-white border-0 shadow-sm";
     case "closed":
-            return "bg-slate-500 hover:bg-slate-600 text-white";
+            return "bg-slate-500 hover:bg-slate-600 text-white border-0 shadow-sm";
     default:
-            return "bg-gray-100 text-gray-700";
+            return "bg-gray-100 text-gray-700 border-0 shadow-sm";
   }
 };
 
 const getPriorityColor = (priority: string) => {
   switch (priority) {
     case "high":
-            return "bg-red-50 text-red-700 border-red-200";
+            return "bg-red-50 text-red-700 border-0 shadow-sm";
     case "medium":
-            return "bg-yellow-50 text-yellow-700 border-yellow-200";
+            return "bg-yellow-50 text-yellow-700 border-0 shadow-sm";
     case "low":
-            return "bg-green-50 text-green-700 border-green-200";
+            return "bg-green-50 text-green-700 border-0 shadow-sm";
     default:
-            return "bg-gray-50 text-gray-700 border-gray-200";
+            return "bg-gray-50 text-gray-700 border-0 shadow-sm";
   }
 };
 
@@ -448,9 +449,12 @@ export default function AdminIssuesPage() {
   };
 
   return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+            <div className="flex h-screen pt-16 md:pt-0">
+                <AdminSidebar pendingIssues={statusCounts.submitted} />
+                <div className="flex-1 overflow-auto">
             {/* Enhanced Header */}
-            <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
+            <div className="border-0 bg-gradient-to-r from-white to-emerald-50/30 backdrop-blur-sm shadow-lg">
                 <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -461,10 +465,10 @@ export default function AdminIssuesPage() {
                                 </Button>
               </Link>
               <div>
-                                <h1 className="text-3xl font-bold text-gray-900">
+                                <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
                                     Issue Management
                                 </h1>
-                                <p className="text-gray-600 mt-1">
+                                <p className="text-emerald-700 mt-1">
                                     Track, assign, and manage all civic issues
                                 </p>
               </div>
@@ -487,17 +491,17 @@ export default function AdminIssuesPage() {
 
                     {/* Summary Stats */}
                     <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-6">
-                        <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+                        <Card className="border-0 bg-gradient-to-r from-emerald-50 to-green-100 shadow-lg hover:shadow-xl transition-shadow">
                             <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-blue-700">
+                                <div className="text-2xl font-bold text-emerald-700">
                                     {statusCounts.all}
                                 </div>
-                                <div className="text-sm text-blue-600">
+                                <div className="text-sm text-emerald-600">
                                     Total Issues
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-yellow-50 to-amber-100 border-amber-200">
+                        <Card className="border-0 bg-gradient-to-r from-amber-50 to-yellow-100 shadow-lg hover:shadow-xl transition-shadow">
                             <CardContent className="p-4 text-center">
                                 <div className="text-2xl font-bold text-amber-700">
                                     {statusCounts.submitted}
@@ -507,7 +511,7 @@ export default function AdminIssuesPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-orange-50 to-orange-100 border-orange-200">
+                        <Card className="border-0 bg-gradient-to-r from-orange-50 to-amber-100 shadow-lg hover:shadow-xl transition-shadow">
                             <CardContent className="p-4 text-center">
                                 <div className="text-2xl font-bold text-orange-700">
                                     {statusCounts.assigned}
@@ -517,17 +521,17 @@ export default function AdminIssuesPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-purple-50 to-purple-100 border-purple-200">
+                        <Card className="border-0 bg-gradient-to-r from-cyan-50 to-teal-100 shadow-lg hover:shadow-xl transition-shadow">
                             <CardContent className="p-4 text-center">
-                                <div className="text-2xl font-bold text-purple-700">
+                                <div className="text-2xl font-bold text-cyan-700">
                                     {statusCounts.in_progress}
                                 </div>
-                                <div className="text-sm text-purple-600">
+                                <div className="text-sm text-cyan-600">
                                     In Progress
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-emerald-50 to-green-100 border-emerald-200">
+                        <Card className="border-0 bg-gradient-to-r from-green-50 to-emerald-100 shadow-lg hover:shadow-xl transition-shadow">
                             <CardContent className="p-4 text-center">
                                 <div className="text-2xl font-bold text-emerald-700">
                                     {statusCounts.resolved}
@@ -537,7 +541,7 @@ export default function AdminIssuesPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                        <Card className="bg-gradient-to-r from-slate-50 to-gray-100 border-slate-200">
+                        <Card className="border-0 bg-gradient-to-r from-slate-50 to-gray-100 shadow-lg hover:shadow-xl transition-shadow">
                             <CardContent className="p-4 text-center">
                                 <div className="text-2xl font-bold text-slate-700">
                                     {statusCounts.closed}
@@ -553,8 +557,8 @@ export default function AdminIssuesPage() {
 
             <div className="responsive-container py-6">
                 {/* Enhanced Filters */}
-                <Card className="mb-6 shadow-sm">
-                    <CardContent className="responsive-card-content">
+                <Card className="mb-6 border-0 shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-emerald-50/30">
+                    <CardContent className="responsive-card-content pt-6">
                         {/* Search and Filter Toggle */}
                         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
                             <div className="relative flex-1 max-w-lg">
@@ -708,9 +712,9 @@ export default function AdminIssuesPage() {
 
         {/* Loading State */}
         {loading && (
-                    <Card className="shadow-sm">
+                    <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-emerald-50/30">
                         <CardContent className="p-12 text-center">
-                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-4"></div>
                             <p className="text-lg">Loading issues...</p>
             </CardContent>
           </Card>
@@ -718,7 +722,7 @@ export default function AdminIssuesPage() {
 
         {/* Error State */}
         {error && (
-                    <Card className="shadow-sm">
+                    <Card className="border-0 shadow-lg bg-gradient-to-br from-red-50 to-pink-50">
                         <CardContent className="p-12 text-center">
                             <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
                             <h3 className="text-xl font-semibold mb-2">
@@ -739,8 +743,8 @@ export default function AdminIssuesPage() {
                         onValueChange={setStatusFilter}
                         className="space-y-6"
                     >
-                        <div className="overflow-x-auto">
-                            <TabsList className="grid w-full grid-cols-6 h-12">
+                        <div className="overflow-x-auto pb-2">
+                            <TabsList className="grid w-full grid-cols-6 h-12 bg-gradient-to-r from-emerald-50 to-green-50 border-0 shadow-sm">
                                 <TabsTrigger value="all" className="text-sm">
                                     All ({statusCounts.all})
                                 </TabsTrigger>
@@ -776,10 +780,10 @@ export default function AdminIssuesPage() {
 
                         <TabsContent value={statusFilter} className="space-y-6">
                             <Card
-                                className="shadow-sm"
+                                className="border-0 shadow-xl hover:shadow-2xl transition-all bg-gradient-to-br from-white to-emerald-50/40"
                                 style={{ overflow: "visible" }}
                             >
-                                <CardHeader className="pb-4">
+                                <CardHeader className="pb-6 border-b border-emerald-100">
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <CardTitle className="text-xl">
@@ -809,7 +813,7 @@ export default function AdminIssuesPage() {
                                         <div className="responsive-table-container">
                                             <Table className="responsive-table">
                     <TableHeader>
-                                                    <TableRow className="bg-gray-50">
+                                                    <TableRow className="bg-gradient-to-r from-emerald-50 to-green-50">
                         <TableHead className="w-12">
                           <input
                             type="checkbox"
@@ -877,9 +881,9 @@ export default function AdminIssuesPage() {
                                                         (issue, index) => (
                                                             <TableRow
                                                                 key={issue.id}
-                                                                className={`hover:bg-gray-50 ${
+                                                                className={`hover:bg-emerald-50 transition-colors ${
                                                                     index === 0
-                                                                        ? "bg-blue-50/50 border-l-4 border-l-blue-500"
+                                                                        ? "bg-emerald-50/50 border-l-4 border-l-emerald-500"
                                                                         : ""
                                                                 }`}
                                                             >
@@ -923,10 +927,10 @@ export default function AdminIssuesPage() {
                                                                         <Link
                                                                             href={`/admin/issues/${issue.id}`}
                                                                         >
-                                                                            <div className="font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer line-clamp-1">
+                                                                            <div className="font-semibold text-gray-900 hover:text-emerald-600 transition-colors cursor-pointer line-clamp-1">
                                                                                 {index ===
                                                                                     0 && (
-                                                                                    <span className="inline-flex items-center mr-2 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">
+                                                                                    <span className="inline-flex items-center mr-2 px-2 py-1 bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 text-xs rounded-full border-0 shadow-sm">
                                                                                         <TrendingUp className="w-3 h-3 mr-1" />
                                                                                         Most
                                                                                         Voted
@@ -951,7 +955,7 @@ export default function AdminIssuesPage() {
                                                                             </span>
                               </div>
                                                                         <div
-                                                                            className="text-xs text-gray-400 cursor-pointer hover:text-blue-500 transition-colors font-mono"
+                                                                            className="text-xs text-gray-400 cursor-pointer hover:text-emerald-600 transition-colors font-mono"
                                                                             onClick={() =>
                                                                                 handleUserIdClick(
                                                                                     issue.id
@@ -969,7 +973,7 @@ export default function AdminIssuesPage() {
                                                                         {expandedUserIds.has(
                                                                             issue.id
                                                                         ) && (
-                                                                            <div className="text-xs text-blue-600 font-mono bg-blue-50 px-2 py-1 rounded border mt-1">
+                                                                            <div className="text-xs text-emerald-700 font-mono bg-emerald-50 px-2 py-1 rounded-md border-0 shadow-sm mt-1">
                                                                                 {
                                                                                     issue.id
                                                                                 }
@@ -998,8 +1002,7 @@ export default function AdminIssuesPage() {
                                                                     <Badge
                                                                         className={`${getPriorityColor(
                                                                             issue.priority
-                                                                        )} border`}
-                                                                        variant="outline"
+                                                                        )}`}
                                                                     >
                                                                         {issue.priority
                                                                             .charAt(
@@ -1030,8 +1033,7 @@ export default function AdminIssuesPage() {
                                                                             )}
                                                                         </span>
                                                                         <Badge
-                                                                            variant="outline"
-                                                                            className="text-xs border-gray-200"
+                                                                            className="text-xs bg-gradient-to-r from-slate-50 to-gray-100 text-slate-700 border-0 shadow-sm"
                                                                         >
                                                                             {getCategoryLabel(
                                                                                 issue.category
@@ -1152,10 +1154,10 @@ export default function AdminIssuesPage() {
                                                 (issue, index) => (
                                                     <Card
                                                         key={issue.id}
-                                                        className={`responsive-card ${
+                                                        className={`responsive-card border-0 shadow-md hover:shadow-lg transition-shadow ${
                                                             index === 0
-                                                                ? "border-l-4 border-l-blue-500 bg-blue-50/30"
-                                                                : ""
+                                                                ? "border-l-4 border-l-emerald-500 bg-emerald-50/50"
+                                                                : "bg-gradient-to-br from-white to-slate-50/50"
                                                         }`}
                                                     >
                                                         <CardContent className="responsive-card-content">
@@ -1198,7 +1200,7 @@ export default function AdminIssuesPage() {
                                                                         {index ===
                                                                             0 && (
                                                                             <div className="mb-2">
-                                                                                <Badge className="bg-blue-100 text-blue-700 text-xs">
+                                                                                <Badge className="bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 text-xs border-0 shadow-sm">
                                                                                     <TrendingUp className="w-3 h-3 mr-1" />
                                                                                     Most
                                                                                     Voted
@@ -1208,7 +1210,7 @@ export default function AdminIssuesPage() {
                                                                         <Link
                                                                             href={`/admin/issues/${issue.id}`}
                                                                         >
-                                                                            <h3 className="font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer mb-1">
+                                                                            <h3 className="font-semibold text-gray-900 hover:text-emerald-600 transition-colors cursor-pointer mb-1">
                                                                                 {
                                                                                     issue.title
                                                                                 }
@@ -1233,7 +1235,7 @@ export default function AdminIssuesPage() {
                                                                         {expandedUserIds.has(
                                                                             issue.id
                                                                         ) && (
-                                                                            <div className="text-xs text-blue-600 font-mono bg-blue-50 px-2 py-1 rounded border mb-2">
+                                                                            <div className="text-xs text-emerald-700 font-mono bg-emerald-50 px-2 py-1 rounded-md border-0 shadow-sm mb-2">
                                                                                 {
                                                                                     issue.id
                                                                                 }
@@ -1302,8 +1304,7 @@ export default function AdminIssuesPage() {
                                                                     <Badge
                                                                         className={`${getPriorityColor(
                                                                             issue.priority
-                                                                        )} border text-xs`}
-                                                                        variant="outline"
+                                                                        )} text-xs`}
                                                                     >
                                                                         {issue.priority
                                                                             .charAt(
@@ -1341,8 +1342,7 @@ export default function AdminIssuesPage() {
                                                                             )}
                                                                         </span>
                                                                         <Badge
-                                                                            variant="outline"
-                                                                            className="text-xs"
+                                                                            className="text-xs bg-gradient-to-r from-slate-50 to-gray-100 text-slate-700 border-0 shadow-sm"
                                                                         >
                                                                             {getCategoryLabel(
                                                                                 issue.category
@@ -1352,7 +1352,7 @@ export default function AdminIssuesPage() {
                                                                 </div>
                                                             </div>
 
-                                                            <div className="mt-3 pt-3 border-t space-y-2">
+                                                            <div className="mt-4 pt-4 border-t border-emerald-100 space-y-2">
                                                                 <div className="flex items-center justify-between text-sm">
                                                                     <span className="text-gray-500">
                                                                         Assigned
@@ -1419,7 +1419,7 @@ export default function AdminIssuesPage() {
                                                                 </div>
                                                             </div>
 
-                                                            <div className="mt-3 pt-3 border-t">
+                                                            <div className="mt-4 pt-4 border-t border-emerald-100">
                                                                 <div className="flex items-center text-sm text-gray-500">
                                                                     <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
                                                                     <span className="truncate">
@@ -1468,6 +1468,8 @@ export default function AdminIssuesPage() {
         </Tabs>
         )}
       </div>
+                </div>
+            </div>
     </div>
     );
 }
