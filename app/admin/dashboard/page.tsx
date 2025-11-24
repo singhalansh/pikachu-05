@@ -478,7 +478,7 @@ const AdminDashboard = () => {
     return (
         <div className="flex h-screen pt-16 md:pt-0">
             <AdminSidebar pendingIssues={overviewStats.pendingIssues} />
-            
+
             <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
                 {/* Header */}
                 <div className="sticky top-0 bg-white/95 backdrop-blur-md shadow-lg border-0 p-4 md:p-6 flex items-center justify-between z-30 md:z-10">
@@ -512,9 +512,7 @@ const AdminDashboard = () => {
                     {error && (
                         <Card className="border-0 bg-gradient-to-r from-red-50 to-pink-50 shadow-md">
                             <CardContent className="p-4">
-                                <p className="text-red-800">
-                                    {error}
-                                </p>
+                                <p className="text-red-800">{error}</p>
                             </CardContent>
                         </Card>
                     )}
@@ -608,19 +606,13 @@ const AdminDashboard = () => {
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <ResponsiveContainer
-                                    width="100%"
-                                    height={300}
-                                >
+                                <ResponsiveContainer width="100%" height={300}>
                                     <RechartsLineChart data={monthlyTrends}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
                                             stroke="#e5e7eb"
                                         />
-                                        <XAxis
-                                            dataKey="month"
-                                            stroke="#666"
-                                        />
+                                        <XAxis dataKey="month" stroke="#666" />
                                         <YAxis stroke="#666" />
                                         <Tooltip
                                             contentStyle={{
@@ -647,7 +639,7 @@ const AdminDashboard = () => {
                                             activeDot={{ r: 6 }}
                                             name="Resolved"
                                         />
-                                </RechartsLineChart>
+                                    </RechartsLineChart>
                                 </ResponsiveContainer>
                             </CardContent>
                         </Card>
@@ -683,9 +675,7 @@ const AdminDashboard = () => {
                                                     (entry, index) => (
                                                         <Cell
                                                             key={`cell-${index}`}
-                                                            fill={
-                                                                entry.color
-                                                            }
+                                                            fill={entry.color}
                                                         />
                                                     )
                                                 )}

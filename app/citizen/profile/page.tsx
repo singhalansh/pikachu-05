@@ -235,7 +235,9 @@ export default function ProfilePage() {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
             <div className="container mx-auto px-4 py-8 max-w-6xl">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">
+                        Profile
+                    </h1>
                     <p className="text-gray-600">
                         Manage your account information and settings
                     </p>
@@ -247,495 +249,510 @@ export default function ProfilePage() {
                         <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
                             <CardContent className="pt-6">
                                 <div className="flex flex-col items-center text-center">
-                                <div className="relative mb-4">
-                                    <Avatar className="w-24 h-24">
-                                        {profileData.avatar_url ? (
-                                            <AvatarImage
-                                                src={profileData.avatar_url}
-                                                alt={displayName}
-                                            />
-                                        ) : (
-                                            <AvatarFallback className="text-2xl">
-                                                {displayName
-                                                    .substring(0, 2)
-                                                    .toUpperCase()}
-                                            </AvatarFallback>
+                                    <div className="relative mb-4">
+                                        <Avatar className="w-24 h-24">
+                                            {profileData.avatar_url ? (
+                                                <AvatarImage
+                                                    src={profileData.avatar_url}
+                                                    alt={displayName}
+                                                />
+                                            ) : (
+                                                <AvatarFallback className="text-2xl">
+                                                    {displayName
+                                                        .substring(0, 2)
+                                                        .toUpperCase()}
+                                                </AvatarFallback>
+                                            )}
+                                        </Avatar>
+                                        {isEditing && (
+                                            <div className="absolute -bottom-2 -right-2">
+                                                <input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    onChange={(e) => {
+                                                        const file =
+                                                            e.target.files?.[0];
+                                                        if (file)
+                                                            handleAvatarUpload(
+                                                                file
+                                                            );
+                                                    }}
+                                                    className="hidden"
+                                                    id="avatar-upload"
+                                                />
+                                                <label
+                                                    htmlFor="avatar-upload"
+                                                    className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-[#2E6A56] to-emerald-600 text-white rounded-full cursor-pointer hover:shadow-lg transition-all duration-300"
+                                                >
+                                                    {uploading ? (
+                                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                                    ) : (
+                                                        <Camera className="w-4 h-4" />
+                                                    )}
+                                                </label>
+                                            </div>
                                         )}
-                                    </Avatar>
-                                    {isEditing && (
-                                        <div className="absolute -bottom-2 -right-2">
-                                            <input
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={(e) => {
-                                                    const file =
-                                                        e.target.files?.[0];
-                                                    if (file)
-                                                        handleAvatarUpload(
-                                                            file
-                                                        );
-                                                }}
-                                                className="hidden"
-                                                id="avatar-upload"
-                                            />
-                                            <label
-                                                htmlFor="avatar-upload"
-                                                className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-[#2E6A56] to-emerald-600 text-white rounded-full cursor-pointer hover:shadow-lg transition-all duration-300"
-                                            >
-                                                {uploading ? (
-                                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                                ) : (
-                                                    <Camera className="w-4 h-4" />
-                                                )}
-                                            </label>
-                                        </div>
-                                    )}
-                                </div>
+                                    </div>
 
-                                <h2 className="text-xl font-semibold mb-2 text-gray-900">
-                                    {displayName}
-                                </h2>
-                                <p className="text-gray-600 mb-4">
-                                    {profileData.email}
-                                </p>
+                                    <h2 className="text-xl font-semibold mb-2 text-gray-900">
+                                        {displayName}
+                                    </h2>
+                                    <p className="text-gray-600 mb-4">
+                                        {profileData.email}
+                                    </p>
 
-                                {/* Role and Department Display */}
-                                <div className="flex flex-col gap-2 mb-4">
-                                    <Badge
-                                        variant="secondary"
-                                        className="w-fit bg-gradient-to-r from-[#2E6A56]/10 to-emerald-100 text-[#2E6A56] border-0"
-                                    >
-                                        {userRole === "admin"
-                                            ? "Administrator"
-                                            : "Citizen"}
-                                    </Badge>
-                                    {userDepartmentName && (
+                                    {/* Role and Department Display */}
+                                    <div className="flex flex-col gap-2 mb-4">
                                         <Badge
-                                            variant="outline"
-                                            className="w-fit border-[#2E6A56]/30 text-[#2E6A56]"
+                                            variant="secondary"
+                                            className="w-fit bg-gradient-to-r from-[#2E6A56]/10 to-emerald-100 text-[#2E6A56] border-0"
                                         >
-                                            {userDepartmentName}
+                                            {userRole === "admin"
+                                                ? "Administrator"
+                                                : "Citizen"}
                                         </Badge>
-                                    )}
-                                </div>
+                                        {userDepartmentName && (
+                                            <Badge
+                                                variant="outline"
+                                                className="w-fit border-[#2E6A56]/30 text-[#2E6A56]"
+                                            >
+                                                {userDepartmentName}
+                                            </Badge>
+                                        )}
+                                    </div>
 
-                                {!isEditing ? (
-                                    <Button
-                                        onClick={() => setIsEditing(true)}
-                                        variant="outline"
-                                        size="sm"
-                                        className="border-[#2E6A56]/30 text-[#2E6A56] hover:bg-[#2E6A56]/10"
-                                    >
-                                        <Edit className="w-4 h-4 mr-2" />
-                                        Edit Profile
-                                    </Button>
-                                ) : (
-                                    <div className="flex gap-2">
+                                    {!isEditing ? (
                                         <Button
-                                            onClick={handleSave}
-                                            disabled={loading}
-                                            size="sm"
-                                            className="bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700"
-                                        >
-                                            <Save className="w-4 h-4 mr-2" />
-                                            {loading ? "Saving..." : "Save"}
-                                        </Button>
-                                        <Button
-                                            onClick={() => setIsEditing(false)}
+                                            onClick={() => setIsEditing(true)}
                                             variant="outline"
                                             size="sm"
                                             className="border-[#2E6A56]/30 text-[#2E6A56] hover:bg-[#2E6A56]/10"
                                         >
-                                            <X className="w-4 h-4 mr-2" />
-                                            Cancel
+                                            <Edit className="w-4 h-4 mr-2" />
+                                            Edit Profile
                                         </Button>
-                                    </div>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Enhanced Activity Summary */}
-                    <Card className="mt-6">
-                        <CardHeader>
-                            <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg flex items-center gap-2">
-                                    📊 Activity Summary
-                                    {statsLoading && (
-                                        <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                    ) : (
+                                        <div className="flex gap-2">
+                                            <Button
+                                                onClick={handleSave}
+                                                disabled={loading}
+                                                size="sm"
+                                                className="bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700"
+                                            >
+                                                <Save className="w-4 h-4 mr-2" />
+                                                {loading ? "Saving..." : "Save"}
+                                            </Button>
+                                            <Button
+                                                onClick={() =>
+                                                    setIsEditing(false)
+                                                }
+                                                variant="outline"
+                                                size="sm"
+                                                className="border-[#2E6A56]/30 text-[#2E6A56] hover:bg-[#2E6A56]/10"
+                                            >
+                                                <X className="w-4 h-4 mr-2" />
+                                                Cancel
+                                            </Button>
+                                        </div>
                                     )}
-                                </CardTitle>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={fetchIssueStats}
-                                    disabled={statsLoading}
-                                    className="h-8 w-8 p-0"
-                                    title="Refresh stats"
-                                >
-                                    <RefreshCw
-                                        className={`w-4 h-4 ${
-                                            statsLoading ? "animate-spin" : ""
-                                        }`}
-                                    />
-                                </Button>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            {statsLoading ? (
-                                <div className="space-y-3">
-                                    {[1, 2, 3, 4].map((i) => (
-                                        <div
-                                            key={i}
-                                            className="flex justify-between items-center"
-                                        >
-                                            <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
-                                            <div className="h-6 bg-gray-200 rounded w-8 animate-pulse"></div>
-                                        </div>
-                                    ))}
                                 </div>
-                            ) : (
-                                <div className="space-y-4">
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-emerald-50 border border-emerald-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-emerald-900">
-                                                Issues Reported
-                                            </span>
-                                        </div>
-                                        <Badge className="bg-emerald-500 text-white">
-                                            {issueStats.reported}
-                                        </Badge>
-                                    </div>
+                            </CardContent>
+                        </Card>
 
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-yellow-50 border border-yellow-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-yellow-900">
-                                                Submitted
-                                            </span>
-                                        </div>
-                                        <Badge className="bg-yellow-500 text-white">
-                                            {issueStats.submitted}
-                                        </Badge>
+                        {/* Enhanced Activity Summary */}
+                        <Card className="mt-6">
+                            <CardHeader>
+                                <div className="flex items-center justify-between">
+                                    <CardTitle className="text-lg flex items-center gap-2">
+                                        📊 Activity Summary
+                                        {statsLoading && (
+                                            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                        )}
+                                    </CardTitle>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={fetchIssueStats}
+                                        disabled={statsLoading}
+                                        className="h-8 w-8 p-0"
+                                        title="Refresh stats"
+                                    >
+                                        <RefreshCw
+                                            className={`w-4 h-4 ${
+                                                statsLoading
+                                                    ? "animate-spin"
+                                                    : ""
+                                            }`}
+                                        />
+                                    </Button>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                {statsLoading ? (
+                                    <div className="space-y-3">
+                                        {[1, 2, 3, 4].map((i) => (
+                                            <div
+                                                key={i}
+                                                className="flex justify-between items-center"
+                                            >
+                                                <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
+                                                <div className="h-6 bg-gray-200 rounded w-8 animate-pulse"></div>
+                                            </div>
+                                        ))}
                                     </div>
-
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-orange-50 border border-orange-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-orange-900">
-                                                In Progress
-                                            </span>
-                                        </div>
-                                        <Badge className="bg-orange-500 text-white">
-                                            {issueStats.in_progress}
-                                        </Badge>
-                                    </div>
-
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 border border-green-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-green-900">
-                                                Community Impact
-                                            </span>
-                                        </div>
-                                        <Badge className="bg-green-500 text-white">
-                                            {issueStats.assigned}
-                                        </Badge>
-                                    </div>
-
-                                    <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 border border-green-200">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                            <span className="text-sm font-medium text-green-900">
-                                                Resolved
-                                            </span>
-                                        </div>
-                                        <Badge className="bg-green-500 text-white">
-                                            {issueStats.resolved}
-                                        </Badge>
-                                    </div>
-
-                                    {issueStats.closed > 0 && (
-                                        <div className="flex justify-between items-center p-2 rounded-lg bg-gray-50 border border-gray-200">
+                                ) : (
+                                    <div className="space-y-4">
+                                        <div className="flex justify-between items-center p-2 rounded-lg bg-emerald-50 border border-emerald-200">
                                             <div className="flex items-center gap-2">
-                                                <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                                                <span className="text-sm font-medium text-gray-900">
-                                                    Closed
+                                                <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                                                <span className="text-sm font-medium text-emerald-900">
+                                                    Issues Reported
                                                 </span>
                                             </div>
-                                            <Badge className="bg-gray-500 text-white">
-                                                {issueStats.closed}
+                                            <Badge className="bg-emerald-500 text-white">
+                                                {issueStats.reported}
                                             </Badge>
                                         </div>
-                                    )}
-                                </div>
-                            )}
 
-                            {!statsLoading && issueStats.reported === 0 && (
-                                <div className="text-center py-6 text-muted-foreground">
-                                    <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                        📝
+                                        <div className="flex justify-between items-center p-2 rounded-lg bg-yellow-50 border border-yellow-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                                                <span className="text-sm font-medium text-yellow-900">
+                                                    Submitted
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-yellow-500 text-white">
+                                                {issueStats.submitted}
+                                            </Badge>
+                                        </div>
+
+                                        <div className="flex justify-between items-center p-2 rounded-lg bg-orange-50 border border-orange-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                                                <span className="text-sm font-medium text-orange-900">
+                                                    In Progress
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-orange-500 text-white">
+                                                {issueStats.in_progress}
+                                            </Badge>
+                                        </div>
+
+                                        <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 border border-green-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                                <span className="text-sm font-medium text-green-900">
+                                                    Community Impact
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-green-500 text-white">
+                                                {issueStats.assigned}
+                                            </Badge>
+                                        </div>
+
+                                        <div className="flex justify-between items-center p-2 rounded-lg bg-green-50 border border-green-200">
+                                            <div className="flex items-center gap-2">
+                                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                                <span className="text-sm font-medium text-green-900">
+                                                    Resolved
+                                                </span>
+                                            </div>
+                                            <Badge className="bg-green-500 text-white">
+                                                {issueStats.resolved}
+                                            </Badge>
+                                        </div>
+
+                                        {issueStats.closed > 0 && (
+                                            <div className="flex justify-between items-center p-2 rounded-lg bg-gray-50 border border-gray-200">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+                                                    <span className="text-sm font-medium text-gray-900">
+                                                        Closed
+                                                    </span>
+                                                </div>
+                                                <Badge className="bg-gray-500 text-white">
+                                                    {issueStats.closed}
+                                                </Badge>
+                                            </div>
+                                        )}
                                     </div>
-                                    <p className="text-sm font-medium">
-                                        No issues reported yet
-                                    </p>
-                                    <p className="text-xs mt-1">
-                                        Start by reporting your first civic
-                                        issue!
-                                    </p>
-                                </div>
-                            )}
+                                )}
 
-                            {!statsLoading && issueStats.reported > 0 && (
-                                <div className="mt-4 pt-4 border-t">
-                                    <div className="flex justify-between text-xs text-muted-foreground">
-                                        <span>Success Rate:</span>
-                                        <span className="font-medium">
-                                            {issueStats.reported > 0
-                                                ? Math.round(
-                                                      (issueStats.resolved /
-                                                          issueStats.reported) *
-                                                          100
-                                                  )
-                                                : 0}
-                                            %
-                                        </span>
+                                {!statsLoading && issueStats.reported === 0 && (
+                                    <div className="text-center py-6 text-muted-foreground">
+                                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                            📝
+                                        </div>
+                                        <p className="text-sm font-medium">
+                                            No issues reported yet
+                                        </p>
+                                        <p className="text-xs mt-1">
+                                            Start by reporting your first civic
+                                            issue!
+                                        </p>
+                                    </div>
+                                )}
+
+                                {!statsLoading && issueStats.reported > 0 && (
+                                    <div className="mt-4 pt-4 border-t">
+                                        <div className="flex justify-between text-xs text-muted-foreground">
+                                            <span>Success Rate:</span>
+                                            <span className="font-medium">
+                                                {issueStats.reported > 0
+                                                    ? Math.round(
+                                                          (issueStats.resolved /
+                                                              issueStats.reported) *
+                                                              100
+                                                      )
+                                                    : 0}
+                                                %
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Profile Details */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Personal Information */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <User className="w-5 h-5" />
+                                    Personal Information
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="full_name">
+                                            Full Name
+                                        </Label>
+                                        {isEditing ? (
+                                            <Input
+                                                id="full_name"
+                                                value={profileData.full_name}
+                                                onChange={(e) =>
+                                                    setProfileData((prev) => ({
+                                                        ...prev,
+                                                        full_name:
+                                                            e.target.value,
+                                                    }))
+                                                }
+                                                placeholder="Enter your full name"
+                                            />
+                                        ) : (
+                                            <p className="text-muted-foreground">
+                                                {profileData.full_name ||
+                                                    "Not provided"}
+                                            </p>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="email">Email</Label>
+                                        <p className="text-muted-foreground">
+                                            {profileData.email}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            Email cannot be changed here
+                                        </p>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        {isEditing ? (
+                                            <PhoneInput
+                                                value={profileData.phone || ""}
+                                                onChange={(value) =>
+                                                    setProfileData((prev) => ({
+                                                        ...prev,
+                                                        phone: value,
+                                                    }))
+                                                }
+                                                label="Phone Number"
+                                                placeholder="Enter 10-digit mobile number"
+                                            />
+                                        ) : (
+                                            <>
+                                                <Label htmlFor="phone">
+                                                    Phone Number
+                                                </Label>
+                                                <p className="text-muted-foreground">
+                                                    {profileData.phone
+                                                        ? `+91 ${profileData.phone}`
+                                                        : "Not provided"}
+                                                </p>
+                                            </>
+                                        )}
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        {isEditing ? (
+                                            <div>
+                                                <Label htmlFor="location">
+                                                    Location
+                                                </Label>
+                                                <LocationPicker
+                                                    value={
+                                                        profileData.location ||
+                                                        ""
+                                                    }
+                                                    onChange={(
+                                                        location,
+                                                        coordinates
+                                                    ) =>
+                                                        setProfileData(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                location,
+                                                                location_coordinates:
+                                                                    coordinates,
+                                                            })
+                                                        )
+                                                    }
+                                                    placeholder="Enter your city/area"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Label htmlFor="location">
+                                                    Location
+                                                </Label>
+                                                <p className="text-muted-foreground">
+                                                    {profileData.location ||
+                                                        "Not provided"}
+                                                </p>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                </div>
 
-                {/* Profile Details */}
-                <div className="lg:col-span-2 space-y-6">
-                    {/* Personal Information */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <User className="w-5 h-5" />
-                                Personal Information
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="full_name">Full Name</Label>
+                                    <Label htmlFor="bio">Bio</Label>
                                     {isEditing ? (
-                                        <Input
-                                            id="full_name"
-                                            value={profileData.full_name}
+                                        <Textarea
+                                            id="bio"
+                                            value={profileData.bio}
                                             onChange={(e) =>
                                                 setProfileData((prev) => ({
                                                     ...prev,
-                                                    full_name: e.target.value,
+                                                    bio: e.target.value,
                                                 }))
                                             }
-                                            placeholder="Enter your full name"
+                                            placeholder="Tell us about yourself..."
+                                            rows={3}
                                         />
                                     ) : (
                                         <p className="text-muted-foreground">
-                                            {profileData.full_name ||
-                                                "Not provided"}
+                                            {profileData.bio ||
+                                                "No bio provided"}
                                         </p>
                                     )}
                                 </div>
+                            </CardContent>
+                        </Card>
 
-                                <div className="space-y-2">
-                                    <Label htmlFor="email">Email</Label>
-                                    <p className="text-muted-foreground">
-                                        {profileData.email}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground">
-                                        Email cannot be changed here
-                                    </p>
-                                </div>
-
-                                <div className="space-y-2">
-                                    {isEditing ? (
-                                        <PhoneInput
-                                            value={profileData.phone || ""}
-                                            onChange={(value) =>
-                                                setProfileData((prev) => ({
-                                                    ...prev,
-                                                    phone: value,
-                                                }))
-                                            }
-                                            label="Phone Number"
-                                            placeholder="Enter 10-digit mobile number"
-                                        />
-                                    ) : (
-                                        <>
-                                            <Label htmlFor="phone">
-                                                Phone Number
-                                            </Label>
-                                            <p className="text-muted-foreground">
-                                                {profileData.phone
-                                                    ? `+91 ${profileData.phone}`
-                                                    : "Not provided"}
-                                            </p>
-                                        </>
-                                    )}
-                                </div>
-
-                                <div className="space-y-2">
-                                    {isEditing ? (
-                                        <div>
-                                            <Label htmlFor="location">
-                                                Location
-                                            </Label>
-                                            <LocationPicker
-                                                value={
-                                                    profileData.location || ""
-                                                }
-                                                onChange={(
-                                                    location,
-                                                    coordinates
-                                                ) =>
-                                                    setProfileData((prev) => ({
-                                                        ...prev,
-                                                        location,
-                                                        location_coordinates:
-                                                            coordinates,
-                                                    }))
-                                                }
-                                                placeholder="Enter your city/area"
-                                            />
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <Label htmlFor="location">
-                                                Location
-                                            </Label>
-                                            <p className="text-muted-foreground">
-                                                {profileData.location ||
-                                                    "Not provided"}
-                                            </p>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="bio">Bio</Label>
-                                {isEditing ? (
-                                    <Textarea
-                                        id="bio"
-                                        value={profileData.bio}
-                                        onChange={(e) =>
+                        {/* Notification Settings */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Bell className="w-5 h-5" />
+                                    Notification Preferences
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-medium">
+                                            Email Notifications
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            Receive updates about your issues
+                                            via email
+                                        </p>
+                                    </div>
+                                    <Switch
+                                        checked={
+                                            profileData.email_notifications
+                                        }
+                                        onCheckedChange={(checked) =>
                                             setProfileData((prev) => ({
                                                 ...prev,
-                                                bio: e.target.value,
+                                                email_notifications: checked,
                                             }))
                                         }
-                                        placeholder="Tell us about yourself..."
-                                        rows={3}
+                                        disabled={!isEditing}
                                     />
-                                ) : (
-                                    <p className="text-muted-foreground">
-                                        {profileData.bio || "No bio provided"}
-                                    </p>
-                                )}
-                            </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* Notification Settings */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Bell className="w-5 h-5" />
-                                Notification Preferences
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="font-medium">
-                                        Email Notifications
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Receive updates about your issues via
-                                        email
-                                    </p>
                                 </div>
-                                <Switch
-                                    checked={profileData.email_notifications}
-                                    onCheckedChange={(checked) =>
-                                        setProfileData((prev) => ({
-                                            ...prev,
-                                            email_notifications: checked,
-                                        }))
-                                    }
-                                    disabled={!isEditing}
-                                />
-                            </div>
 
-                            <Separator />
+                                <Separator />
 
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="font-medium">
-                                        Push Notifications
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Receive instant notifications in your
-                                        browser
-                                    </p>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-medium">
+                                            Push Notifications
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            Receive instant notifications in
+                                            your browser
+                                        </p>
+                                    </div>
+                                    <Switch
+                                        checked={profileData.push_notifications}
+                                        onCheckedChange={(checked) =>
+                                            setProfileData((prev) => ({
+                                                ...prev,
+                                                push_notifications: checked,
+                                            }))
+                                        }
+                                        disabled={!isEditing}
+                                    />
                                 </div>
-                                <Switch
-                                    checked={profileData.push_notifications}
-                                    onCheckedChange={(checked) =>
-                                        setProfileData((prev) => ({
-                                            ...prev,
-                                            push_notifications: checked,
-                                        }))
-                                    }
-                                    disabled={!isEditing}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
 
-                    {/* Privacy Settings */}
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <Shield className="w-5 h-5" />
-                                Privacy Settings
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="font-medium">
-                                        Public Profile
-                                    </p>
-                                    <p className="text-sm text-muted-foreground">
-                                        Allow others to see your profile
-                                        information
-                                    </p>
+                        {/* Privacy Settings */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Shield className="w-5 h-5" />
+                                    Privacy Settings
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-medium">
+                                            Public Profile
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">
+                                            Allow others to see your profile
+                                            information
+                                        </p>
+                                    </div>
+                                    <Switch
+                                        checked={
+                                            profileData.privacy_public_profile
+                                        }
+                                        onCheckedChange={(checked) =>
+                                            setProfileData((prev) => ({
+                                                ...prev,
+                                                privacy_public_profile: checked,
+                                            }))
+                                        }
+                                        disabled={!isEditing}
+                                    />
                                 </div>
-                                <Switch
-                                    checked={profileData.privacy_public_profile}
-                                    onCheckedChange={(checked) =>
-                                        setProfileData((prev) => ({
-                                            ...prev,
-                                            privacy_public_profile: checked,
-                                        }))
-                                    }
-                                    disabled={!isEditing}
-                                />
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
 
-                    {/* Account Management */}
-                    <AccountManagement userType="citizen" />
+                        {/* Account Management */}
+                        <AccountManagement userType="citizen" />
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     );
 }

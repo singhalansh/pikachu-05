@@ -74,7 +74,9 @@ export default function CitizenCrowdfundingPage() {
 
     return (
         <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 p-6">
-            <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">Citizen Crowdfunding</h1>
+            <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                Citizen Crowdfunding
+            </h1>
             <CampaignForm role="citizen" />
             <h2 className="text-2xl font-semibold mt-10 mb-4">All Campaigns</h2>
             {loading ? (

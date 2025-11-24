@@ -102,7 +102,7 @@ export default function HomePage() {
                                 className="text-[#2E6A56] hover:text-[#1f4a3a] font-medium flex items-center gap-2"
                             >
                                 <LogIn className="w-4 h-4" />
-                                 Login
+                                Login
                             </Link>
                         </div>
                     </div>
@@ -197,7 +197,7 @@ export default function HomePage() {
                                 className="text-[#2E6A56] hover:text-[#1f4a3a] font-medium text-lg flex items-center group transition-all duration-300"
                             >
                                 <Shield className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                                 Portal
+                                Portal
                             </Link>
                         </div>
                     </div>
@@ -417,7 +417,7 @@ export default function HomePage() {
                                     href="/auth?mode=login"
                                     className="block text-gray-400 hover:text-white transition-colors"
                                 >
-                                     Portal
+                                    Portal
                                 </Link>
                             </div>
                         </div>

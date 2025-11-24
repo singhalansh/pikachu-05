@@ -57,23 +57,25 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
 
     useEffect(() => {
         const fetchUserProfile = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
             if (user) {
                 const { data: profile } = await (supabase as any)
                     .from("profiles")
                     .select("*")
                     .eq("id", user.id)
                     .single();
-                
+
                 setCurrentUserProfile(profile);
-                
+
                 if (profile?.department) {
                     const { data: dept } = await (supabase as any)
                         .from("departments")
                         .select("name")
                         .eq("id", profile.department)
                         .single();
-                    
+
                     if (dept) setUserDepartmentName(dept.name);
                 }
             }
@@ -94,7 +96,7 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
 
     const getCurrentPage = () => {
         if (pathname.includes("/profile")) return "profile";
-        const item = navItems.find(item => pathname === item.route);
+        const item = navItems.find((item) => pathname === item.route);
         return item?.id || "dashboard";
     };
 
@@ -129,9 +131,7 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
                         <h2 className="text-2xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent mb-2">
                             JANMARG
                         </h2>
-                        <p className="text-sm text-gray-600">
-                            Admin Dashboard
-                        </p>
+                        <p className="text-sm text-gray-600">Admin Dashboard</p>
                     </div>
 
                     {/* Navigation Items */}
@@ -158,7 +158,11 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
                                     {item.badge && (
                                         <Badge
                                             variant="secondary"
-                                            className={`${item.id === 'issues' ? 'bg-red-500' : 'bg-emerald-600'} text-white border-0 shadow-sm`}
+                                            className={`${
+                                                item.id === "issues"
+                                                    ? "bg-red-500"
+                                                    : "bg-emerald-600"
+                                            } text-white border-0 shadow-sm`}
                                         >
                                             {item.badge}
                                         </Badge>
