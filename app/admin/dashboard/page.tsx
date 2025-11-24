@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import AdminSidebar from "@/components/admin-sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -22,10 +23,10 @@ import {
     BarChart3,
     PieChart,
     LineChartIcon,
-    Menu,
-    X,
     Download,
     Gavel,
+    LogOut,
+    Shield,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { isIssueForDepartment, getDepartmentName } from "@/lib/departments";
@@ -99,12 +100,8 @@ const getPriorityColor = (priority: string) => {
 
 const AdminDashboard = () => {
     const router = useRouter();
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const [currentPage, setCurrentPage] = useState("dashboard");
     const [loading, setLoading] = useState(true);
-    const [isMobile, setIsMobile] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     const supabase = createClient();
 
@@ -132,75 +129,6 @@ const AdminDashboard = () => {
     const [recentIssues, setRecentIssues] = useState<Issue[]>([]);
     const [notifications, setNotifications] = useState(0);
 
-    const navItems = [
-        {
-            id: "dashboard",
-            label: "Dashboard",
-            icon: LayoutDashboard,
-            badge: null,
-            route: "/admin/dashboard",
-        },
-        {
-            id: "reports",
-            label: "Reports",
-            icon: FileText,
-            badge: "23",
-            route: "/admin/reports",
-        },
-        {
-            id: "bidding",
-            label: "Bidding",
-            icon: Gavel,
-            badge: "3",
-            route: "/admin/bidding",
-        },
-        {
-            id: "zones",
-            label: "Zones",
-            icon: Map,
-            badge: "2",
-            route: "/admin/zones",
-        },
-        {
-            id: "wards",
-            label: "Wards",
-            icon: Map,
-            badge: "5",
-            route: "/admin/wards",
-        },
-        {
-            id: "departments",
-            label: "Departments",
-            icon: Building,
-            badge: null,
-            route: "/admin/departments",
-        },
-        {
-            id: "export",
-            label: "Export Report",
-            icon: Download,
-            badge: null,
-            route: "/admin/export",
-        },
-        {
-            id: "settings",
-            label: "Settings",
-            icon: Settings,
-            badge: null,
-            route: "/admin/settings",
-        },
-    ];
-
-    useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768);
-        };
-
-        handleResize();
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
     useEffect(() => {
         const checkAuth = async () => {
             const {
@@ -209,20 +137,20 @@ const AdminDashboard = () => {
             } = await supabase.auth.getUser();
 
             if (error || !user) {
-                router.push("/admin/login");
+                (router as any).push("/admin/login");
                 return;
             }
 
             const role = user.user_metadata?.role || user.role || "citizen";
             setUserRole(role);
             if (role === "citizen") {
-                router.push("/citizen/dashboard");
+                (router as any).push("/citizen/dashboard");
                 return;
             }
 
             setCurrentUser(user);
 
-            const { data: profile } = await supabase
+            const { data: profile } = await (supabase as any)
                 .from("profiles")
                 .select("*")
                 .eq("id", user.id)
@@ -534,11 +462,6 @@ const AdminDashboard = () => {
         return newIssues?.length || 0;
     };
 
-    const navigateTo = (route: string) => {
-        setMobileMenuOpen(false);
-        router.push(route as any);
-    };
-
     if (loading) {
         return (
             <div className="min-h-screen bg-background flex items-center justify-center">
@@ -553,419 +476,320 @@ const AdminDashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white dark:from-slate-950 dark:to-slate-900">
-            {/* Mobile Menu Toggle */}
-            <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-950 border-b">
-                <div className="flex items-center justify-between px-4 py-3">
-                    <h1 className="text-xl font-bold text-accent">
-                        JanPath Admin
-                    </h1>
-                    <button
-                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="p-2"
-                    >
-                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-                    </button>
-                </div>
-            </div>
+        <div className="flex h-screen pt-16 md:pt-0">
+            <AdminSidebar pendingIssues={overviewStats.pendingIssues} />
 
-            <div className="flex h-full md:h-screen gap-0 md:gap-6 md:p-6 pt-16 md:pt-0">
-                {/* Sidebar Navigation */}
-                <div
-                    className={`${
-                        mobileMenuOpen ? "block" : "hidden"
-                    } md:block fixed md:relative top-14 md:top-0 left-0 right-0 md:w-64 bg-white dark:bg-slate-950 border-r shadow-lg md:shadow-none transition-all duration-300 z-40 md:z-auto`}
-                >
-                    <div className="p-4 md:p-6 space-y-6">
-                        {/* Sidebar Header */}
-                        <div className="hidden md:block">
-                            <h2 className="text-2xl font-bold text-accent mb-2">
-                                JanPath
-                            </h2>
-                            <p className="text-sm text-muted-foreground">
-                                Admin Panel
-                            </p>
+            <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+                {/* Header */}
+                <div className="sticky top-0 bg-white/95 backdrop-blur-md shadow-lg border-0 p-4 md:p-6 flex items-center justify-between z-30 md:z-10">
+                    <div className="flex-1">
+                        <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                            Dashboard Overview
+                        </h1>
+                        <p className="text-sm text-gray-600 mt-1">
+                            Welcome back! Here's your real-time analytics 📈
+                        </p>
+                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="relative hidden md:block">
+                            <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
+                            <Input
+                                placeholder="Search..."
+                                className="pl-10 w-64 bg-gray-50 border-gray-200 shadow-sm"
+                            />
                         </div>
-
-                        {/* Navigation Items */}
-                        <nav className="space-y-2">
-                            {navItems.map((item) => {
-                                const Icon = item.icon;
-                                const isActive = currentPage === item.id;
-                                return (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => navigateTo(item.route)}
-                                        className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 ${
-                                            isActive
-                                                ? "bg-accent text-white shadow-md"
-                                                : "text-foreground hover:bg-slate-100 dark:hover:bg-slate-800"
-                                        }`}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <Icon size={20} />
-                                            <span className="font-medium">
-                                                {item.label}
-                                            </span>
-                                        </div>
-                                        {item.badge && (
-                                            <Badge
-                                                variant="secondary"
-                                                className="bg-red-500 text-white"
-                                            >
-                                                {item.badge}
-                                            </Badge>
-                                        )}
-                                    </button>
-                                );
-                            })}
-                        </nav>
-
-                        {/* User Section */}
-                        <div className="pt-6 border-t">
-                            <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
-                                <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white font-bold">
-                                    {currentUserProfile?.full_name
-                                        ?.charAt(0)
-                                        ?.toUpperCase() || "A"}
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium truncate">
-                                        {currentUserProfile?.full_name ||
-                                            "Admin User"}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground truncate">
-                                        {userDepartmentName || "Super Admin"}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <button className="relative p-2 hover:bg-indigo-50 rounded-lg transition-colors shadow-sm">
+                            <Bell size={20} className="text-indigo-600" />
+                            {notifications > 0 && (
+                                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                            )}
+                        </button>
                     </div>
                 </div>
 
-                {/* Main Content */}
-                <div className="flex-1 overflow-auto">
-                    {/* Header */}
-                    <div className="sticky top-0 bg-white dark:bg-slate-950 border-b p-4 md:p-6 flex items-center justify-between z-30 md:z-10">
-                        <div className="flex-1">
-                            <h1 className="text-2xl md:text-3xl font-bold">
-                                Dashboard Overview
-                            </h1>
-                            <p className="text-sm text-muted-foreground mt-1">
-                                Welcome back! Here's your real-time analytics
-                            </p>
-                        </div>
-                        <div className="flex items-center gap-4">
-                            <div className="relative hidden md:block">
-                                <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
-                                <Input
-                                    placeholder="Search..."
-                                    className="pl-10 w-64 bg-slate-50 dark:bg-slate-900 border-0"
-                                />
-                            </div>
-                            <button className="relative p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
-                                <Bell size={20} />
-                                {notifications > 0 && (
-                                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                                )}
-                            </button>
-                        </div>
-                    </div>
+                {/* Content Area */}
+                <div className="p-4 md:p-6 space-y-6">
+                    {error && (
+                        <Card className="border-0 bg-gradient-to-r from-red-50 to-pink-50 shadow-md">
+                            <CardContent className="p-4">
+                                <p className="text-red-800">{error}</p>
+                            </CardContent>
+                        </Card>
+                    )}
 
-                    {/* Content Area */}
-                    <div className="p-4 md:p-6 space-y-6">
-                        {error && (
-                            <Card className="border-red-200 bg-red-50 dark:bg-red-950">
-                                <CardContent className="p-4">
-                                    <p className="text-red-800 dark:text-red-200">
-                                        {error}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        )}
-
-                        {/* KPI Cards */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {[
-                                {
-                                    title: "Total Issues",
-                                    value: overviewStats.totalIssues.toLocaleString(),
-                                    icon: AlertTriangle,
-                                    color: "bg-orange-50 dark:bg-orange-950",
-                                    textColor: "text-orange-600",
-                                    change: `+${overviewStats.newThisWeek} this week`,
-                                },
-                                {
-                                    title: "Pending",
-                                    value: overviewStats.pendingIssues.toLocaleString(),
-                                    icon: Clock,
-                                    color: "bg-yellow-50 dark:bg-yellow-950",
-                                    textColor: "text-yellow-600",
-                                    change: "Awaiting review",
-                                },
-                                {
-                                    title: "In Progress",
-                                    value: overviewStats.inProgressIssues.toLocaleString(),
-                                    icon: Eye,
-                                    color: "bg-blue-50 dark:bg-blue-950",
-                                    textColor: "text-blue-600",
-                                    change: "Being worked on",
-                                },
-                                {
-                                    title: "Resolved",
-                                    value: overviewStats.resolvedIssues.toLocaleString(),
-                                    icon: CheckCircle,
-                                    color: "bg-green-50 dark:bg-green-950",
-                                    textColor: "text-green-600",
-                                    change: `+${overviewStats.resolvedThisWeek} this week`,
-                                },
-                            ].map((kpi, idx) => {
-                                const Icon = kpi.icon;
-                                return (
-                                    <Card
-                                        key={idx}
-                                        className="hover:shadow-lg transition-shadow"
+                    {/* KPI Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {[
+                            {
+                                title: "Total Issues",
+                                value: overviewStats.totalIssues.toLocaleString(),
+                                icon: AlertTriangle,
+                                color: "bg-orange-50 dark:bg-orange-950",
+                                textColor: "text-orange-600",
+                                change: `+${overviewStats.newThisWeek} this week`,
+                            },
+                            {
+                                title: "Pending",
+                                value: overviewStats.pendingIssues.toLocaleString(),
+                                icon: Clock,
+                                color: "bg-yellow-50 dark:bg-yellow-950",
+                                textColor: "text-yellow-600",
+                                change: "Awaiting review",
+                            },
+                            {
+                                title: "In Progress",
+                                value: overviewStats.inProgressIssues.toLocaleString(),
+                                icon: Eye,
+                                color: "bg-blue-50 dark:bg-blue-950",
+                                textColor: "text-blue-600",
+                                change: "Being worked on",
+                            },
+                            {
+                                title: "Resolved",
+                                value: overviewStats.resolvedIssues.toLocaleString(),
+                                icon: CheckCircle,
+                                color: "bg-gradient-to-br from-green-50 to-emerald-100",
+                                textColor: "text-green-600",
+                                change: `+${overviewStats.resolvedThisWeek} this week`,
+                            },
+                        ].map((kpi, idx) => {
+                            const Icon = kpi.icon;
+                            return (
+                                <Card
+                                    key={idx}
+                                    className="hover:shadow-xl transition-all duration-300 hover:scale-105 border-0 shadow-md"
+                                >
+                                    <CardContent
+                                        className={`p-4 md:p-6 rounded-lg ${kpi.color}`}
                                     >
-                                        <CardContent
-                                            className={`p-4 md:p-6 rounded-lg ${kpi.color}`}
-                                        >
-                                            <div className="flex items-start justify-between">
-                                                <div>
-                                                    <p className="text-sm text-muted-foreground mb-1">
-                                                        {kpi.title}
-                                                    </p>
-                                                    <p
-                                                        className={`text-2xl md:text-3xl font-bold ${kpi.textColor}`}
-                                                    >
-                                                        {kpi.value}
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground mt-2">
-                                                        {kpi.change}
-                                                    </p>
-                                                </div>
-                                                <Icon
-                                                    className={`w-8 h-8 ${kpi.textColor} opacity-50`}
-                                                />
+                                        <div className="flex items-start justify-between">
+                                            <div>
+                                                <p className="text-sm text-gray-600 mb-1">
+                                                    {kpi.title}
+                                                </p>
+                                                <p
+                                                    className={`text-2xl md:text-3xl font-bold ${kpi.textColor}`}
+                                                >
+                                                    {kpi.value}
+                                                </p>
+                                                <p className="text-xs text-gray-600 mt-2">
+                                                    {kpi.change}
+                                                </p>
                                             </div>
-                                        </CardContent>
-                                    </Card>
-                                );
-                            })}
-                        </div>
-
-                        {/* Charts Section */}
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            {/* Monthly Trends */}
-                            <Card className="lg:col-span-2">
-                                <CardHeader className="pb-4">
-                                    <div className="flex items-center justify-between">
-                                        <div>
-                                            <CardTitle className="flex items-center gap-2">
-                                                <LineChartIcon className="w-5 h-5" />
-                                                Monthly Trends
-                                            </CardTitle>
+                                            <Icon
+                                                className={`w-8 h-8 ${kpi.textColor} opacity-50`}
+                                            />
                                         </div>
-                                        <select className="text-sm border rounded px-2 py-1 bg-background">
-                                            <option>Last 12 Months</option>
-                                            <option>Last 6 Months</option>
-                                            <option>Last 3 Months</option>
-                                        </select>
+                                    </CardContent>
+                                </Card>
+                            );
+                        })}
+                    </div>
+
+                    {/* Charts Section */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Monthly Trends */}
+                        <Card className="lg:col-span-2">
+                            <CardHeader className="pb-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <CardTitle className="flex items-center gap-2">
+                                            <LineChartIcon className="w-5 h-5" />
+                                            Monthly Trends
+                                        </CardTitle>
                                     </div>
-                                </CardHeader>
-                                <CardContent>
+                                    <select className="text-sm border rounded px-2 py-1 bg-background">
+                                        <option>Last 12 Months</option>
+                                        <option>Last 6 Months</option>
+                                        <option>Last 3 Months</option>
+                                    </select>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <RechartsLineChart data={monthlyTrends}>
+                                        <CartesianGrid
+                                            strokeDasharray="3 3"
+                                            stroke="#e5e7eb"
+                                        />
+                                        <XAxis dataKey="month" stroke="#666" />
+                                        <YAxis stroke="#666" />
+                                        <Tooltip
+                                            contentStyle={{
+                                                backgroundColor: "#fff",
+                                                border: "1px solid #ccc",
+                                                borderRadius: "8px",
+                                            }}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="reported"
+                                            stroke="#f59e0b"
+                                            strokeWidth={2}
+                                            dot={{ fill: "#f59e0b", r: 4 }}
+                                            activeDot={{ r: 6 }}
+                                            name="Reported"
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="resolved"
+                                            stroke="#10b981"
+                                            strokeWidth={2}
+                                            dot={{ fill: "#10b981", r: 4 }}
+                                            activeDot={{ r: 6 }}
+                                            name="Resolved"
+                                        />
+                                    </RechartsLineChart>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+
+                        {/* Category Distribution */}
+                        <Card>
+                            <CardHeader className="pb-4">
+                                <CardTitle className="flex items-center gap-2">
+                                    <PieChart className="w-5 h-5" />
+                                    Issues by Category
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {categoryData.length > 0 ? (
                                     <ResponsiveContainer
                                         width="100%"
                                         height={300}
                                     >
-                                        <RechartsLineChart data={monthlyTrends}>
-                                            <CartesianGrid
-                                                strokeDasharray="3 3"
-                                                stroke="#e5e7eb"
-                                            />
-                                            <XAxis
-                                                dataKey="month"
-                                                stroke="#666"
-                                            />
-                                            <YAxis stroke="#666" />
-                                            <Tooltip
-                                                contentStyle={{
-                                                    backgroundColor: "#fff",
-                                                    border: "1px solid #ccc",
-                                                    borderRadius: "8px",
-                                                }}
-                                            />
-                                            <Line
-                                                type="monotone"
-                                                dataKey="reported"
-                                                stroke="#f59e0b"
-                                                strokeWidth={2}
-                                                dot={{ fill: "#f59e0b", r: 4 }}
-                                                activeDot={{ r: 6 }}
-                                                name="Reported"
-                                            />
-                                            <Line
-                                                type="monotone"
-                                                dataKey="resolved"
-                                                stroke="#10b981"
-                                                strokeWidth={2}
-                                                dot={{ fill: "#10b981", r: 4 }}
-                                                activeDot={{ r: 6 }}
-                                                name="Resolved"
-                                            />
-                                        </RechartsLineChart>
-                                    </ResponsiveContainer>
-                                </CardContent>
-                            </Card>
-
-                            {/* Category Distribution */}
-                            <Card>
-                                <CardHeader className="pb-4">
-                                    <CardTitle className="flex items-center gap-2">
-                                        <PieChart className="w-5 h-5" />
-                                        Issues by Category
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    {categoryData.length > 0 ? (
-                                        <ResponsiveContainer
-                                            width="100%"
-                                            height={300}
-                                        >
-                                            <RechartsPieChart>
-                                                <Pie
-                                                    data={categoryData}
-                                                    cx="50%"
-                                                    cy="50%"
-                                                    labelLine={false}
-                                                    label={({ name, value }) =>
-                                                        `${name}: ${value}`
-                                                    }
-                                                    outerRadius={80}
-                                                    fill="#8884d8"
-                                                    dataKey="value"
-                                                >
-                                                    {categoryData.map(
-                                                        (entry, index) => (
-                                                            <Cell
-                                                                key={`cell-${index}`}
-                                                                fill={
-                                                                    entry.color
-                                                                }
-                                                            />
-                                                        )
-                                                    )}
-                                                </Pie>
-                                                <Tooltip />
-                                            </RechartsPieChart>
-                                        </ResponsiveContainer>
-                                    ) : (
-                                        <div className="h-[300px] flex items-center justify-center text-muted-foreground">
-                                            No data available
-                                        </div>
-                                    )}
-                                </CardContent>
-                            </Card>
-                        </div>
-
-                        {/* Department Performance */}
-                        <Card>
-                            <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2">
-                                    <BarChart3 className="w-5 h-5" />
-                                    Department Performance & Efficiency
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    {departmentPerformance.map((dept, idx) => (
-                                        <div key={idx} className="space-y-2">
-                                            <div className="flex items-center justify-between">
-                                                <div>
-                                                    <p className="font-medium">
-                                                        {dept.department}
-                                                    </p>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        {dept.completed} of{" "}
-                                                        {dept.assigned} resolved
-                                                    </p>
-                                                </div>
-                                                <div className="text-right">
-                                                    <p className="font-bold text-lg text-accent">
-                                                        {dept.efficiency}%
-                                                    </p>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        Efficiency
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <Progress
-                                                value={dept.efficiency}
-                                                className="h-2"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Recent Issues */}
-                        <Card>
-                            <CardHeader className="pb-4">
-                                <div className="flex items-center justify-between">
-                                    <CardTitle className="flex items-center gap-2">
-                                        <AlertTriangle className="w-5 h-5" />
-                                        Recent Issues
-                                    </CardTitle>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        asChild
-                                        className="bg-transparent"
-                                    >
-                                        <a href="/admin/issues">View All</a>
-                                    </Button>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-3">
-                                    {recentIssues.map((issue) => (
-                                        <div
-                                            key={issue.id}
-                                            className="flex items-center justify-between p-3 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
-                                        >
-                                            <div className="flex-1 min-w-0">
-                                                <p className="font-medium truncate">
-                                                    {issue.title}
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {issue.location_address ||
-                                                        "No location"}
-                                                </p>
-                                            </div>
-                                            <div className="flex items-center gap-2 ml-4">
-                                                <Badge
-                                                    className={getStatusColor(
-                                                        issue.status
-                                                    )}
-                                                >
-                                                    {issue.status}
-                                                </Badge>
-                                                {issue.priority && (
-                                                    <Badge
-                                                        className={getPriorityColor(
-                                                            issue.priority
-                                                        )}
-                                                    >
-                                                        {issue.priority}
-                                                    </Badge>
+                                        <RechartsPieChart>
+                                            <Pie
+                                                data={categoryData}
+                                                cx="50%"
+                                                cy="50%"
+                                                labelLine={false}
+                                                label={({ name, value }) =>
+                                                    `${name}: ${value}`
+                                                }
+                                                outerRadius={80}
+                                                fill="#8884d8"
+                                                dataKey="value"
+                                            >
+                                                {categoryData.map(
+                                                    (entry, index) => (
+                                                        <Cell
+                                                            key={`cell-${index}`}
+                                                            fill={entry.color}
+                                                        />
+                                                    )
                                                 )}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                            </Pie>
+                                            <Tooltip />
+                                        </RechartsPieChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                                        No data available
+                                    </div>
+                                )}
                             </CardContent>
                         </Card>
                     </div>
+
+                    {/* Department Performance */}
+                    <Card>
+                        <CardHeader className="pb-4">
+                            <CardTitle className="flex items-center gap-2">
+                                <BarChart3 className="w-5 h-5" />
+                                Department Performance & Efficiency
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-4">
+                                {departmentPerformance.map((dept, idx) => (
+                                    <div key={idx} className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <p className="font-medium">
+                                                    {dept.department}
+                                                </p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {dept.completed} of{" "}
+                                                    {dept.assigned} resolved
+                                                </p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="font-bold text-lg text-accent">
+                                                    {dept.efficiency}%
+                                                </p>
+                                                <p className="text-xs text-muted-foreground">
+                                                    Efficiency
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <Progress
+                                            value={dept.efficiency}
+                                            className="h-2"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Recent Issues */}
+                    <Card>
+                        <CardHeader className="pb-4">
+                            <div className="flex items-center justify-between">
+                                <CardTitle className="flex items-center gap-2">
+                                    <AlertTriangle className="w-5 h-5" />
+                                    Recent Issues
+                                </CardTitle>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    asChild
+                                    className="bg-transparent"
+                                >
+                                    <a href="/admin/issues">View All</a>
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-3">
+                                {recentIssues.map((issue) => (
+                                    <div
+                                        key={issue.id}
+                                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                                    >
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-medium truncate">
+                                                {issue.title}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground">
+                                                {issue.location_address ||
+                                                    "No location"}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-2 ml-4">
+                                            <Badge
+                                                className={getStatusColor(
+                                                    issue.status
+                                                )}
+                                            >
+                                                {issue.status}
+                                            </Badge>
+                                            {issue.priority && (
+                                                <Badge
+                                                    className={getPriorityColor(
+                                                        issue.priority
+                                                    )}
+                                                >
+                                                    {issue.priority}
+                                                </Badge>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
         </div>

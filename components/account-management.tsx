@@ -196,9 +196,9 @@ export default function AccountManagement({
     return (
         <div className="space-y-6">
             {/* Password Reset Section */}
-            <Card>
+            <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-emerald-50/30">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-emerald-600">
                         <Key className="w-5 h-5" />
                         Change Password
                     </CardTitle>
@@ -215,6 +215,7 @@ export default function AccountManagement({
                             variant="outline"
                             size="sm"
                             onClick={() => setShowPasswordReset(true)}
+                            className="border-emerald-200 text-emerald-700 hover:bg-emerald-50"
                         >
                             <Lock className="w-4 h-4 mr-2" />
                             Change Password
@@ -224,7 +225,7 @@ export default function AccountManagement({
             </Card>
 
             {/* Account Deletion Section */}
-            <Card className="border-red-200">
+            <Card className="border-0 bg-gradient-to-br from-red-50 to-pink-50 shadow-lg">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-red-600">
                         <Trash2 className="w-5 h-5" />
@@ -237,7 +238,7 @@ export default function AccountManagement({
                             <h3 className="font-semibold text-red-600">
                                 Permanently Delete Your Account
                             </h3>
-                            <p className="text-sm text-muted-foreground mt-1">
+                            <p className="text-sm text-red-700 mt-1">
                                 This action is final and cannot be undone.
                             </p>
                         </div>
@@ -245,7 +246,7 @@ export default function AccountManagement({
                             variant="destructive"
                             size="sm"
                             onClick={() => setShowDeleteDialog(true)}
-                            className="self-start sm:self-center"
+                            className="self-start sm:self-center bg-red-600 hover:bg-red-700 text-white shadow-md"
                         >
                             <Trash2 className="w-4 h-4 mr-2" />
                             Request Account Deletion

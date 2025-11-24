@@ -384,7 +384,7 @@ function UnifiedAuthPageInner() {
                                     <SelectContent>
                                         <SelectItem value="citizen">
                                             <div className="flex items-center space-x-2">
-                                                <MapPin className="w-4 h-4 text-blue-600" />
+                                                <MapPin className="w-4 h-4 text-emerald-600" />
                                                 <span>
                                                     Citizen - Report and track
                                                     civic issues
@@ -393,7 +393,7 @@ function UnifiedAuthPageInner() {
                                         </SelectItem>
                                         <SelectItem value="department_head">
                                             <div className="flex items-center space-x-2">
-                                                <Shield className="w-4 h-4 text-purple-600" />
+                                                <Shield className="w-4 h-4 text-emerald-600" />
                                                 <span>
                                                     Department Head - Full
                                                     administrative access
@@ -589,7 +589,7 @@ function UnifiedAuthPageInner() {
                                                     value={dept.id}
                                                 >
                                                     <div className="flex items-center space-x-2">
-                                                        <Shield className="w-4 h-4 text-blue-600" />
+                                                        <Shield className="w-4 h-4 text-emerald-600" />
                                                         <span>{dept.name}</span>
                                                     </div>
                                                 </SelectItem>

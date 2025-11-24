@@ -172,7 +172,7 @@ export default function CitizenNav() {
                                 <Home className="w-5 h-5 text-white" />
                             </div>
                             <span className="font-bold text-base sm:text-lg text-[#2E6A56]">
-                                JANMARG
+                                civik
                             </span>
                         </Link>
 

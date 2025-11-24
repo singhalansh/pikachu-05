@@ -1,15 +1,13 @@
-import type React from "react"
-import AdminNav from "@/components/admin-nav"
+import type React from "react";
 
 export default function AdminLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode
+    children: React.ReactNode;
 }) {
-  return (
-    <div className="min-h-screen bg-background">
-      <AdminNav />
-      <main>{children}</main>
-    </div>
-  )
+    return (
+        <div className="min-h-screen bg-background">
+            <main>{children}</main>
+        </div>
+    );
 }

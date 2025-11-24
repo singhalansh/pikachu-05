@@ -527,7 +527,7 @@ export default function CitizenDashboard() {
                                     </p>
                                 </div>
                                 <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-xl flex items-center justify-center">
-                                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-blue-700" />
+                                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700" />
                                 </div>
                             </div>
                         </CardContent>
@@ -625,31 +625,31 @@ export default function CitizenDashboard() {
                                     <SelectContent>
                                         <SelectItem value="all">
                                             <div className="flex items-center space-x-2">
-                                                <Shield className="w-4 h-4 text-blue-600" />
+                                                <Shield className="w-4 h-4 text-emerald-600" />
                                                 <span>All Categories</span>
                                             </div>
                                         </SelectItem>
                                         <SelectItem value="pothole">
                                             <div className="flex items-center space-x-2">
-                                                <Shield className="w-4 h-4 text-blue-600" />
+                                                <Shield className="w-4 h-4 text-emerald-600" />
                                                 <span>Pothole</span>
                                             </div>
                                         </SelectItem>
                                         <SelectItem value="streetlight">
                                             <div className="flex items-center space-x-2">
-                                                <Shield className="w-4 h-4 text-blue-600" />
+                                                <Shield className="w-4 h-4 text-emerald-600" />
                                                 <span>Streetlight</span>
                                             </div>
                                         </SelectItem>
                                         <SelectItem value="garbage">
                                             <div className="flex items-center space-x-2">
-                                                <Shield className="w-4 h-4 text-blue-600" />
+                                                <Shield className="w-4 h-4 text-emerald-600" />
                                                 <span>Garbage</span>
                                             </div>
                                         </SelectItem>
                                         <SelectItem value="water-leakage">
                                             <div className="flex items-center space-x-2">
-                                                <Shield className="w-4 h-4 text-blue-600" />
+                                                <Shield className="w-4 h-4 text-emerald-600" />
                                                 <span>Water Leakage</span>
                                             </div>
                                         </SelectItem>
@@ -1069,7 +1069,7 @@ export default function CitizenDashboard() {
                                         {/* Map Legend */}
                                         <div className="mt-4 flex flex-wrap gap-4 text-sm">
                                             <div className="flex items-center">
-                                                <div className="w-3 h-3 rounded-full bg-blue-500 mr-2" />
+                                                <div className="w-3 h-3 rounded-full bg-emerald-500 mr-2" />
                                                 <span>Submitted</span>
                                             </div>
                                             <div className="flex items-center">
@@ -1086,7 +1086,7 @@ export default function CitizenDashboard() {
                                             </div>
                                             {userLocation && (
                                                 <div className="flex items-center">
-                                                    <div className="w-3 h-3 rounded-full bg-blue-400 mr-2 animate-pulse" />
+                                                    <div className="w-3 h-3 rounded-full bg-emerald-400 mr-2 animate-pulse" />
                                                     <span>Your Location</span>
                                                 </div>
                                             )}
