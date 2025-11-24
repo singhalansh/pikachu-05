@@ -92,7 +92,7 @@ export default function HomePage() {
                                 <MapPin className="w-6 h-6 text-white" />
                             </div>
                             <span className="text-2xl font-bold text-[#2E6A56]">
-                                JANMARG
+                                civik
                             </span>
                         </div>
 
@@ -249,7 +249,7 @@ export default function HomePage() {
                                         <Smartphone className="w-8 h-8 text-white" />
                                     </div>
                                     <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                                        Janmarg Mobile App
+                                        civik Mobile App
                                     </h3>
                                     <div className="flex items-center justify-center space-x-1 mt-2">
                                         {[...Array(5)].map((_, i) => (
@@ -391,9 +391,7 @@ export default function HomePage() {
                                 <div className="w-8 h-8 rounded-lg bg-[#2E6A56] flex items-center justify-center">
                                     <MapPin className="w-5 h-5 text-white" />
                                 </div>
-                                <span className="text-xl font-bold">
-                                    JANMARG
-                                </span>
+                                <span className="text-xl font-bold">civik</span>
                             </div>
                             <p className="text-gray-400">
                                 Empowering digital democracy through
@@ -425,7 +423,7 @@ export default function HomePage() {
                         <div className="space-y-4">
                             <h3 className="text-lg font-semibold">Contact</h3>
                             <div className="space-y-2 text-gray-400">
-                                <p>support@janmarg.gov.in</p>
+                                <p>support@civik.gov.in</p>
                                 <p>+91 1800-XXX-XXXX</p>
                             </div>
                         </div>
@@ -433,8 +431,8 @@ export default function HomePage() {
 
                     <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
                         <p>
-                            © 2025 Janmarg. All rights reserved. | A Digital
-                            India Initiative
+                            © 2025 civik. All rights reserved. | A Digital India
+                            Initiative
                         </p>
                     </div>
                 </div>

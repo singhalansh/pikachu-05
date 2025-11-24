@@ -108,7 +108,7 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
             <div className="md:hidden fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-emerald-50 to-white shadow-lg border-0">
                 <div className="flex items-center justify-between px-4 py-3">
                     <h1 className="text-2xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
-                        JANMARG Admin
+                        civik Admin
                     </h1>
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -129,7 +129,7 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
                     {/* Sidebar Header */}
                     <div className="hidden md:block">
                         <h2 className="text-2xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent mb-2">
-                            JANMARG
+                            civik
                         </h2>
                         <p className="text-sm text-gray-600">Admin Dashboard</p>
                     </div>

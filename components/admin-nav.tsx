@@ -67,7 +67,7 @@ export default function AdminNav() {
                                 <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                             </div>
                             <span className="font-semibold text-sm sm:text-base lg:text-lg truncate bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
-                                JANMARG Admin
+                                civik Admin
                             </span>
                         </Link>
 

@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-    /* Updated to Janmarg's professional green palette */
+    /* Updated to civik's professional green palette */
     --primary-green: #2e6a56; /* Primary Green */
     --secondary-green: #5c9479; /* Secondary Green */
     --neutral-gray: #4a4a4a; /* Dark gray for body text */
