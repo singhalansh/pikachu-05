@@ -92,7 +92,9 @@ export default function AdminUserAssigner({
                     <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-lg shadow-md">
                         <User className="w-5 h-5 text-white" />
                     </div>
-                    <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent font-bold">Assign to User</span>
+                    <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent font-bold">
+                        Assign to User
+                    </span>
                 </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -104,7 +106,8 @@ export default function AdminUserAssigner({
                     {currentAssignee ? (
                         <div className="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200 shadow-sm">
                             <div className="text-sm font-semibold text-blue-900">
-                                {currentAssignee.full_name || currentAssignee.email}
+                                {currentAssignee.full_name ||
+                                    currentAssignee.email}
                             </div>
                             <div className="text-xs text-blue-700 mt-1">
                                 {currentAssignee.email}
@@ -136,21 +139,34 @@ export default function AdminUserAssigner({
                             />
                         </SelectTrigger>
                         <SelectContent className="bg-white border-2 border-[#2E6A56]/20 shadow-xl">
-                            <SelectItem value="unassign" className="hover:bg-red-50 focus:bg-red-50">
+                            <SelectItem
+                                value="unassign"
+                                className="hover:bg-red-50 focus:bg-red-50"
+                            >
                                 <div className="flex items-center gap-2">
                                     <AlertCircle className="w-4 h-4 text-red-600" />
-                                    <span className="font-medium text-red-700">Unassign</span>
+                                    <span className="font-medium text-red-700">
+                                        Unassign
+                                    </span>
                                 </div>
                             </SelectItem>
                             {users.map((u) => (
-                                <SelectItem key={u.id} value={u.id} className="hover:bg-[#2E6A56]/10 focus:bg-[#2E6A56]/10">
+                                <SelectItem
+                                    key={u.id}
+                                    value={u.id}
+                                    className="hover:bg-[#2E6A56]/10 focus:bg-[#2E6A56]/10"
+                                >
                                     <div className="flex items-start gap-2">
                                         <div className="p-1 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-md">
                                             <User className="w-3 h-3 text-white" />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="font-semibold text-[#2E6A56]">{u.full_name || u.email}</span>
-                                            <span className="text-xs text-muted-foreground">{u.email}</span>
+                                            <span className="font-semibold text-[#2E6A56]">
+                                                {u.full_name || u.email}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {u.email}
+                                            </span>
                                         </div>
                                     </div>
                                 </SelectItem>
@@ -159,9 +175,9 @@ export default function AdminUserAssigner({
                     </Select>
                 </div>
 
-                <Button 
-                    onClick={assign} 
-                    disabled={loading} 
+                <Button
+                    onClick={assign}
+                    disabled={loading}
                     className="w-full bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#5C9479] hover:to-[#2E6A56] text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {loading ? (
