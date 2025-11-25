@@ -11,7 +11,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { User } from "lucide-react";
+import { User, CheckCircle, Clock, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 type UserOption = { id: string; full_name: string | null; email: string };
@@ -85,33 +85,49 @@ export default function AdminUserAssigner({
     };
 
     return (
-        <Card>
+        <Card className="border-[#2E6A56]/20 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56] rounded-t-lg"></div>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <User className="w-5 h-5" /> Assign to User
+                    <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-lg shadow-md">
+                        <User className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent font-bold">
+                        Assign to User
+                    </span>
                 </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4">
                 <div>
-                    <Label className="mb-1 block">Current Assignee</Label>
+                    <Label className="mb-2 text-[#2E6A56] font-semibold flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Current Assignee
+                    </Label>
                     {currentAssignee ? (
-                        <div className="text-sm text-muted-foreground">
-                            {currentAssignee.full_name || currentAssignee.email}
-                            <div className="text-xs">
+                        <div className="p-3 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200 shadow-sm">
+                            <div className="text-sm font-semibold text-blue-900">
+                                {currentAssignee.full_name ||
+                                    currentAssignee.email}
+                            </div>
+                            <div className="text-xs text-blue-700 mt-1">
                                 {currentAssignee.email}
                             </div>
                         </div>
                     ) : (
-                        <div className="text-sm text-muted-foreground">
+                        <div className="p-3 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg border border-gray-200 text-sm text-muted-foreground flex items-center gap-2">
+                            <AlertCircle className="w-4 h-4" />
                             Not assigned
                         </div>
                     )}
                 </div>
 
                 <div className="space-y-2">
-                    <Label>Select user in department</Label>
+                    <Label className="text-[#2E6A56] font-semibold flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        Select user in department
+                    </Label>
                     <Select value={selected} onValueChange={setSelected}>
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full bg-white border-[#2E6A56]/30 focus:ring-[#2E6A56] focus:border-[#2E6A56] hover:border-[#2E6A56]/50 transition-colors">
                             <SelectValue
                                 placeholder={
                                     users.length
@@ -122,19 +138,59 @@ export default function AdminUserAssigner({
                                 }
                             />
                         </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="unassign">Unassign</SelectItem>
+                        <SelectContent className="bg-white border-2 border-[#2E6A56]/20 shadow-xl">
+                            <SelectItem
+                                value="unassign"
+                                className="hover:bg-red-50 focus:bg-red-50"
+                            >
+                                <div className="flex items-center gap-2">
+                                    <AlertCircle className="w-4 h-4 text-red-600" />
+                                    <span className="font-medium text-red-700">
+                                        Unassign
+                                    </span>
+                                </div>
+                            </SelectItem>
                             {users.map((u) => (
-                                <SelectItem key={u.id} value={u.id}>
-                                    {u.full_name || u.email} — {u.email}
+                                <SelectItem
+                                    key={u.id}
+                                    value={u.id}
+                                    className="hover:bg-[#2E6A56]/10 focus:bg-[#2E6A56]/10"
+                                >
+                                    <div className="flex items-start gap-2">
+                                        <div className="p-1 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-md">
+                                            <User className="w-3 h-3 text-white" />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold text-[#2E6A56]">
+                                                {u.full_name || u.email}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {u.email}
+                                            </span>
+                                        </div>
+                                    </div>
                                 </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
                 </div>
 
-                <Button onClick={assign} disabled={loading} className="w-full">
-                    {loading ? "Assigning…" : "Assign"}
+                <Button
+                    onClick={assign}
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#5C9479] hover:to-[#2E6A56] text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {loading ? (
+                        <>
+                            <Clock className="w-4 h-4 mr-2 animate-spin" />
+                            Assigning…
+                        </>
+                    ) : (
+                        <>
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Assign User
+                        </>
+                    )}
                 </Button>
             </CardContent>
         </Card>
