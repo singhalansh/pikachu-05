@@ -155,12 +155,14 @@ export default function IssuesMapPage() {
             setLoading(true);
             setError(null);
 
-                        const { data, error: fetchError } = await (supabase as any)
-                                .from("issues")
-                                .select(`
+            const { data, error: fetchError } = await (supabase as any)
+                .from("issues")
+                .select(
+                    `
                     *,
                     profiles:user_id(full_name, email)
-                `)
+                `
+                )
                 .not("location_lat", "is", null)
                 .not("location_lng", "is", null)
                 .order("created_at", { ascending: false });
