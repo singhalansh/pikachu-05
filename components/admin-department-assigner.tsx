@@ -237,17 +237,22 @@ export default function AdminDepartmentAssigner({
 
     if (fetchingDepartments) {
         return (
-            <Card>
+            <Card className="border-[#2E6A56]/20">
+                <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56] rounded-t-lg"></div>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                        <Building2 className="w-5 h-5" />
-                        Assign Department
+                        <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-lg">
+                            <Building2 className="w-5 h-5 text-white" />
+                        </div>
+                        <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent">Assign Department</span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                        <Clock className="w-4 h-4 animate-spin" />
-                        Loading departments...
+                    <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#2E6A56]/5 to-[#5C9479]/5 rounded-lg border border-[#2E6A56]/20">
+                        <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-full">
+                            <Clock className="w-4 h-4 text-white animate-spin" />
+                        </div>
+                        <span className="text-[#2E6A56] font-medium">Loading departments...</span>
                     </div>
                 </CardContent>
             </Card>
@@ -255,18 +260,22 @@ export default function AdminDepartmentAssigner({
     }
 
     return (
-        <Card className="overflow-visible">
+        <Card className="overflow-visible border-[#2E6A56]/20 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56] rounded-t-lg"></div>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                    <Building2 className="w-5 h-5" />
-                    Assign Department
+                    <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-lg shadow-md">
+                        <Building2 className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent font-bold">Assign Department</span>
                 </CardTitle>
                 {currentDepartment && (
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 mt-2 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-900">
                             Currently assigned to:
                         </span>
-                        <Badge variant="outline">
+                        <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0 shadow-sm">
                             {currentDepartment.name}
                         </Badge>
                     </div>
@@ -275,19 +284,20 @@ export default function AdminDepartmentAssigner({
             <CardContent className="space-y-4 overflow-visible">
                 {/* Category-based suggestions */}
                 {suggestedDepartments.length > 0 && (
-                    <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <div className="flex items-center gap-2 text-sm mb-2">
-                            <AlertCircle className="w-4 h-4 text-blue-600" />
-                            <span className="font-medium text-blue-900">
+                    <div className="p-4 bg-gradient-to-br from-[#2E6A56]/10 via-[#5C9479]/10 to-[#2E6A56]/5 rounded-lg border-2 border-[#2E6A56]/30 shadow-md">
+                        <div className="flex items-center gap-2 text-sm mb-3">
+                            <div className="p-1.5 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-full">
+                                <AlertCircle className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="font-bold text-[#2E6A56]">
                                 Suggested for "{issueCategory}" category:
                             </span>
                         </div>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="flex flex-wrap gap-2">
                             {suggestedDepartments.map((dept) => (
                                 <Badge
                                     key={dept.id}
-                                    variant="secondary"
-                                    className="text-xs cursor-pointer hover:bg-blue-100"
+                                    className="text-xs cursor-pointer bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#5C9479] hover:to-[#2E6A56] text-white border-0 shadow-sm hover:shadow-md transition-all hover:scale-105"
                                     onClick={() =>
                                         setSelectedDepartmentId(dept.id)
                                     }
@@ -301,25 +311,30 @@ export default function AdminDepartmentAssigner({
 
                 {/* Department Selection */}
                 <div className="space-y-2">
-                    <Label htmlFor="department">Select Department</Label>
+                    <Label htmlFor="department" className="text-[#2E6A56] font-semibold flex items-center gap-2">
+                        <Building2 className="w-4 h-4" />
+                        Select Department
+                    </Label>
                     <Select
                         value={selectedDepartmentId}
                         onValueChange={setSelectedDepartmentId}
                     >
-                        <SelectTrigger className="w-full">
+                        <SelectTrigger className="w-full bg-white border-[#2E6A56]/30 focus:ring-[#2E6A56] focus:border-[#2E6A56] hover:border-[#2E6A56]/50 transition-colors">
                             <SelectValue placeholder="Choose a department" />
                         </SelectTrigger>
-                        <SelectContent className="w-full min-w-[300px] max-w-[400px]">
+                        <SelectContent className="bg-white w-full min-w-[300px] max-w-[400px] border-2 border-[#2E6A56]/20 shadow-xl">
                             {departments.map((department) => (
                                 <SelectItem
                                     key={department.id}
                                     value={department.id}
-                                    className="w-full"
+                                    className="w-full hover:bg-[#2E6A56]/10 focus:bg-[#2E6A56]/10"
                                 >
                                     <div className="flex items-start space-x-2 w-full">
-                                        <Shield className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                                        <div className="p-1 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-md">
+                                            <Shield className="w-4 h-4 text-white mt-0.5 flex-shrink-0" />
+                                        </div>
                                         <div className="flex flex-col w-full">
-                                            <span className="font-medium">
+                                            <span className="font-semibold text-[#2E6A56]">
                                                 {department.name}
                                             </span>
                                             {department.description && (
@@ -344,32 +359,32 @@ export default function AdminDepartmentAssigner({
                             );
                             return (
                                 selectedDept && (
-                                    <div className="p-3 bg-gray-50 rounded-lg">
-                                        <div className="flex items-center gap-2 text-sm mb-1">
-                                            <User className="w-4 h-4" />
-                                            <span className="font-medium">
+                                    <div className="p-4 bg-gradient-to-br from-[#2E6A56]/5 to-[#5C9479]/10 rounded-lg border border-[#2E6A56]/20 shadow-sm">
+                                        <div className="flex items-center gap-2 text-sm mb-3">
+                                            <div className="p-1.5 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-full">
+                                                <User className="w-4 h-4 text-white" />
+                                            </div>
+                                            <span className="font-bold text-[#2E6A56]">
                                                 Department Details
                                             </span>
                                         </div>
-                                        <div className="text-sm text-muted-foreground space-y-1">
+                                        <div className="text-sm space-y-2">
                                             {selectedDept.head && (
-                                                <p>
-                                                    Head:{" "}
-                                                    {
-                                                        selectedDept.head
-                                                            .full_name
-                                                    }
-                                                </p>
+                                                <div className="flex items-start gap-2 p-2 bg-white/50 rounded-md">
+                                                    <span className="font-medium text-[#2E6A56]">Head:</span>
+                                                    <span className="text-gray-700">{selectedDept.head.full_name}</span>
+                                                </div>
                                             )}
                                             {selectedDept.email && (
-                                                <p>
-                                                    Email: {selectedDept.email}
-                                                </p>
+                                                <div className="flex items-start gap-2 p-2 bg-white/50 rounded-md">
+                                                    <span className="font-medium text-[#2E6A56]">Email:</span>
+                                                    <span className="text-gray-700">{selectedDept.email}</span>
+                                                </div>
                                             )}
                                             {selectedDept.description && (
-                                                <p>
-                                                    {selectedDept.description}
-                                                </p>
+                                                <div className="p-2 bg-white/50 rounded-md">
+                                                    <span className="text-gray-700">{selectedDept.description}</span>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
@@ -388,7 +403,7 @@ export default function AdminDepartmentAssigner({
                             !selectedDepartmentId ||
                             selectedDepartmentId === currentDepartment?.id
                         }
-                        className="flex-1"
+                        className="flex-1 bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#5C9479] hover:to-[#2E6A56] text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? (
                             <>
@@ -409,21 +424,23 @@ export default function AdminDepartmentAssigner({
                 {/* Assignment Preview */}
                 {selectedDepartmentId &&
                     selectedDepartmentId !== currentDepartment?.id && (
-                        <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                            <div className="flex items-center gap-2 text-sm">
-                                <CheckCircle className="w-4 h-4 text-green-600" />
-                                <span className="font-medium text-green-900">
+                        <div className="p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border-2 border-green-300 shadow-md">
+                            <div className="flex items-center gap-2 text-sm mb-2">
+                                <div className="p-1.5 bg-gradient-to-br from-green-600 to-emerald-600 rounded-full">
+                                    <CheckCircle className="w-4 h-4 text-white" />
+                                </div>
+                                <span className="font-bold text-green-900">
                                     Assignment Preview:
                                 </span>
                             </div>
-                            <div className="mt-2 text-sm text-green-800">
+                            <div className="mt-3 p-3 bg-white/60 rounded-md text-sm">
                                 {currentDepartment ? (
-                                    <>
-                                        <span className="font-medium">
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <Badge className="bg-gray-600 text-white border-0 shadow-sm">
                                             {currentDepartment.name}
-                                        </span>
-                                        <span className="mx-2">→</span>
-                                        <span className="font-medium">
+                                        </Badge>
+                                        <span className="text-green-600 font-bold text-lg">→</span>
+                                        <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0 shadow-md">
                                             {
                                                 departments.find(
                                                     (d) =>
@@ -431,24 +448,26 @@ export default function AdminDepartmentAssigner({
                                                         selectedDepartmentId
                                                 )?.name
                                             }
-                                        </span>
-                                    </>
+                                        </Badge>
+                                    </div>
                                 ) : (
-                                    <span className="font-medium">
-                                        Will be assigned to{" "}
-                                        {
-                                            departments.find(
-                                                (d) =>
-                                                    d.id ===
-                                                    selectedDepartmentId
-                                            )?.name
-                                        }
-                                    </span>
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="text-gray-700">Will be assigned to</span>
+                                        <Badge className="bg-gradient-to-r from-green-600 to-emerald-600 text-white border-0 shadow-md">
+                                            {
+                                                departments.find(
+                                                    (d) =>
+                                                        d.id ===
+                                                        selectedDepartmentId
+                                                )?.name
+                                            }
+                                        </Badge>
+                                    </div>
                                 )}
                             </div>
-                            <p className="text-xs text-green-700 mt-1">
-                                The department will receive a notification about
-                                this assignment.
+                            <p className="text-xs text-green-800 mt-2 flex items-center gap-1">
+                                <AlertCircle className="w-3 h-3" />
+                                The department will receive a notification about this assignment.
                             </p>
                         </div>
                     )}
