@@ -85,9 +85,9 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                     // Silently handle geolocation errors
                 },
                 {
-                    enableHighAccuracy: false,
-                    maximumAge: 60_000,
-                    timeout: 5_000,
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0,
                 }
             );
         }
@@ -120,9 +120,9 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                                     resolve,
                                     reject,
                                     {
-                                        enableHighAccuracy: false,
-                                        maximumAge: 60_000,
-                                        timeout: 5_000,
+                                        enableHighAccuracy: true,
+                                        timeout: 10000,
+                                        maximumAge: 0,
                                     }
                                 );
                             }
@@ -145,7 +145,7 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                 // Start the call with variables
                 try {
                     await vapi.start(assistantId, {
-                        variableValues: variables
+                        variableValues: variables,
                     });
                 } catch (e) {
                     // Fallback: try without variables
@@ -235,7 +235,8 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                                     background: "#fff",
                                     borderRadius: "2px",
                                     marginRight: "2px",
-                                    animation: "wave 1.5s ease-in-out infinite 0.1s",
+                                    animation:
+                                        "wave 1.5s ease-in-out infinite 0.1s",
                                 }}
                             />
                             <div
@@ -245,7 +246,8 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                                     background: "#fff",
                                     borderRadius: "2px",
                                     marginRight: "2px",
-                                    animation: "wave 1.5s ease-in-out infinite 0.2s",
+                                    animation:
+                                        "wave 1.5s ease-in-out infinite 0.2s",
                                 }}
                             />
                             <div
@@ -254,7 +256,8 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                                     height: "18px",
                                     background: "#fff",
                                     borderRadius: "2px",
-                                    animation: "wave 1.5s ease-in-out infinite 0.3s",
+                                    animation:
+                                        "wave 1.5s ease-in-out infinite 0.3s",
                                 }}
                             />
                         </div>
@@ -314,23 +317,28 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                     justifyContent: "center",
                     zIndex: 1000,
                     outline: "none",
-                    transform: isConnected && !isSpeaking ? "scale(1.1)" : "scale(1)",
+                    transform:
+                        isConnected && !isSpeaking ? "scale(1.1)" : "scale(1)",
                     ...style,
                 }}
                 onMouseOver={(e) => {
                     if (!isLoading) {
-                        e.currentTarget.style.transform = isConnected && !isSpeaking 
-                            ? "scale(1.15) translateY(-2px)" 
-                            : "scale(1.05) translateY(-2px)";
-                        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0, 0, 0, 0.2)";
+                        e.currentTarget.style.transform =
+                            isConnected && !isSpeaking
+                                ? "scale(1.15) translateY(-2px)"
+                                : "scale(1.05) translateY(-2px)";
+                        e.currentTarget.style.boxShadow =
+                            "0 12px 32px rgba(0, 0, 0, 0.2)";
                     }
                 }}
                 onMouseOut={(e) => {
                     if (!isLoading) {
-                        e.currentTarget.style.transform = isConnected && !isSpeaking 
-                            ? "scale(1.1) translateY(0)" 
-                            : "scale(1) translateY(0)";
-                        e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.15)";
+                        e.currentTarget.style.transform =
+                            isConnected && !isSpeaking
+                                ? "scale(1.1) translateY(0)"
+                                : "scale(1) translateY(0)";
+                        e.currentTarget.style.boxShadow =
+                            "0 8px 24px rgba(0, 0, 0, 0.15)";
                     }
                 }}
                 title={buttonState.label}

@@ -145,7 +145,7 @@ export default function IssuesMapPage() {
             {
                 enableHighAccuracy: true,
                 timeout: 10000,
-                maximumAge: 300000, // 5 minutes
+                maximumAge: 0,
             }
         );
     };
@@ -155,12 +155,14 @@ export default function IssuesMapPage() {
             setLoading(true);
             setError(null);
 
-                        const { data, error: fetchError } = await (supabase as any)
-                                .from("issues")
-                                .select(`
+            const { data, error: fetchError } = await (supabase as any)
+                .from("issues")
+                .select(
+                    `
                     *,
                     profiles:user_id(full_name, email)
-                `)
+                `
+                )
                 .not("location_lat", "is", null)
                 .not("location_lng", "is", null)
                 .order("created_at", { ascending: false });

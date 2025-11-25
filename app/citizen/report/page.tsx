@@ -398,6 +398,11 @@ export default function ReportIssuePage() {
                         description: "Please enter your location manually.",
                         variant: "destructive",
                     });
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0,
                 }
             );
         }
