@@ -85,9 +85,9 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                     // Silently handle geolocation errors
                 },
                 {
-                    enableHighAccuracy: false,
-                    maximumAge: 60_000,
-                    timeout: 5_000,
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0,
                 }
             );
         }
@@ -120,9 +120,9 @@ const VapiVoiceButton: React.FC<VapiVoiceButtonProps> = ({
                                     resolve,
                                     reject,
                                     {
-                                        enableHighAccuracy: false,
-                                        maximumAge: 60_000,
-                                        timeout: 5_000,
+                                        enableHighAccuracy: true,
+                                        timeout: 10000,
+                                        maximumAge: 0,
                                     }
                                 );
                             }
