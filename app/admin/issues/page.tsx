@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import AdminSidebar from "@/components/admin-sidebar";
 import { Button } from "@/components/ui/button";
 import {
@@ -449,26 +450,51 @@ export default function AdminIssuesPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
-            <div className="flex h-screen pt-16 md:pt-0">
+        <div className="min-h-screen bg-black">
+            {/* Animated Background */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed inset-0 z-0 pointer-events-none"
+            >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(46,106,86,0.25),transparent_50%)]"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(92,148,121,0.2),transparent_50%)]"></div>
+            </motion.div>
+
+            <div className="flex h-screen pt-16 md:pt-0 relative z-10">
                 <AdminSidebar pendingIssues={statusCounts.submitted} />
                 <div className="flex-1 overflow-auto">
                     {/* Enhanced Header */}
-                    <div className="border-0 bg-gradient-to-r from-white to-emerald-50/30 backdrop-blur-sm shadow-lg">
+                    <motion.div
+                        initial={{ y: -50, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="border-0 bg-black/80 backdrop-blur-2xl border-b border-white/10 shadow-lg"
+                    >
                         <div className="container mx-auto px-4 py-6">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-4">
                                     <Link href="/admin/dashboard">
-                                        <Button variant="outline" size="sm">
-                                            <ArrowLeft className="w-4 h-4 mr-2" />
-                                            Dashboard
-                                        </Button>
+                                        <motion.div
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="bg-white/5 border-white/20 text-white hover:bg-white/10"
+                                            >
+                                                <ArrowLeft className="w-4 h-4 mr-2" />
+                                                Dashboard
+                                            </Button>
+                                        </motion.div>
                                     </Link>
                                     <div>
-                                        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                                        <h1 className="text-3xl font-bold text-white">
                                             Issue Management
                                         </h1>
-                                        <p className="text-emerald-700 mt-1">
+                                        <p className="text-white/60 mt-1">
                                             Track, assign, and manage all civic
                                             issues
                                         </p>
@@ -476,86 +502,124 @@ export default function AdminIssuesPage() {
                                 </div>
                                 <div className="flex items-center space-x-3">
                                     {selectedIssues.length > 0 && (
-                                        <Button variant="secondary" size="sm">
-                                            <Users className="w-4 h-4 mr-2" />
-                                            Bulk Actions (
-                                            {selectedIssues.length})
-                                        </Button>
+                                        <motion.div
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                className="bg-white/10 border-white/20 text-white hover:bg-white/15"
+                                            >
+                                                <Users className="w-4 h-4 mr-2" />
+                                                Bulk Actions (
+                                                {selectedIssues.length})
+                                            </Button>
+                                        </motion.div>
                                     )}
                                     <Link href="/admin/issues/map">
-                                        <Button>
-                                            <MapPin className="w-4 h-4 mr-2" />
-                                            Map View
-                                        </Button>
+                                        <motion.div
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <Button className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#3d6b58] text-white shadow-lg shadow-[#2E6A56]/30">
+                                                <MapPin className="w-4 h-4 mr-2" />
+                                                Map View
+                                            </Button>
+                                        </motion.div>
                                     </Link>
                                 </div>
                             </div>
 
                             {/* Summary Stats */}
                             <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-6">
-                                <Card className="border-0 bg-gradient-to-r from-emerald-50 to-green-100 shadow-lg hover:shadow-xl transition-shadow">
-                                    <CardContent className="p-4 text-center">
-                                        <div className="text-2xl font-bold text-emerald-700">
-                                            {statusCounts.all}
-                                        </div>
-                                        <div className="text-sm text-emerald-600">
-                                            Total Issues
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="border-0 bg-gradient-to-r from-amber-50 to-yellow-100 shadow-lg hover:shadow-xl transition-shadow">
-                                    <CardContent className="p-4 text-center">
-                                        <div className="text-2xl font-bold text-amber-700">
-                                            {statusCounts.submitted}
-                                        </div>
-                                        <div className="text-sm text-amber-600">
-                                            New
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="border-0 bg-gradient-to-r from-orange-50 to-amber-100 shadow-lg hover:shadow-xl transition-shadow">
-                                    <CardContent className="p-4 text-center">
-                                        <div className="text-2xl font-bold text-orange-700">
-                                            {statusCounts.assigned}
-                                        </div>
-                                        <div className="text-sm text-orange-600">
-                                            Assigned
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="border-0 bg-gradient-to-r from-cyan-50 to-teal-100 shadow-lg hover:shadow-xl transition-shadow">
-                                    <CardContent className="p-4 text-center">
-                                        <div className="text-2xl font-bold text-cyan-700">
-                                            {statusCounts.in_progress}
-                                        </div>
-                                        <div className="text-sm text-cyan-600">
-                                            In Progress
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="border-0 bg-gradient-to-r from-green-50 to-emerald-100 shadow-lg hover:shadow-xl transition-shadow">
-                                    <CardContent className="p-4 text-center">
-                                        <div className="text-2xl font-bold text-emerald-700">
-                                            {statusCounts.resolved}
-                                        </div>
-                                        <div className="text-sm text-emerald-600">
-                                            Resolved
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                                <Card className="border-0 bg-gradient-to-r from-slate-50 to-gray-100 shadow-lg hover:shadow-xl transition-shadow">
-                                    <CardContent className="p-4 text-center">
-                                        <div className="text-2xl font-bold text-slate-700">
-                                            {statusCounts.closed}
-                                        </div>
-                                        <div className="text-sm text-slate-600">
-                                            Closed
-                                        </div>
-                                    </CardContent>
-                                </Card>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0, duration: 0.5 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className="bg-[#5C9479]/20 border border-[#5C9479]/30 rounded-xl backdrop-blur-xl p-4 text-center shadow-lg hover:shadow-2xl hover:shadow-[#5C9479]/20"
+                                >
+                                    <div className="text-2xl font-bold text-emerald-300">
+                                        {statusCounts.all}
+                                    </div>
+                                    <div className="text-sm text-white/60">
+                                        Total Issues
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1, duration: 0.5 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className="bg-amber-500/20 border border-amber-500/30 rounded-xl backdrop-blur-xl p-4 text-center shadow-lg hover:shadow-2xl hover:shadow-amber-500/20"
+                                >
+                                    <div className="text-2xl font-bold text-amber-300">
+                                        {statusCounts.submitted}
+                                    </div>
+                                    <div className="text-sm text-white/60">
+                                        New
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2, duration: 0.5 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className="bg-orange-500/20 border border-orange-500/30 rounded-xl backdrop-blur-xl p-4 text-center shadow-lg hover:shadow-2xl hover:shadow-orange-500/20"
+                                >
+                                    <div className="text-2xl font-bold text-orange-300">
+                                        {statusCounts.assigned}
+                                    </div>
+                                    <div className="text-sm text-white/60">
+                                        Assigned
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.3, duration: 0.5 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className="bg-cyan-500/20 border border-cyan-500/30 rounded-xl backdrop-blur-xl p-4 text-center shadow-lg hover:shadow-2xl hover:shadow-cyan-500/20"
+                                >
+                                    <div className="text-2xl font-bold text-cyan-300">
+                                        {statusCounts.in_progress}
+                                    </div>
+                                    <div className="text-sm text-white/60">
+                                        In Progress
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.4, duration: 0.5 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className="bg-[#2E6A56]/20 border border-[#2E6A56]/30 rounded-xl backdrop-blur-xl p-4 text-center shadow-lg hover:shadow-2xl hover:shadow-[#2E6A56]/20"
+                                >
+                                    <div className="text-2xl font-bold text-emerald-300">
+                                        {statusCounts.resolved}
+                                    </div>
+                                    <div className="text-sm text-white/60">
+                                        Resolved
+                                    </div>
+                                </motion.div>
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.5, duration: 0.5 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className="bg-slate-500/20 border border-slate-500/30 rounded-xl backdrop-blur-xl p-4 text-center shadow-lg hover:shadow-2xl hover:shadow-slate-500/20"
+                                >
+                                    <div className="text-2xl font-bold text-slate-300">
+                                        {statusCounts.closed}
+                                    </div>
+                                    <div className="text-sm text-white/60">
+                                        Closed
+                                    </div>
+                                </motion.div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     <div className="responsive-container py-6">
                         {/* Enhanced Filters */}

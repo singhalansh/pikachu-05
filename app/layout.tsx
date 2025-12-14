@@ -37,9 +37,10 @@ export default function RootLayout({
         | string
         | undefined;
     return (
-        <html lang="en">
+        <html lang="en" className="dark">
             <body
-                className={`${poppins.variable} ${inter.variable} overflow-x-hidden font-poppins`}
+                className={`${poppins.variable} ${inter.variable} overflow-x-hidden font-poppins bg-black text-white`}
+                style={{ backgroundColor: "#000000", color: "#ffffff" }}
             >
                 <AuthProvider>
                     {children}

@@ -232,13 +232,13 @@ export default function ProfilePage() {
         profileData.full_name || user?.email?.split("@")[0] || "User";
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+        <div className="min-h-screen bg-black/30">
             <div className="container mx-auto px-4 py-8 max-w-6xl">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">
+                    <h1 className="text-3xl font-bold text-white">
                         Profile
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-white/70">
                         Manage your account information and settings
                     </p>
                 </div>
@@ -246,7 +246,7 @@ export default function ProfilePage() {
                 <div className="grid gap-6 lg:grid-cols-3">
                     {/* Profile Overview */}
                     <div className="lg:col-span-1">
-                        <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+                        <Card className="bg-white/5 backdrop-blur-sm shadow-lg border-0">
                             <CardContent className="pt-6">
                                 <div className="flex flex-col items-center text-center">
                                     <div className="relative mb-4">
@@ -294,10 +294,10 @@ export default function ProfilePage() {
                                         )}
                                     </div>
 
-                                    <h2 className="text-xl font-semibold mb-2 text-gray-900">
+                                    <h2 className="text-xl font-semibold mb-2 text-white">
                                         {displayName}
                                     </h2>
-                                    <p className="text-gray-600 mb-4">
+                                    <p className="text-white/70 mb-4">
                                         {profileData.email}
                                     </p>
 
@@ -360,10 +360,10 @@ export default function ProfilePage() {
                         </Card>
 
                         {/* Enhanced Activity Summary */}
-                        <Card className="mt-6">
+                        <Card className="mt-6 bg-white/5 border-white/10 backdrop-blur-xl">
                             <CardHeader>
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-lg flex items-center gap-2">
+                                    <CardTitle className="text-lg flex items-center gap-2 text-white">
                                         📊 Activity Summary
                                         {statsLoading && (
                                             <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -463,14 +463,14 @@ export default function ProfilePage() {
                                         </div>
 
                                         {issueStats.closed > 0 && (
-                                            <div className="flex justify-between items-center p-2 rounded-lg bg-gray-50 border border-gray-200">
+                                            <div className="flex justify-between items-center p-2 rounded-lg bg-white/5 border border-gray-200">
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                                                    <span className="text-sm font-medium text-gray-900">
+                                                    <div className="w-3 h-3 bg-white/50 rounded-full"></div>
+                                                    <span className="text-sm font-medium text-white">
                                                         Closed
                                                     </span>
                                                 </div>
-                                                <Badge className="bg-gray-500 text-white">
+                                                <Badge className="bg-white/50 text-white">
                                                     {issueStats.closed}
                                                 </Badge>
                                             </div>
@@ -480,7 +480,7 @@ export default function ProfilePage() {
 
                                 {!statsLoading && issueStats.reported === 0 && (
                                     <div className="text-center py-6 text-muted-foreground">
-                                        <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3">
                                             📝
                                         </div>
                                         <p className="text-sm font-medium">

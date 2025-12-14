@@ -3,10 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
     ArrowLeft,
     MapPin,
@@ -20,12 +19,16 @@ import {
     ExternalLink,
     Map as MapIcon,
     MessageCircle,
+    Shield,
+    Settings,
+    TrendingUp,
+    Sparkles,
+    Users,
 } from "lucide-react";
 import AdminIssueStatusUpdater from "@/components/admin-issue-status-updater";
 import AdminDepartmentAssigner from "@/components/admin-department-assigner";
 import AdminUserAssigner from "@/components/admin-user-assigner";
 import CitizenComments from "@/components/citizen-comments";
-import GoogleMapsEmbed from "@/components/google-maps-embed";
 import InteractiveGoogleMap from "@/components/interactive-google-map";
 
 interface Issue {
@@ -64,22 +67,18 @@ interface Issue {
 }
 
 const priorityColors = {
-    low: "bg-gradient-to-r from-[#2E6A56]/20 to-[#5C9479]/20 text-[#2E6A56] border border-[#2E6A56]/30",
-    medium: "bg-gradient-to-r from-yellow-50 to-yellow-100 text-yellow-700 border border-yellow-300",
-    high: "bg-gradient-to-r from-orange-50 to-orange-100 text-orange-700 border border-orange-300",
-    urgent: "bg-gradient-to-r from-red-50 to-red-100 text-red-700 border border-red-400 shadow-md",
+    low: "bg-emerald-100 text-emerald-700 border-emerald-300",
+    medium: "bg-amber-100 text-amber-700 border-amber-300",
+    high: "bg-orange-100 text-orange-700 border-orange-300",
+    urgent: "bg-red-100 text-red-700 border-red-400",
 };
 
 const statusColors = {
-    submitted:
-        "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-300",
-    assigned:
-        "bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 border border-purple-300",
-    in_progress:
-        "bg-gradient-to-r from-[#5C9479]/20 to-[#2E6A56]/20 text-[#2E6A56] border border-[#5C9479]/30",
-    resolved:
-        "bg-gradient-to-r from-green-50 to-green-100 text-green-700 border border-green-400 shadow-sm",
-    closed: "bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 border border-gray-300",
+    submitted: "bg-sky-100 text-sky-700 border-sky-300",
+    assigned: "bg-purple-100 text-purple-700 border-purple-300",
+    in_progress: "bg-[#5C9479]/20 text-[#2E6A56] border-[#5C9479]/30",
+    resolved: "bg-green-100 text-green-700 border-green-400",
+    closed: "bg-gray-100 text-gray-700 border-gray-300",
 };
 
 export default function AdminIssueDetailPage() {
@@ -155,441 +154,412 @@ export default function AdminIssueDetailPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-                <div className="container mx-auto px-4 py-8 max-w-6xl">
-                    <div className="animate-pulse space-y-6">
-                        <div className="h-8 bg-gradient-to-r from-[#2E6A56]/20 to-[#5C9479]/20 rounded-lg w-1/3"></div>
-                        <div className="grid gap-6 lg:grid-cols-3">
-                            <div className="lg:col-span-2 space-y-6">
-                                <div className="h-64 bg-white border-2 border-gray-100 rounded-xl shadow-sm"></div>
-                                <div className="h-32 bg-white border-2 border-gray-100 rounded-xl shadow-sm"></div>
-                            </div>
-                            <div className="h-96 bg-white border-2 border-gray-100 rounded-xl shadow-sm"></div>
-                        </div>
-                    </div>
-                </div>
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-purple-50/30 flex items-center justify-center p-4">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="text-center"
+                >
+                    <motion.div
+                        animate={{ rotate: 360 }}
+                        transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear",
+                        }}
+                        className="w-16 h-16 border-4 border-[#2E6A56] border-t-transparent rounded-full mx-auto mb-4"
+                    />
+                    <p className="text-gray-600 font-medium">
+                        Loading issue details...
+                    </p>
+                </motion.div>
             </div>
         );
     }
 
     if (error || !issue) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-                <div className="container mx-auto px-4 py-8 max-w-6xl">
-                    <div className="text-center py-12">
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center mx-auto mb-6 shadow-lg">
-                            <AlertCircle className="w-10 h-10 text-red-600" />
-                        </div>
-                        <h1 className="text-3xl font-bold mb-3 bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent">
-                            Issue Not Found
-                        </h1>
-                        <p className="text-gray-600 mb-6 text-lg">
-                            {error ||
-                                "The issue you are looking for does not exist."}
-                        </p>
-                        <Button
-                            className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] text-white shadow-lg"
-                            asChild
-                        >
-                            <Link href="/admin/issues">
-                                <ArrowLeft className="w-4 h-4 mr-2" />
-                                Back to Issues
-                            </Link>
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-[#2E6A56]/5">
-            <div className="container mx-auto px-4 py-8 max-w-6xl">
-                {/* Header */}
-                <div className="mb-8">
+            <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center p-4">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center max-w-md"
+                >
+                    <AlertCircle className="w-20 h-20 text-red-500 mx-auto mb-6" />
+                    <h1 className="text-4xl font-bold mb-3 text-gray-900">
+                        Issue Not Found
+                    </h1>
+                    <p className="text-gray-600 mb-8 text-lg">
+                        {error ||
+                            "The issue you are looking for does not exist."}
+                    </p>
                     <Button
-                        variant="ghost"
                         asChild
-                        className="mb-6 hover:bg-[#2E6A56]/10 hover:text-[#2E6A56] transition-colors"
+                        size="lg"
+                        className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] shadow-lg"
                     >
                         <Link href="/admin/issues">
                             <ArrowLeft className="w-4 h-4 mr-2" />
                             Back to Issues
                         </Link>
                     </Button>
+                </motion.div>
+            </div>
+        );
+    }
 
-                    <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-100 p-8 mb-6">
-                        <div className="flex items-start justify-between gap-4 flex-wrap">
-                            <div className="flex-1 min-w-0">
-                                <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent">
-                                    {issue.title}
-                                </h1>
-                                <div className="flex items-center gap-3 text-gray-600 flex-wrap">
-                                    <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium">
-                                        Issue #{issue.id.slice(0, 8)}
-                                    </span>
-                                    <span className="text-gray-400">•</span>
-                                    <span className="flex items-center gap-1.5">
-                                        <Calendar className="w-4 h-4" />
-                                        Reported{" "}
-                                        {new Date(
-                                            issue.created_at
-                                        ).toLocaleDateString()}
-                                    </span>
-                                </div>
+    return (
+        <div className="min-h-screen bg-black text-white relative overflow-hidden">
+            {/* Animated Background */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2E6A56]/20 via-black to-[#5C9479]/20" />
+                <motion.div
+                    animate={{
+                        backgroundPosition: ["0% 0%", "100% 100%"],
+                    }}
+                    transition={{
+                        duration: 20,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                    }}
+                    className="absolute inset-0 opacity-20"
+                    style={{
+                        backgroundImage:
+                            "radial-gradient(circle at 20% 50%, #2E6A56 0%, transparent 50%), radial-gradient(circle at 80% 80%, #5C9479 0%, transparent 50%)",
+                        backgroundSize: "100% 100%",
+                    }}
+                />
+            </div>
+
+            {/* Compact Top Bar */}
+            <motion.div
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-2xl border-b border-white/10"
+            >
+                <div className="max-w-[1600px] mx-auto px-6 py-3">
+                    <div className="flex items-center justify-between">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            asChild
+                            className="text-white/80 hover:text-white hover:bg-white/10"
+                        >
+                            <Link
+                                href="/admin/issues"
+                                className="flex items-center gap-2"
+                            >
+                                <ArrowLeft className="w-4 h-4 mr-2" />
+                                Back to Issues
+                            </Link>
+                        </Button>
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.1 }}
+                            className="flex items-center gap-3"
+                        >
+                            <Badge
+                                variant="outline"
+                                className={
+                                    priorityColors[
+                                        issue.priority as keyof typeof priorityColors
+                                    ]
+                                }
+                            >
+                                <Shield className="w-3 h-3 mr-1" />
+                                {issue.priority}
+                            </Badge>
+                            <Badge
+                                variant="outline"
+                                className={
+                                    statusColors[
+                                        issue.status as keyof typeof statusColors
+                                    ]
+                                }
+                            >
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                {issue.status.replace("_", " ")}
+                            </Badge>
+                            <span className="text-sm text-gray-600">
+                                #{issue.id.slice(0, 8)}
+                            </span>
+                        </motion.div>
+                    </div>
+                </div>
+            </motion.div>
+
+            {/* Main Content - Bento Grid Style */}
+            <div className="relative z-10 pt-20 px-6 max-w-[1600px] mx-auto">
+                {/* Title Section - Diagonal Layout */}
+                <motion.div
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="mb-8"
+                >
+                    <div className="relative">
+                        <div className="absolute -left-4 top-0 w-1 h-full bg-gradient-to-b from-[#2E6A56] to-[#5C9479]" />
+                        <div className="pl-8">
+                            <div className="flex items-center gap-3 mb-3">
+                                <Settings className="w-5 h-5 text-yellow-400" />
+                                <span className="text-[#5C9479] text-sm font-mono">
+                                    Admin • #{issue.id.slice(0, 8)}
+                                </span>
+                                <span className="text-white/40">•</span>
+                                <span className="text-white/60 text-sm">
+                                    {new Date(
+                                        issue.created_at
+                                    ).toLocaleDateString()}
+                                </span>
                             </div>
-
-                            <div className="flex items-center gap-3 flex-wrap">
-                                <Badge
-                                    className={`${
-                                        priorityColors[
-                                            issue.priority as keyof typeof priorityColors
-                                        ]
-                                    } font-semibold px-4 py-2 text-sm`}
-                                >
-                                    {issue.priority.charAt(0).toUpperCase() +
-                                        issue.priority.slice(1)}{" "}
-                                    Priority
-                                </Badge>
-                                <Badge
-                                    className={`${
-                                        statusColors[
-                                            issue.status as keyof typeof statusColors
-                                        ]
-                                    } font-semibold px-4 py-2 text-sm`}
-                                >
-                                    {issue.status
-                                        .replace("_", " ")
-                                        .charAt(0)
-                                        .toUpperCase() +
-                                        issue.status.replace("_", " ").slice(1)}
-                                </Badge>
+                            <h1 className="text-5xl md:text-7xl font-black mb-4 leading-tight text-white">
+                                {issue.title}
+                            </h1>
+                            <p className="text-xl text-white/70 max-w-3xl leading-relaxed">
+                                {issue.description}
+                            </p>
+                            <div className="flex items-center gap-4 mt-4 text-sm text-white/50">
+                                <span className="flex items-center gap-2">
+                                    <User className="w-4 h-4" />
+                                    {issue.profiles?.full_name || "Unknown"}
+                                </span>
+                                <span>•</span>
+                                <span className="capitalize">
+                                    {issue.category.replace("-", " ")}
+                                </span>
+                                {issue.votes_count && issue.votes_count > 0 && (
+                                    <>
+                                        <span>•</span>
+                                        <span className="flex items-center gap-1">
+                                            <TrendingUp className="w-4 h-4" />
+                                            {issue.votes_count} votes
+                                        </span>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="grid gap-6 lg:grid-cols-3">
-                    {/* Main Content */}
-                    <div className="lg:col-span-2 space-y-6">
+                {/* Bento Grid */}
+                <div className="grid grid-cols-12 gap-4">
+                    {/* Image - 7 columns */}
+                    {issue.image_url && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="col-span-12 lg:col-span-7 relative group cursor-pointer h-[350px]"
+                            onClick={() =>
+                                window.open(issue.image_url, "_blank")
+                            }
+                        >
+                            <div className="absolute inset-0 bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-xl">
+                                <motion.img
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ duration: 0.6 }}
+                                    src={issue.image_url}
+                                    alt="Issue"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                                <motion.div
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileHover={{ opacity: 1, y: 0 }}
+                                    className="absolute bottom-6 left-6 right-6 flex items-center justify-between"
+                                >
+                                    <span className="text-white font-bold text-xl">
+                                        View Full Size
+                                    </span>
+                                    <ExternalLink className="w-6 h-6 text-white" />
+                                </motion.div>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* Details - 5 columns */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="col-span-12 lg:col-span-5 space-y-4"
+                    >
                         {/* Issue Details */}
-                        <Card className="border-2 border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl overflow-hidden">
-                            <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56]" />
-                            <CardHeader className="bg-gradient-to-r from-[#2E6A56]/5 to-[#5C9479]/5">
-                                <CardTitle className="text-2xl flex items-center gap-2">
-                                    <FileText className="w-6 h-6 text-[#2E6A56]" />
+                        <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
+                            <div className="flex items-center gap-2 mb-4">
+                                <FileText className="w-6 h-6 text-[#5C9479]" />
+                                <h3 className="text-xl font-bold text-white">
                                     Issue Details
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6 p-6">
-                                <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border-2 border-gray-100">
-                                    <h3 className="font-semibold mb-3 text-lg text-[#2E6A56] flex items-center gap-2">
-                                        <MessageCircle className="w-5 h-5" />
-                                        Description
-                                    </h3>
-                                    <p className="text-gray-700 leading-relaxed">
-                                        {issue.description}
-                                    </p>
+                                </h3>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="text-xs text-white/40">
+                                        Category
+                                    </div>
+                                    <div className="text-white font-semibold capitalize">
+                                        {issue.category.replace("-", " ")}
+                                    </div>
+                                    <div className="text-xs text-white/40">
+                                        Priority
+                                    </div>
+                                    <Badge
+                                        className={
+                                            priorityColors[
+                                                issue.priority as keyof typeof priorityColors
+                                            ]
+                                        }
+                                    >
+                                        {issue.priority}
+                                    </Badge>
+                                    <div className="text-xs text-white/40">
+                                        Reporter
+                                    </div>
+                                    <div className="text-white font-medium">
+                                        {issue.profiles?.full_name || "Unknown"}
+                                    </div>
+                                    <div className="text-xs text-white/40">
+                                        Email
+                                    </div>
+                                    <div className="text-white/70 text-sm">
+                                        {issue.profiles?.email}
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                {issue.audio_url && (
-                                    <div className="bg-gradient-to-br from-blue-50 to-white p-6 rounded-xl border-2 border-blue-100">
-                                        <h3 className="font-semibold mb-3 text-lg text-[#2E6A56] flex items-center gap-2">
-                                            <FileText className="w-5 h-5" />
-                                            Audio Recording
-                                        </h3>
-                                        <audio
-                                            src={issue.audio_url}
-                                            controls
-                                            className="w-full rounded-lg"
-                                            preload="metadata"
-                                        />
+                        {/* Assignment & Audio */}
+                        {issue.department && (
+                            <div className="bg-purple-500/20 border border-purple-500/30 rounded-3xl p-6 backdrop-blur-xl">
+                                <Building2 className="w-6 h-6 text-purple-400 mb-3" />
+                                <div className="text-sm text-purple-300 mb-1">
+                                    Assigned To
+                                </div>
+                                <div className="text-lg font-bold text-white mb-1">
+                                    {issue.department.name}
+                                </div>
+                                {issue.department.email && (
+                                    <div className="text-sm text-white/60">
+                                        {issue.department.email}
                                     </div>
                                 )}
+                            </div>
+                        )}
 
-                                <Separator />
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="bg-gradient-to-br from-[#2E6A56]/10 to-[#5C9479]/10 p-4 rounded-xl border border-[#2E6A56]/20">
-                                        <h4 className="font-semibold mb-2 text-[#2E6A56] text-sm uppercase tracking-wide">
-                                            Category
-                                        </h4>
-                                        <p className="text-gray-700 capitalize font-medium text-lg">
-                                            {issue.category.replace("-", " ")}
-                                        </p>
-                                    </div>
-
-                                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
-                                        <h4 className="font-semibold mb-2 text-purple-700 text-sm uppercase tracking-wide">
-                                            Priority
-                                        </h4>
-                                        <p className="text-gray-700 capitalize font-medium text-lg">
-                                            {issue.priority}
-                                        </p>
-                                    </div>
+                        {issue.assigned_profile && (
+                            <div className="bg-emerald-500/20 border border-emerald-500/30 rounded-3xl p-6 backdrop-blur-xl">
+                                <User className="w-6 h-6 text-emerald-400 mb-3" />
+                                <div className="text-sm text-emerald-300 mb-1">
+                                    Officer
                                 </div>
-
-                                <Separator />
-
-                                {/* Location with Map */}
-                                <div className="bg-gradient-to-br from-[#2E6A56]/5 to-[#5C9479]/5 p-6 rounded-xl border-2 border-[#2E6A56]/20">
-                                    <h4 className="font-semibold mb-4 text-xl flex items-center gap-2 text-[#2E6A56]">
-                                        <MapPin className="w-6 h-6" />
-                                        Location
-                                    </h4>
-                                    <p className="text-gray-700 mb-2 font-medium">
-                                        {issue.location_address}
-                                    </p>
-                                    {issue.landmark && (
-                                        <p className="text-sm text-gray-600 mb-4 flex items-center gap-2">
-                                            <span className="w-2 h-2 rounded-full bg-[#5C9479]"></span>
-                                            Landmark: {issue.landmark}
-                                        </p>
-                                    )}
-
-                                    {/* Interactive Map */}
-                                    <div className="mb-4 rounded-xl overflow-hidden border-2 border-[#2E6A56]/30 shadow-md">
-                                        <InteractiveGoogleMap
-                                            lat={issue.location_lat}
-                                            lng={issue.location_lng}
-                                            address={issue.location_address}
-                                            height={300}
-                                            zoom={16}
-                                        />
-                                    </div>
-
-                                    {/* Map Action Buttons */}
-                                    <div className="flex gap-3 flex-wrap">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="bg-white hover:bg-[#2E6A56] hover:text-white hover:border-[#2E6A56] transition-all border-2"
-                                            asChild
-                                        >
-                                            <a
-                                                href={`https://maps.google.com/?q=${issue.location_lat},${issue.location_lng}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <ExternalLink className="w-4 h-4 mr-2" />
-                                                Open in Google Maps
-                                            </a>
-                                        </Button>
-
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            className="bg-white hover:bg-[#5C9479] hover:text-white hover:border-[#5C9479] transition-all border-2"
-                                            asChild
-                                        >
-                                            <a
-                                                href={`https://www.google.com/maps/dir/?api=1&destination=${issue.location_lat},${issue.location_lng}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                            >
-                                                <MapIcon className="w-4 h-4 mr-2" />
-                                                Get Directions
-                                            </a>
-                                        </Button>
-                                    </div>
+                                <div className="text-lg font-bold text-white mb-1">
+                                    {issue.assigned_profile.full_name}
                                 </div>
+                                <div className="text-sm text-white/60">
+                                    {issue.assigned_profile.email}
+                                </div>
+                            </div>
+                        )}
 
-                                {issue.image_url && (
-                                    <>
-                                        <Separator className="my-6" />
-                                        <div className="bg-gradient-to-br from-gray-50 to-white p-6 rounded-xl border-2 border-gray-100">
-                                            <h4 className="font-semibold mb-4 text-lg text-[#2E6A56] flex items-center gap-2">
-                                                <FileText className="w-5 h-5" />
-                                                Photo Evidence
-                                            </h4>
-                                            <div className="relative group">
-                                                <img
-                                                    src={issue.image_url}
-                                                    alt="Issue photo"
-                                                    className="rounded-xl max-w-full h-auto max-h-96 object-cover cursor-pointer shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-gray-200 group-hover:scale-[1.02]"
-                                                    onClick={() =>
-                                                        window.open(
-                                                            issue.image_url,
-                                                            "_blank"
-                                                        )
-                                                    }
-                                                />
-                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-xl transition-all duration-300 flex items-center justify-center">
-                                                    <ExternalLink className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                                                </div>
+                        {issue.audio_url && (
+                            <div className="bg-blue-500/20 border border-blue-500/30 rounded-3xl p-6 backdrop-blur-xl">
+                                <FileText className="w-6 h-6 text-blue-400 mb-3" />
+                                <div className="text-sm text-blue-300 mb-2">
+                                    Audio Recording
+                                </div>
+                                <audio
+                                    src={issue.audio_url}
+                                    controls
+                                    className="w-full"
+                                />
+                            </div>
+                        )}
+                    </motion.div>
+
+                    {/* Map - 7 columns */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="col-span-12 lg:col-span-7 relative h-[350px]"
+                    >
+                        <div className="absolute inset-0 rounded-3xl overflow-hidden border border-white/10 bg-white/5 backdrop-blur-xl">
+                            <InteractiveGoogleMap
+                                lat={issue.location_lat}
+                                lng={issue.location_lng}
+                                address={issue.location_address}
+                                height={350}
+                                zoom={16}
+                            />
+                            <div className="absolute bottom-6 left-6 right-6 bg-black/80 backdrop-blur-2xl rounded-2xl p-4 border border-white/20">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 text-[#5C9479] text-sm mb-2">
+                                            <MapPin className="w-4 h-4" />
+                                            <span className="font-mono">
+                                                Location
+                                            </span>
+                                        </div>
+                                        <div className="text-white font-medium text-sm">
+                                            {issue.location_address}
+                                        </div>
+                                        {issue.landmark && (
+                                            <div className="text-white/60 text-xs mt-1">
+                                                📍 {issue.landmark}
                                             </div>
-                                        </div>
-                                    </>
-                                )}
-                            </CardContent>
-                        </Card>
-
-                        {/* Reporter Info */}
-                        <Card className="border-2 border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl overflow-hidden">
-                            <div className="h-2 bg-gradient-to-r from-blue-500 to-blue-600" />
-                            <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100/50">
-                                <CardTitle className="text-2xl flex items-center gap-2">
-                                    <User className="w-6 h-6 text-blue-600" />
-                                    Reporter Information
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-4 p-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="bg-gradient-to-br from-blue-50 to-white p-4 rounded-xl border-2 border-blue-100">
-                                        <h4 className="font-semibold mb-2 flex items-center gap-2 text-blue-700">
-                                            <User className="w-5 h-5" />
-                                            Reporter
-                                        </h4>
-                                        <p className="text-gray-800 font-medium">
-                                            {issue.profiles?.full_name ||
-                                                "Unknown"}
-                                        </p>
-                                        <p className="text-sm text-gray-600 mt-1">
-                                            {issue.profiles?.email}
-                                        </p>
-                                    </div>
-
-                                    <div className="bg-gradient-to-br from-purple-50 to-white p-4 rounded-xl border-2 border-purple-100">
-                                        <h4 className="font-semibold mb-2 flex items-center gap-2 text-purple-700">
-                                            <Calendar className="w-5 h-5" />
-                                            Reported Date
-                                        </h4>
-                                        <p className="text-gray-800 font-medium">
-                                            {new Date(
-                                                issue.created_at
-                                            ).toLocaleString()}
-                                        </p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-
-                        {/* Assignment Info */}
-                        <Card className="border-2 border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl overflow-hidden">
-                            <div className="h-2 bg-gradient-to-r from-[#2E6A56] to-[#5C9479]" />
-                            <CardHeader className="bg-gradient-to-r from-[#2E6A56]/5 to-[#5C9479]/5">
-                                <CardTitle className="text-2xl flex items-center gap-2">
-                                    <Building2 className="w-6 h-6 text-[#2E6A56]" />
-                                    Assignment Information
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6 p-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {issue.department && (
-                                        <div className="bg-gradient-to-br from-[#2E6A56]/10 to-[#5C9479]/10 p-5 rounded-xl border-2 border-[#2E6A56]/20">
-                                            <h4 className="font-semibold mb-2 flex items-center gap-2 text-[#2E6A56]">
-                                                <Building2 className="w-5 h-5" />
-                                                Department
-                                            </h4>
-                                            <p className="text-gray-800 font-medium text-lg">
-                                                {issue.department.name}
-                                            </p>
-                                            {issue.department.email && (
-                                                <p className="text-sm text-gray-600 mt-1">
-                                                    {issue.department.email}
-                                                </p>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    <div className="bg-gradient-to-br from-indigo-50 to-white p-5 rounded-xl border-2 border-indigo-100">
-                                        <h4 className="font-semibold mb-2 flex items-center gap-2 text-indigo-700">
-                                            <User className="w-5 h-5" />
-                                            Assigned To
-                                        </h4>
-                                        {issue.assigned_profile ? (
-                                            <>
-                                                <p className="text-gray-800 font-medium text-lg">
-                                                    {
-                                                        issue.assigned_profile
-                                                            .full_name
-                                                    }
-                                                </p>
-                                                <p className="text-sm text-gray-600 mt-1">
-                                                    {
-                                                        issue.assigned_profile
-                                                            .email
-                                                    }
-                                                </p>
-                                            </>
-                                        ) : (
-                                            <p className="text-gray-500 italic">
-                                                Not assigned yet
-                                            </p>
                                         )}
                                     </div>
+                                    <div className="flex gap-2 ml-4">
+                                        <motion.a
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            href={`https://maps.google.com/?q=${issue.location_lat},${issue.location_lng}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                                        >
+                                            <ExternalLink className="w-4 h-4 text-white" />
+                                        </motion.a>
+                                        <motion.a
+                                            whileHover={{ scale: 1.1 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            href={`https://www.google.com/maps/dir/?api=1&destination=${issue.location_lat},${issue.location_lng}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-2 bg-[#2E6A56] hover:bg-[#5C9479] rounded-lg transition-colors"
+                                        >
+                                            <MapIcon className="w-4 h-4 text-white" />
+                                        </motion.a>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                    </motion.div>
 
-                                {/* Timeline Information */}
-                                <Separator className="my-6" />
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {issue.estimated_completion && (
-                                        <div className="bg-gradient-to-br from-amber-50 to-white p-5 rounded-xl border-2 border-amber-100">
-                                            <h4 className="font-semibold mb-2 flex items-center gap-2 text-amber-700">
-                                                <Calendar className="w-5 h-5" />
-                                                Estimated Completion
-                                            </h4>
-                                            <p className="text-gray-800 font-medium text-lg">
-                                                {new Date(
-                                                    issue.estimated_completion
-                                                ).toLocaleDateString()}
-                                            </p>
-                                        </div>
-                                    )}
+                    {/* User Assignment - 5 columns */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="col-span-12 lg:col-span-5"
+                    >
+                        <AdminUserAssigner
+                            issueId={issue.id}
+                            departmentId={issue.department?.id}
+                            currentAssignee={issue.assigned_profile || null}
+                            onAssigned={handleUserAssigned}
+                        />
+                    </motion.div>
+                </div>
 
-                                    {issue.completed_at && (
-                                        <div className="bg-gradient-to-br from-green-50 to-white p-5 rounded-xl border-2 border-green-200 shadow-md">
-                                            <h4 className="font-semibold mb-2 flex items-center gap-2 text-green-700">
-                                                <CheckCircle className="w-5 h-5" />
-                                                Completed On
-                                            </h4>
-                                            <p className="text-gray-800 font-medium">
-                                                {new Date(
-                                                    issue.completed_at
-                                                ).toLocaleDateString()}{" "}
-                                                at{" "}
-                                                {new Date(
-                                                    issue.completed_at
-                                                ).toLocaleTimeString()}
-                                            </p>
-                                            <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white mt-2 shadow-sm">
-                                                ✓ Resolved
-                                            </Badge>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {!issue.department &&
-                                    !issue.assigned_profile && (
-                                        <div className="text-center py-8 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-dashed border-gray-300">
-                                            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center mx-auto mb-3">
-                                                <Clock className="w-8 h-8 text-gray-400" />
-                                            </div>
-                                            <p className="text-gray-600 font-medium">
-                                                This issue is awaiting
-                                                assignment to a department.
-                                            </p>
-                                        </div>
-                                    )}
-                            </CardContent>
-                        </Card>
-                        {/* Citizen Comments */}
-                        <Card className="border-2 border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl overflow-hidden">
-                            <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500" />
-                            <CardHeader className="bg-gradient-to-r from-indigo-50 to-purple-50">
-                                <CardTitle className="text-2xl flex items-center gap-2">
-                                    <MessageCircle className="w-6 h-6 text-indigo-600" />
-                                    Citizen Comments
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="p-6">
-                                <CitizenComments issueId={issue.id} />
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Status Update Sidebar */}
-                    <div className="space-y-6">
+                {/* Department Assignment & Quick Actions - Full Width Below */}
+                <div className="grid grid-cols-12 gap-4 mt-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                        className="col-span-12 lg:col-span-6"
+                    >
                         <AdminDepartmentAssigner
                             issueId={issue.id}
                             issueCategory={issue.category}
@@ -603,71 +573,79 @@ export default function AdminIssueDetailPage() {
                             }
                             onDepartmentAssigned={handleDepartmentAssigned}
                         />
+                    </motion.div>
 
-                        <AdminUserAssigner
-                            issueId={issue.id}
-                            departmentId={issue.department?.id}
-                            currentAssignee={issue.assigned_profile || null}
-                            onAssigned={handleUserAssigned}
-                        />
-                        {/* 
-                    <AdminIssueStatusUpdater
-                        issueId={issue.id}
-                        currentStatus={issue.status}
-                        currentAssignedTo={undefined}
-                        departmentId={issue.department?.id}
-                        onStatusUpdate={handleStatusUpdate}
-                    /> */}
-
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7 }}
+                        className="col-span-12 lg:col-span-6"
+                    >
                         {/* Quick Actions */}
-                        <Card className="border-2 border-gray-100 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl overflow-hidden sticky top-4">
-                            <div className="h-2 bg-gradient-to-r from-[#5C9479] to-[#2E6A56]" />
-                            <CardHeader className="bg-gradient-to-r from-[#5C9479]/10 to-[#2E6A56]/10">
-                                <CardTitle className="text-xl flex items-center gap-2">
-                                    <AlertCircle className="w-5 h-5 text-[#2E6A56]" />
+                        <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl sticky top-24">
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="p-2 bg-[#2E6A56]/30 rounded-xl">
+                                    <AlertCircle className="w-5 h-5 text-[#5C9479]" />
+                                </div>
+                                <h3 className="text-xl font-black text-white">
                                     Quick Actions
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-3 p-4">
-                                <Button
-                                    variant="outline"
-                                    className="w-full justify-start hover:bg-[#2E6A56] hover:text-white hover:border-[#2E6A56] transition-all border-2 shadow-sm"
-                                    asChild
+                                </h3>
+                            </div>
+                            <div className="space-y-3">
+                                <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
                                 >
-                                    <Link href="/admin/issues">
-                                        <FileText className="w-4 h-4 mr-2" />
-                                        View All Issues
-                                    </Link>
-                                </Button>
-
-                                <Button
-                                    variant="outline"
-                                    className="w-full justify-start hover:bg-[#5C9479] hover:text-white hover:border-[#5C9479] transition-all border-2 shadow-sm"
-                                    asChild
-                                >
-                                    <Link href="/admin/dashboard">
-                                        <AlertCircle className="w-4 h-4 mr-2" />
-                                        Admin Dashboard
-                                    </Link>
-                                </Button>
-
-                                <Button
-                                    variant="outline"
-                                    className="w-full justify-start hover:bg-gradient-to-r hover:from-[#2E6A56] hover:to-[#5C9479] hover:text-white hover:border-[#2E6A56] transition-all border-2 shadow-sm"
-                                    asChild
-                                >
-                                    <a
-                                        href={`https://maps.google.com/maps/dir/?api=1&destination=${issue.location_lat},${issue.location_lng}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <Button
+                                        variant="outline"
+                                        className="w-full justify-start bg-white/5 hover:bg-[#2E6A56] text-white border-white/20 hover:border-[#2E6A56] transition-all"
+                                        asChild
                                     >
-                                        <MapIcon className="w-4 h-4 mr-2" />
-                                        Navigate to Location
-                                    </a>
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </div>
+                                        <Link href="/admin/issues">
+                                            <FileText className="w-4 h-4 mr-2" />
+                                            View All Issues
+                                        </Link>
+                                    </Button>
+                                </motion.div>
+
+                                <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <Button
+                                        variant="outline"
+                                        className="w-full justify-start bg-white/5 hover:bg-[#5C9479] text-white border-white/20 hover:border-[#5C9479] transition-all"
+                                        asChild
+                                    >
+                                        <Link href="/admin/dashboard">
+                                            <AlertCircle className="w-4 h-4 mr-2" />
+                                            Admin Dashboard
+                                        </Link>
+                                    </Button>
+                                </motion.div>
+
+                                <motion.div
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                >
+                                    <Button
+                                        variant="outline"
+                                        className="w-full justify-start bg-gradient-to-r from-[#2E6A56] to-[#5C9479] text-white border-0 hover:opacity-80 transition-all"
+                                        asChild
+                                    >
+                                        <a
+                                            href={`https://maps.google.com/maps/dir/?api=1&destination=${issue.location_lat},${issue.location_lng}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <MapIcon className="w-4 h-4 mr-2" />
+                                            Navigate to Location
+                                        </a>
+                                    </Button>
+                                </motion.div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </div>

@@ -328,10 +328,10 @@ export default function AdminDepartmentAssigner({
                         value={selectedDepartmentId}
                         onValueChange={setSelectedDepartmentId}
                     >
-                        <SelectTrigger className="w-full bg-white border-[#2E6A56]/30 focus:ring-[#2E6A56] focus:border-[#2E6A56] hover:border-[#2E6A56]/50 transition-colors">
+                        <SelectTrigger className="w-full bg-white dark:bg-gray-950 border-[#2E6A56]/30 focus:ring-[#2E6A56] focus:border-[#2E6A56] hover:border-[#2E6A56]/50 transition-colors">
                             <SelectValue placeholder="Choose a department" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white w-full min-w-[300px] max-w-[400px] border-2 border-[#2E6A56]/20 shadow-xl">
+                        <SelectContent className="bg-white dark:bg-gray-950 w-full min-w-[300px] max-w-[400px] border-2 border-[#2E6A56]/20 shadow-xl backdrop-blur-none">
                             {departments.map((department) => (
                                 <SelectItem
                                     key={department.id}

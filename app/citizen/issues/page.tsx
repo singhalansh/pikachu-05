@@ -122,21 +122,21 @@ const getCategoryColor = (category: string) => {
 const LoadingSkeleton = () => (
     <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-            <Card key={i}>
-                <CardContent className="p-4">
+            <div key={i} className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl">
+                <div className="p-4">
                     <div className="flex gap-4">
-                        <div className="w-20 h-20 bg-gray-200 rounded-lg animate-pulse" />
+                        <div className="w-20 h-20 bg-white/20 rounded-lg animate-pulse" />
                         <div className="flex-1 space-y-3">
                             <div className="flex justify-between">
-                                <div className="h-5 w-48 bg-gray-200 rounded animate-pulse" />
-                                <div className="h-6 w-20 bg-gray-200 rounded animate-pulse" />
+                                <div className="h-5 w-48 bg-white/20 rounded animate-pulse" />
+                                <div className="h-6 w-20 bg-white/20 rounded animate-pulse" />
                             </div>
-                            <div className="h-4 w-64 bg-gray-200 rounded animate-pulse" />
-                            <div className="h-2 w-full bg-gray-200 rounded animate-pulse" />
+                            <div className="h-4 w-64 bg-white/20 rounded animate-pulse" />
+                            <div className="h-2 w-full bg-white/20 rounded animate-pulse" />
                         </div>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         ))}
     </div>
 );
@@ -217,9 +217,9 @@ export default function MyIssuesPage() {
     );
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+        <div className="min-h-screen bg-black">
             {/* Enhanced Header with Stats - Mobile Responsive */}
-            <div className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+            <div className="bg-white/5 backdrop-blur-xl shadow-lg border-0 border-b border-white/10">
                 \n{" "}
                 <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
@@ -228,7 +228,7 @@ export default function MyIssuesPage() {
                                 variant="ghost"
                                 size="sm"
                                 asChild
-                                className="hover:bg-gray-100 flex-shrink-0"
+                                className="hover:bg-white/10 flex-shrink-0"
                             >
                                 <Link href="/citizen/dashboard">
                                     <ArrowLeft className="w-4 h-4 mr-2" />
@@ -239,10 +239,10 @@ export default function MyIssuesPage() {
                                 </Link>
                             </Button>
                             <div className="min-w-0 flex-1">
-                                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+                                <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
                                     My Issues
                                 </h1>
-                                <p className="text-sm sm:text-base text-gray-600 mt-1">
+                                <p className="text-sm sm:text-base text-white/70 mt-1">
                                     Track the progress of your reported issues
                                 </p>
                             </div>
@@ -263,14 +263,14 @@ export default function MyIssuesPage() {
 
                     {/* Stats Cards - Mobile Responsive Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-                        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 shadow-md border-0 transition-all duration-200 hover:shadow-lg">
-                            <CardContent className="p-3 sm:p-4">
+                        <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg hover:bg-white/10">
+                            <div className="p-3 sm:p-4">
                                 <div className="flex items-center">
-                                    <div className="p-2 bg-blue-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
-                                        <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
+                                    <div className="p-2 bg-[#2E6A56]/20 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                                        <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-[#5C9479]" />
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-xs sm:text-sm font-medium text-blue-600 truncate">
+                                        <p className="text-xs sm:text-sm font-medium text-[#5C9479] truncate">
                                             <span className="hidden sm:inline">
                                                 Total Issues
                                             </span>
@@ -278,58 +278,58 @@ export default function MyIssuesPage() {
                                                 Total
                                             </span>
                                         </p>
-                                        <p className="text-lg sm:text-2xl font-bold text-blue-900">
+                                        <p className="text-lg sm:text-2xl font-bold text-white">
                                             {issues.length}
                                         </p>
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
 
-                        <Card className="bg-gradient-to-br from-orange-50 to-orange-100 shadow-md border-0 transition-all duration-200 hover:shadow-lg">
-                            <CardContent className="p-3 sm:p-4">
+                        <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg hover:bg-white/10">
+                            <div className="p-3 sm:p-4">
                                 <div className="flex items-center">
-                                    <div className="p-2 bg-orange-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
-                                        <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
+                                    <div className="p-2 bg-orange-500/20 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                                        <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400" />
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-xs sm:text-sm font-medium text-orange-600 truncate">
+                                        <p className="text-xs sm:text-sm font-medium text-orange-400 truncate">
                                             Active
                                         </p>
-                                        <p className="text-lg sm:text-2xl font-bold text-orange-900">
+                                        <p className="text-lg sm:text-2xl font-bold text-white">
                                             {activeIssues.length}
                                         </p>
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
 
-                        <Card className="bg-green-50 border-green-200 transition-all duration-200 hover:shadow-md">
-                            <CardContent className="p-3 sm:p-4">
+                        <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg hover:bg-white/10">
+                            <div className="p-3 sm:p-4">
                                 <div className="flex items-center">
-                                    <div className="p-2 bg-green-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
-                                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                                    <div className="p-2 bg-emerald-500/20 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-xs sm:text-sm font-medium text-green-600 truncate">
+                                        <p className="text-xs sm:text-sm font-medium text-emerald-400 truncate">
                                             Resolved
                                         </p>
-                                        <p className="text-lg sm:text-2xl font-bold text-green-900">
+                                        <p className="text-lg sm:text-2xl font-bold text-white">
                                             {resolvedIssues.length}
                                         </p>
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
 
-                        <Card className="bg-purple-50 border-purple-200 transition-all duration-200 hover:shadow-md col-span-2 sm:col-span-2 lg:col-span-1">
-                            <CardContent className="p-3 sm:p-4">
+                        <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-md transition-all duration-200 hover:shadow-lg hover:bg-white/10 col-span-2 sm:col-span-2 lg:col-span-1">
+                            <div className="p-3 sm:p-4">
                                 <div className="flex items-center">
-                                    <div className="p-2 bg-purple-100 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
-                                        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
+                                    <div className="p-2 bg-purple-500/20 rounded-lg mr-2 sm:mr-3 flex-shrink-0">
+                                        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
                                     </div>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-xs sm:text-sm font-medium text-purple-600 truncate">
+                                        <p className="text-xs sm:text-sm font-medium text-purple-400 truncate">
                                             <span className="hidden sm:inline">
                                                 Total Upvotes
                                             </span>
@@ -337,13 +337,13 @@ export default function MyIssuesPage() {
                                                 Upvotes
                                             </span>
                                         </p>
-                                        <p className="text-lg sm:text-2xl font-bold text-purple-900">
+                                        <p className="text-lg sm:text-2xl font-bold text-white">
                                             {totalUpvotes}
                                         </p>
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -356,7 +356,7 @@ export default function MyIssuesPage() {
                             defaultValue="active"
                             className="space-y-4 sm:space-y-6"
                         >
-                            <TabsList className="grid w-full grid-cols-2 bg-white border shadow-sm h-12 sm:h-auto">
+                            <TabsList className="grid w-full grid-cols-2 bg-white/5 border border-white/10 shadow-sm h-12 sm:h-auto">
                                 <TabsTrigger
                                     value="active"
                                     className="data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700 text-sm sm:text-base px-2 sm:px-4 py-2 sm:py-3 min-h-[44px] sm:min-h-auto"
@@ -384,28 +384,28 @@ export default function MyIssuesPage() {
                                 {loading && <LoadingSkeleton />}
 
                                 {error && (
-                                    <Card className="border-red-200 bg-red-50">
-                                        <CardContent className="p-6 text-center">
-                                            <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                                            <p className="text-red-700 font-medium">
+                                    <div className="border border-red-500/30 bg-red-500/10 rounded-2xl backdrop-blur-xl">
+                                        <div className="p-6 text-center">
+                                            <AlertTriangle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+                                            <p className="text-red-300 font-medium">
                                                 {error}
                                             </p>
-                                        </CardContent>
-                                    </Card>
+                                        </div>
+                                    </div>
                                 )}
 
                                 {!loading &&
                                 !error &&
                                 activeIssues.length === 0 ? (
-                                    <Card className="border-dashed border-2 border-gray-300">
-                                        <CardContent className="p-12 text-center">
-                                            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                                <AlertTriangle className="w-10 h-10 text-gray-400" />
+                                    <div className="border-dashed border-2 border-white/20 rounded-2xl bg-white/5 backdrop-blur-xl">
+                                        <div className="p-12 text-center">
+                                            <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                <AlertTriangle className="w-10 h-10 text-white/50" />
                                             </div>
-                                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                            <h3 className="text-xl font-semibold text-white mb-2">
                                                 No Active Issues
                                             </h3>
-                                            <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                                            <p className="text-white/70 mb-6 max-w-md mx-auto">
                                                 You don't have any active issues
                                                 at the moment. Help improve your
                                                 community by reporting problems
@@ -421,18 +421,18 @@ export default function MyIssuesPage() {
                                                     Report Your First Issue
                                                 </Link>
                                             </Button>
-                                        </CardContent>
-                                    </Card>
+                                        </div>
+                                    </div>
                                 ) : (
                                     activeIssues.map((issue) => (
-                                        <Card
+                                        <div
                                             key={issue.id}
-                                            className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 bg-white border-gray-200 overflow-hidden w-full max-w-full"
+                                            className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1 bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl overflow-hidden w-full max-w-full"
                                             onClick={() =>
                                                 handleIssueClick(issue.id)
                                             }
                                         >
-                                            <CardContent className="p-0 w-full">
+                                            <div className="p-0 w-full">
                                                 {/* Mobile Layout: Instagram-style stacked layout */}
                                                 <div className="block sm:hidden w-full">
                                                     {/* Full-width image at top for mobile */}
@@ -702,41 +702,41 @@ export default function MyIssuesPage() {
                                                         </div>
 
                                                         <div className="flex-shrink-0 ml-2">
-                                                            <ArrowUpRight className="w-5 h-5 text-gray-400" />
+                                                            <ArrowUpRight className="w-5 h-5 text-white/50" />
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </CardContent>
-                                        </Card>
+                                            </div>
+                                        </div>
                                     ))
                                 )}
                             </TabsContent>
                             <TabsContent value="resolved" className="space-y-4">
                                 {resolvedIssues.length === 0 ? (
-                                    <Card className="border-dashed border-2 border-gray-300">
-                                        <CardContent className="p-12 text-center">
-                                            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                                <CheckCircle className="w-10 h-10 text-green-500" />
+                                    <div className="border-dashed border-2 border-white/20 rounded-2xl bg-white/5 backdrop-blur-xl">
+                                        <div className="p-12 text-center">
+                                            <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                <CheckCircle className="w-10 h-10 text-emerald-400" />
                                             </div>
-                                            <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                            <h3 className="text-xl font-semibold text-white mb-2">
                                                 No Resolved Issues Yet
                                             </h3>
-                                            <p className="text-gray-600 max-w-md mx-auto">
+                                            <p className="text-white/70 max-w-md mx-auto">
                                                 Once your reported issues are
                                                 resolved, they will appear here.
                                             </p>
-                                        </CardContent>
-                                    </Card>
+                                        </div>
+                                    </div>
                                 ) : (
                                     resolvedIssues.map((issue) => (
-                                        <Card
+                                        <div
                                             key={issue.id}
-                                            className="cursor-pointer transition-all duration-200 hover:shadow-md bg-white border-green-200 overflow-hidden w-full max-w-full"
+                                            className="cursor-pointer transition-all duration-200 hover:shadow-md bg-white/5 border border-emerald-500/20 backdrop-blur-xl rounded-2xl overflow-hidden w-full max-w-full"
                                             onClick={() =>
                                                 handleIssueClick(issue.id)
                                             }
                                         >
-                                            <CardContent className="p-0 w-full">
+                                            <div className="p-0 w-full">
                                                 {/* Mobile Layout: Instagram-style stacked layout */}
                                                 <div className="block sm:hidden w-full">
                                                     {/* Full-width image at top for mobile */}
@@ -904,12 +904,12 @@ export default function MyIssuesPage() {
                                                         </div>
 
                                                         <div className="flex-shrink-0 ml-2">
-                                                            <ExternalLink className="w-4 h-4 text-gray-400" />
+                                                            <ExternalLink className="w-4 h-4 text-white/50" />
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </CardContent>
-                                        </Card>
+                                            </div>
+                                        </div>
                                     ))
                                 )}
                             </TabsContent>
@@ -919,12 +919,12 @@ export default function MyIssuesPage() {
                     {/* Enhanced Issue Details Sidebar */}
                     <div className="lg:col-span-1">
                         {selectedIssueData ? (
-                            <Card className="sticky top-6 shadow-lg">
-                                <CardHeader className="pb-4">
+                            <div className="sticky top-6 shadow-lg bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl">
+                                <div className="pb-4 p-6">
                                     <div className="flex items-center justify-between">
-                                        <CardTitle className="text-lg">
+                                        <h3 className="text-lg font-semibold text-white">
                                             Issue Details
-                                        </CardTitle>
+                                        </h3>
                                         <Badge
                                             className={getStatusColor(
                                                 selectedIssueData.status.replace(
@@ -944,11 +944,11 @@ export default function MyIssuesPage() {
                                             </span>
                                         </Badge>
                                     </div>
-                                    <CardDescription className="font-mono">
+                                    <p className="font-mono text-white/60 text-sm mt-2">
                                         #{selectedIssueData.id.slice(0, 8)}
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="space-y-6">
+                                    </p>
+                                </div>
+                                <div className="space-y-6 px-6 pb-6">
                                     <div>
                                         <h4 className="font-semibold text-gray-900 mb-2">
                                             {selectedIssueData.title}
@@ -1041,24 +1041,24 @@ export default function MyIssuesPage() {
                                         View Full Details
                                         <ArrowUpRight className="w-4 h-4 ml-2" />
                                     </Button>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         ) : (
-                            <Card className="sticky top-6 shadow-lg">
-                                <CardContent className="p-12 text-center">
-                                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                                        <Eye className="w-8 h-8 text-gray-400" />
+                            <div className="sticky top-6 shadow-lg bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl">
+                                <div className="p-12 text-center">
+                                    <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <Eye className="w-8 h-8 text-white/50" />
                                     </div>
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                    <h3 className="text-lg font-semibold text-white mb-2">
                                         Select an Issue
                                     </h3>
-                                    <p className="text-gray-600 text-sm leading-relaxed">
+                                    <p className="text-white/70 text-sm leading-relaxed">
                                         Click on any issue from the list to view
                                         detailed information, timeline, and
                                         updates.
                                     </p>
-                                </CardContent>
-                            </Card>
+                                </div>
+                            </div>
                         )}
                     </div>
                 </div>

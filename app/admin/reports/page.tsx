@@ -171,7 +171,7 @@ export default function AdminReportsPage() {
                                     </Link>
                                 </Button>
                                 <div>
-                                    <h1 className="text-2xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                                    <h1 className="text-2xl font-bold text-white">
                                         Reports & Analytics
                                     </h1>
                                     <p className="text-muted-foreground">
@@ -232,7 +232,7 @@ export default function AdminReportsPage() {
                                 </div>
 
                                 {/* Generate New Report */}
-                                <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-emerald-50/30">
+                                <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white/5 border-white/10 backdrop-blur-xl to-emerald-50/30">
                                     <CardHeader>
                                         <CardTitle className="flex items-center">
                                             <BarChart3 className="w-5 h-5 mr-2 text-emerald-600" />
@@ -435,7 +435,7 @@ export default function AdminReportsPage() {
 
                             {/* Available Reports */}
                             <div>
-                                <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-green-50/30">
+                                <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white/5 border-white/10 backdrop-blur-xl to-green-50/30">
                                     <CardHeader>
                                         <CardTitle>Available Reports</CardTitle>
                                         <CardDescription>

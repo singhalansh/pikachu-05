@@ -333,7 +333,7 @@ function UnifiedAuthPageInner() {
                                 )}
                             </div>
 
-                            <CardTitle className="text-3xl font-bold bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent">
+                            <CardTitle className="text-3xl font-bold text-white">
                                 {authMode === "signin"
                                     ? "Welcome Back"
                                     : "Create Account"}
@@ -400,7 +400,7 @@ function UnifiedAuthPageInner() {
                                             setSelectedDepartment("");
                                         }}
                                     >
-                                        <SelectTrigger className="border-gray-200 focus:border-[#2E6A56] focus:ring-[#2E6A56] bg-white">
+                                        <SelectTrigger className="border-white/10 focus:border-[#5C9479] focus:ring-[#5C9479] bg-white/5 text-white">
                                             <SelectValue placeholder="Choose your role" />
                                         </SelectTrigger>
                                         <SelectContent className="relative z-10 bg-white border-2">
@@ -479,10 +479,10 @@ function UnifiedAuthPageInner() {
                                                 setSelectedDepartment
                                             }
                                         >
-                                            <SelectTrigger className="border-gray-200 focus:border-[#2E6A56] focus:ring-[#2E6A56] bg-white">
+                                            <SelectTrigger className="border-white/10 focus:border-[#5C9479] focus:ring-[#5C9479] bg-white/5 text-white">
                                                 <SelectValue placeholder="Choose your department" />
                                             </SelectTrigger>
-                                            <SelectContent className="relative z-10 bg-white border-2">
+                                            <SelectContent className="relative z-10 bg-white/5 border-white/10 backdrop-blur-xl border-2">
                                                 {departments.map((dept) => (
                                                     <SelectItem
                                                         key={dept.id}
@@ -688,7 +688,7 @@ function UnifiedAuthPageInner() {
                                     <Separator className="w-full" />
                                 </div>
                                 <div className="relative flex justify-center text-xs uppercase">
-                                    <span className="bg-white px-2 text-muted-foreground">
+                                    <span className="bg-black px-2 text-white/60">
                                         Or continue with
                                     </span>
                                 </div>
@@ -696,7 +696,7 @@ function UnifiedAuthPageInner() {
 
                             <Button
                                 variant="outline"
-                                className="w-full hover:bg-[#2E6A56]/10 hover:border-[#2E6A56] border-2 bg-white font-semibold transition-all"
+                                className="w-full hover:bg-[#2E6A56]/10 hover:border-[#2E6A56] border-2 bg-white/5 text-white font-semibold transition-all backdrop-blur-xl"
                                 onClick={handleGoogleAuth}
                                 disabled={isLoading}
                             >

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -734,47 +735,78 @@ export default function ReportIssuePage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
-            <div className="responsive-container py-8">
+        <div className="min-h-screen bg-black relative">
+            {/* Animated Background */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed inset-0 z-0 pointer-events-none"
+            >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(46,106,86,0.3),transparent_60%)]"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(92,148,121,0.2),transparent_60%)]"></div>
+            </motion.div>
+
+            <div className="responsive-container py-8 relative z-10">
                 <div className="max-w-4xl mx-auto">
-                    <div className="text-center mb-8">
-                        <div className="inline-block p-3 bg-gradient-to-br from-[#2E6A56]/10 to-emerald-100 rounded-2xl mb-4">
-                            <AlertCircle className="w-8 h-8 text-[#2E6A56]" />
-                        </div>
-                        <h1 className="responsive-heading-1 mb-3 bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                    <motion.div
+                        initial={{ opacity: 0, y: -30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center mb-8"
+                    >
+                        <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{
+                                delay: 0.2,
+                                type: "spring",
+                                stiffness: 200,
+                            }}
+                            className="inline-block p-3 bg-gradient-to-br from-[#2E6A56]/30 to-[#5C9479]/30 rounded-2xl mb-4 border border-[#5C9479]/30 backdrop-blur-xl"
+                        >
+                            <AlertCircle className="w-8 h-8 text-[#5C9479]" />
+                        </motion.div>
+                        <h1 className="responsive-heading-1 mb-3 text-white">
                             Report an Issue
                         </h1>
-                        <p className="responsive-body text-gray-600 max-w-2xl mx-auto">
+                        <p className="responsive-body text-white/60 max-w-2xl mx-auto">
                             Help improve your community by reporting issues that
                             need attention. Every report makes a difference! 🌟
                         </p>
-                    </div>
+                    </motion.div>
 
                     {/* Quick Photo Report */}
                     {!isQuickPhotoMode && (
-                        <Card className="mb-6 border-0 shadow-xl bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 overflow-hidden relative">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-300/20 to-orange-300/20 rounded-full blur-3xl"></div>
-                            <CardHeader className="relative">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-3 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl shadow-md">
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3, duration: 0.5 }}
+                            className="mb-6 bg-amber-500/10 border border-amber-500/30 rounded-2xl backdrop-blur-xl shadow-xl overflow-hidden relative"
+                        >
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/20 to-orange-500/20 rounded-full blur-3xl"></div>
+                            <div className="p-6 relative">
+                                <div className="flex items-center gap-3 mb-4">
+                                    <motion.div
+                                        whileHover={{ scale: 1.1, rotate: 5 }}
+                                        className="p-3 bg-gradient-to-br from-orange-500 to-amber-600 rounded-xl shadow-md"
+                                    >
                                         <Camera className="w-6 h-6 text-white" />
-                                    </div>
+                                    </motion.div>
                                     <div>
-                                        <CardTitle className="text-gray-900 flex items-center gap-2">
+                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
                                             Quick Photo Report
                                             <span className="text-2xl">⚡</span>
-                                        </CardTitle>
-                                        <CardDescription className="text-gray-700">
+                                        </h3>
+                                        <p className="text-sm text-white/60">
                                             Just snap a picture - AI will handle
                                             the rest!
-                                        </CardDescription>
+                                        </p>
                                     </div>
                                 </div>
-                            </CardHeader>
-                            <CardContent className="relative">
                                 <div className="space-y-4">
-                                    <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 shadow-md">
-                                        <p className="text-sm text-gray-700 font-medium text-center">
+                                    <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
+                                        <p className="text-sm text-white/80 font-medium text-center">
                                             📸 Take a photo → 🤖 AI extracts
                                             title, description, category → 📍
                                             Auto-detects location → ✅ Submit
@@ -792,41 +824,59 @@ export default function ReportIssuePage() {
                                                 handleQuickPhotoCapture(file);
                                         }}
                                     />
-                                    <Button
-                                        type="button"
-                                        size="lg"
-                                        className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 text-base font-semibold"
-                                        onClick={() =>
-                                            fileInputRef.current?.click()
-                                        }
-                                        disabled={isProcessingPhoto}
+                                    <motion.div
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
                                     >
-                                        <Camera className="w-5 h-5 mr-2" />
-                                        {isProcessingPhoto
-                                            ? "Processing..."
-                                            : "Take Photo & Auto-Report"}
-                                    </Button>
+                                        <Button
+                                            type="button"
+                                            size="lg"
+                                            className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white shadow-lg shadow-orange-500/30 hover:shadow-xl hover:shadow-orange-500/40 transition-all duration-300 text-base font-semibold"
+                                            onClick={() =>
+                                                fileInputRef.current?.click()
+                                            }
+                                            disabled={isProcessingPhoto}
+                                        >
+                                            <Camera className="w-5 h-5 mr-2" />
+                                            {isProcessingPhoto
+                                                ? "Processing..."
+                                                : "Take Photo & Auto-Report"}
+                                        </Button>
+                                    </motion.div>
                                     {isProcessingPhoto && (
-                                        <div className="flex items-center justify-center gap-2 text-sm text-orange-700 animate-pulse">
-                                            <div className="w-4 h-4 border-2 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+                                        <motion.div
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            className="flex items-center justify-center gap-2 text-sm text-orange-300 animate-pulse"
+                                        >
+                                            <div className="w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full animate-spin"></div>
                                             <span className="font-medium">
                                                 🔄 AI is analyzing your photo...
                                             </span>
-                                        </div>
+                                        </motion.div>
                                     )}
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </motion.div>
                     )}
 
                     {isQuickPhotoMode && (
-                        <div className="mb-6 p-5 bg-gradient-to-r from-green-50 via-emerald-50 to-teal-50 shadow-lg rounded-xl">
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="mb-6 p-5 bg-[#5C9479]/20 border border-[#5C9479]/30 backdrop-blur-xl shadow-lg rounded-xl"
+                        >
                             <div className="flex items-start gap-3">
-                                <div className="flex-shrink-0 p-2 bg-green-500 rounded-lg">
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ delay: 0.2, type: "spring" }}
+                                    className="flex-shrink-0 p-2 bg-[#5C9479] rounded-lg"
+                                >
                                     <CheckCircle className="w-5 h-5 text-white" />
-                                </div>
+                                </motion.div>
                                 <div className="flex-1">
-                                    <p className="font-semibold text-green-900 text-lg">
+                                    <p className="font-semibold text-emerald-300 text-lg">
                                         ✨ Photo processed successfully!
                                     </p>
                                     <p className="text-sm text-green-700 mt-1">
@@ -857,10 +907,10 @@ export default function ReportIssuePage() {
                                     Start Over
                                 </Button>
                             </div>
-                        </div>
+                        </motion.div>
                     )}
 
-                    <Card className="bg-white/95 backdrop-blur-sm shadow-xl border-0 overflow-hidden">
+                    <Card className="bg-white/5 backdrop-blur-sm shadow-xl border-0 overflow-hidden">
                         <div className="h-1 bg-gradient-to-r from-[#2E6A56] via-emerald-500 to-[#2E6A56]"></div>
                         <CardHeader>
                             <div className="flex items-center gap-3">
@@ -868,12 +918,12 @@ export default function ReportIssuePage() {
                                     <AlertCircle className="w-5 h-5 text-[#2E6A56]" />
                                 </div>
                                 <div>
-                                    <CardTitle className="text-gray-900">
+                                    <CardTitle className="text-white">
                                         {isQuickPhotoMode
                                             ? "Review & Submit"
                                             : "Issue Details"}
                                     </CardTitle>
-                                    <CardDescription className="text-gray-600">
+                                    <CardDescription className="text-white/70">
                                         {isQuickPhotoMode
                                             ? "AI has filled in the details. Review and submit when ready."
                                             : "Provide as much detail as possible to help us address the issue quickly"}
@@ -946,7 +996,7 @@ export default function ReportIssuePage() {
                                             value="audio"
                                             className="space-y-4"
                                         >
-                                            <div className="rounded-lg p-4 space-y-4 bg-gray-50/50 shadow-sm">
+                                            <div className="rounded-lg p-4 space-y-4 bg-white/5/50 shadow-sm">
                                                 {supportsSpeech ? (
                                                     <div className="flex flex-col gap-3 rounded-md p-3 bg-muted/30 shadow-sm">
                                                         <div className="flex items-center justify-between">
@@ -1236,14 +1286,15 @@ export default function ReportIssuePage() {
                                             handleInputChange("category", v)
                                         }
                                     >
-                                        <SelectTrigger className="responsive-focus">
+                                        <SelectTrigger className="responsive-focus bg-white/5 border-white/10 text-white">
                                             <SelectValue placeholder="Select category" />
                                         </SelectTrigger>
-                                        <SelectContent>
+                                        <SelectContent className="bg-white/5 border-white/10 text-white shadow-lg backdrop-blur-xl">
                                             {departments.map((dept) => (
                                                 <SelectItem
                                                     key={dept.id}
                                                     value={dept.name}
+                                                    className="bg-white dark:bg-gray-950 hover:bg-white/10 dark:hover:bg-gray-900"
                                                 >
                                                     <div className="flex items-center space-x-2">
                                                         <Shield className="w-4 h-4 text-blue-600" />
@@ -1258,7 +1309,6 @@ export default function ReportIssuePage() {
                                         urgency level after submission
                                     </p>
                                 </div>
-
                                 {/* Location (Required) with Google Maps */}
                                 <div className="space-y-2">
                                     <Label>Location *</Label>
@@ -1356,7 +1406,7 @@ export default function ReportIssuePage() {
                                         />
                                         <label
                                             htmlFor="image-upload"
-                                            className="flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer shadow-sm hover:shadow-md hover:bg-gray-50 bg-gray-50/50"
+                                            className="flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer shadow-sm hover:shadow-md hover:bg-white/5 bg-white/5/50"
                                         >
                                             <Camera className="h-4 w-4" />
                                             {isUploading
@@ -1378,7 +1428,7 @@ export default function ReportIssuePage() {
                                         type="button"
                                         variant="outline"
                                         onClick={() => router.back()}
-                                        className="responsive-button flex-1 shadow-sm hover:shadow-md hover:bg-gray-50"
+                                        className="responsive-button flex-1 shadow-sm hover:shadow-md hover:bg-white/5"
                                     >
                                         Cancel
                                     </Button>
@@ -1407,17 +1457,17 @@ export default function ReportIssuePage() {
                     </Card>
 
                     {/* Help Text */}
-                    <Card className="mt-6 border-0 shadow-lg bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+                    <Card className="mt-6 border-0 shadow-lg bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10">
                         <CardContent className="pt-6">
                             <div className="flex items-start gap-3">
                                 <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md flex-shrink-0">
                                     <Lightbulb className="h-5 w-5 text-white" />
                                 </div>
                                 <div className="text-sm">
-                                    <p className="font-semibold mb-3 text-gray-900 text-base">
+                                    <p className="font-semibold mb-3 text-white text-base">
                                         💡 Tips for better issue reports:
                                     </p>
-                                    <ul className="space-y-2 text-gray-700">
+                                    <ul className="space-y-2 text-white/80">
                                         <li className="flex items-start gap-2">
                                             <span className="text-emerald-600 font-bold">
                                                 •

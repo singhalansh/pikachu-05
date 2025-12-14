@@ -157,9 +157,9 @@ export default function NotificationsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+        <div className="min-h-screen bg-black/30">
             {/* Header */}
-            <div className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+            <div className="bg-white/5 backdrop-blur-sm shadow-lg border-0">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
@@ -175,10 +175,10 @@ export default function NotificationsPage() {
                                 </Link>
                             </Button>
                             <div>
-                                <h1 className="text-2xl font-bold text-gray-900">
+                                <h1 className="text-2xl font-bold text-white">
                                     Notifications
                                 </h1>
-                                <p className="text-gray-600">
+                                <p className="text-white/70">
                                     Stay updated on your issues and community
                                     activity
                                 </p>
@@ -307,7 +307,7 @@ export default function NotificationsPage() {
                                 {readNotifications.map((notification) => (
                                     <Card
                                         key={notification.id}
-                                        className="opacity-75 shadow-sm border-0 bg-white/80"
+                                        className="opacity-75 shadow-sm border-0 bg-white/5"
                                     >
                                         <CardContent className="p-4">
                                             <div className="flex gap-4">
