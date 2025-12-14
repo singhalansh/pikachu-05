@@ -122,7 +122,10 @@ const getCategoryColor = (category: string) => {
 const LoadingSkeleton = () => (
     <div className="space-y-4">
         {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl">
+            <div
+                key={i}
+                className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl"
+            >
                 <div className="p-4">
                     <div className="flex gap-4">
                         <div className="w-20 h-20 bg-white/20 rounded-lg animate-pulse" />

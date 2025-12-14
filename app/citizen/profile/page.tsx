@@ -235,9 +235,7 @@ export default function ProfilePage() {
         <div className="min-h-screen bg-black/30">
             <div className="container mx-auto px-4 py-8 max-w-6xl">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-white">
-                        Profile
-                    </h1>
+                    <h1 className="text-3xl font-bold text-white">Profile</h1>
                     <p className="text-white/70">
                         Manage your account information and settings
                     </p>

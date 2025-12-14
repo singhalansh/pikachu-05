@@ -231,10 +231,7 @@ export default function HomePage() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                         {stats.map((stat, index) => (
-                            <div
-                                key={index}
-                                className="relative group"
-                            >
+                            <div key={index} className="relative group">
                                 <div className="absolute inset-0 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
                                 <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center group-hover:scale-105 group-hover:border-[#2E6A56]/40 transition-all duration-300">
                                     <div className="text-4xl lg:text-5xl font-black text-white mb-2">
@@ -354,10 +351,7 @@ export default function HomePage() {
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {features.map((feature, index) => (
-                            <div
-                                key={index}
-                                className="relative group"
-                            >
+                            <div key={index} className="relative group">
                                 <div className="absolute inset-0 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                                 <div className="relative bg-white/5 border border-white/10 backdrop-blur-xl shadow-lg hover:shadow-2xl hover:shadow-[#2E6A56]/10 hover:border-[#2E6A56]/30 transition-all duration-500 hover:scale-105 rounded-2xl p-8">
                                     <div className="pb-4">
@@ -389,8 +383,8 @@ export default function HomePage() {
                                 Ready to make a difference?
                             </h2>
                             <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light max-w-3xl mx-auto">
-                                Join thousands building stronger communities through
-                                digital governance.
+                                Join thousands building stronger communities
+                                through digital governance.
                             </p>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-6">
@@ -423,7 +417,9 @@ export default function HomePage() {
                                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2E6A56] to-emerald-600 flex items-center justify-center shadow-lg shadow-[#2E6A56]/30">
                                     <MapPin className="w-6 h-6 text-white" />
                                 </div>
-                                <span className="text-2xl font-bold">civik</span>
+                                <span className="text-2xl font-bold">
+                                    civik
+                                </span>
                             </div>
                             <p className="text-white/60 leading-relaxed text-base">
                                 Empowering digital democracy through
@@ -459,25 +455,39 @@ export default function HomePage() {
                         </div>
 
                         <div className="space-y-6">
-                            <h3 className="text-xl font-bold text-white">Contact</h3>
+                            <h3 className="text-xl font-bold text-white">
+                                Contact
+                            </h3>
                             <div className="space-y-3">
-                                <a href="mailto:support@civik.gov.in" className="block text-white/60 hover:text-emerald-400 transition-colors font-medium">
+                                <a
+                                    href="mailto:support@civik.gov.in"
+                                    className="block text-white/60 hover:text-emerald-400 transition-colors font-medium"
+                                >
                                     support@civik.gov.in
                                 </a>
-                                <p className="text-white/60 font-medium">+91 1800-XXX-XXXX</p>
+                                <p className="text-white/60 font-medium">
+                                    +91 1800-XXX-XXXX
+                                </p>
                             </div>
                         </div>
                     </div>
 
                     <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                         <p className="text-white/50 text-sm">
-                            © 2025 civik. All rights reserved. | A Digital India Initiative
+                            © 2025 civik. All rights reserved. | A Digital India
+                            Initiative
                         </p>
                         <div className="flex gap-6">
-                            <Link href="#" className="text-white/50 hover:text-white transition-colors text-sm font-medium">
+                            <Link
+                                href="#"
+                                className="text-white/50 hover:text-white transition-colors text-sm font-medium"
+                            >
                                 Privacy Policy
                             </Link>
-                            <Link href="#" className="text-white/50 hover:text-white transition-colors text-sm font-medium">
+                            <Link
+                                href="#"
+                                className="text-white/50 hover:text-white transition-colors text-sm font-medium"
+                            >
                                 Terms of Service
                             </Link>
                         </div>

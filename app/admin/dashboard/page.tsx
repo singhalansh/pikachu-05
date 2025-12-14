@@ -610,9 +610,15 @@ const AdminDashboard = () => {
                                     </h3>
                                 </div>
                                 <select className="text-sm border border-white/20 rounded-lg px-3 py-2 bg-white/10 text-white">
-                                    <option className="bg-black text-white">Last 12 Months</option>
-                                    <option className="bg-black text-white">Last 6 Months</option>
-                                    <option className="bg-black text-white">Last 3 Months</option>
+                                    <option className="bg-black text-white">
+                                        Last 12 Months
+                                    </option>
+                                    <option className="bg-black text-white">
+                                        Last 6 Months
+                                    </option>
+                                    <option className="bg-black text-white">
+                                        Last 3 Months
+                                    </option>
                                 </select>
                             </div>
                             <div>
@@ -622,7 +628,10 @@ const AdminDashboard = () => {
                                             strokeDasharray="3 3"
                                             stroke="rgba(255,255,255,0.1)"
                                         />
-                                        <XAxis dataKey="month" stroke="rgba(255,255,255,0.5)" />
+                                        <XAxis
+                                            dataKey="month"
+                                            stroke="rgba(255,255,255,0.5)"
+                                        />
                                         <YAxis stroke="rgba(255,255,255,0.5)" />
                                         <Tooltip
                                             contentStyle={{

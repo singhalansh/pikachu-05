@@ -69,9 +69,7 @@ export default function AbhiyaanPage() {
 
     return (
         <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 p-6">
-            <h1 className="text-3xl font-bold mb-6 text-white">
-                Add Abhiyaan
-            </h1>
+            <h1 className="text-3xl font-bold mb-6 text-white">Add Abhiyaan</h1>
 
             <form onSubmit={handleSubmit} className="space-y-4 mb-10">
                 <input
