@@ -446,7 +446,7 @@ export default function HomePage() {
                                     Admin Portal
                                 </Link>
                                 <Link
-                                    href="/citizen"
+                                    href="/citizen/dashboard"
                                     className="block text-white/60 hover:text-white transition-all duration-300 hover:translate-x-1 font-medium"
                                 >
                                     Citizen Portal

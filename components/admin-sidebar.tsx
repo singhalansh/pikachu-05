@@ -86,7 +86,7 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
     }, []);
 
     const navigateTo = (route: string) => {
-        router.push(route);
+        router.push(route as any);
         setMobileMenuOpen(false);
     };
 
