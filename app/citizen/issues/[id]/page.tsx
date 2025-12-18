@@ -243,7 +243,7 @@ export default function CitizenIssueDetailPage() {
                     <Button
                         asChild
                         size="lg"
-                        className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] shadow-lg"
+                        className="bg-emerald-600 hover:bg-emerald-700 shadow-lg"
                     >
                         <Link href="/citizen/issues">
                             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -322,7 +322,7 @@ export default function CitizenIssueDetailPage() {
                             disabled={votingInProgress}
                             className={`relative px-4 py-2 rounded-full font-bold transition-all ${
                                 hasUpvoted
-                                    ? "bg-gradient-to-r from-[#2E6A56] to-[#5C9479] shadow-lg shadow-[#2E6A56]/50"
+                                    ? "bg-emerald-600 shadow-lg"
                                     : "bg-white/10 hover:bg-white/20"
                             }`}
                         >
@@ -577,7 +577,7 @@ export default function CitizenIssueDetailPage() {
                                     disabled={
                                         !newComment.trim() || submittingComment
                                     }
-                                    className="absolute bottom-4 right-4 px-6 py-3 bg-gradient-to-r from-[#2E6A56] to-[#5C9479] rounded-xl font-bold text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-2xl hover:shadow-[#2E6A56]/50 transition-all"
+                                    className="absolute bottom-4 right-4 px-6 py-3 bg-emerald-600 rounded-xl font-bold text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-2xl transition-all"
                                 >
                                     {submittingComment ? (
                                         <>

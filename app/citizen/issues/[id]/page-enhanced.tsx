@@ -210,7 +210,7 @@ export default function CitizenIssueDetailPage() {
                     </p>
                     <Button
                         asChild
-                        className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63]"
+                        className="bg-emerald-600 hover:bg-emerald-700"
                     >
                         <Link href="/citizen/issues">
                             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -247,7 +247,7 @@ export default function CitizenIssueDetailPage() {
             <div className="flex-1 overflow-hidden">
                 <div className="h-full flex flex-col">
                     {/* Hero Section */}
-                    <div className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] text-white p-6 shadow-lg">
+                    <div className="bg-emerald-600 text-white p-6 shadow-lg">
                         <div className="container mx-auto">
                             <div className="flex items-start justify-between gap-4 flex-wrap">
                                 <div className="flex-1 min-w-0">
@@ -356,7 +356,7 @@ export default function CitizenIssueDetailPage() {
                                             <div className="lg:col-span-2 space-y-6">
                                                 {/* Description Card */}
                                                 <Card className="border-2 shadow-lg">
-                                                    <CardHeader className="bg-gradient-to-r from-[#2E6A56]/5 to-[#5C9479]/5">
+                                                    <CardHeader className="bg-emerald-50">
                                                         <CardTitle className="flex items-center gap-2">
                                                             <FileText className="w-5 h-5 text-[#2E6A56]" />
                                                             Description
@@ -566,7 +566,7 @@ export default function CitizenIssueDetailPage() {
                                         className="mt-0"
                                     >
                                         <Card className="border-2 shadow-lg">
-                                            <CardHeader className="bg-gradient-to-r from-[#2E6A56]/5 to-[#5C9479]/5">
+                                            <CardHeader className="bg-emerald-50">
                                                 <CardTitle className="flex items-center gap-2">
                                                     <MapPin className="w-5 h-5 text-[#2E6A56]" />
                                                     Location Details
@@ -703,7 +703,7 @@ export default function CitizenIssueDetailPage() {
                                                             !newComment.trim() ||
                                                             submittingComment
                                                         }
-                                                        className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63]"
+                                                        className="bg-emerald-600 hover:bg-emerald-700"
                                                     >
                                                         <Send className="w-4 h-4 mr-2" />
                                                         {submittingComment

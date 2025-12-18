@@ -106,7 +106,7 @@ export default function HomePage() {
                             </Link>
                             <Link
                                 href="/auth?mode=signup"
-                                className="bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg shadow-[#2E6A56]/30"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
                             >
                                 Get Started
                             </Link>
@@ -170,7 +170,7 @@ export default function HomePage() {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center space-y-10 max-w-5xl mx-auto">
-                        <div className="inline-flex items-center bg-gradient-to-r from-[#2E6A56]/20 to-emerald-600/20 border border-[#2E6A56]/30 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-lg shadow-[#2E6A56]/20 backdrop-blur-xl">
+                        <div className="inline-flex items-center bg-white/10 border border-white/20 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-lg backdrop-blur-xl">
                             <Globe className="w-4 h-4 mr-2 text-emerald-400" />
                             Digital Governance Platform
                         </div>
@@ -191,7 +191,7 @@ export default function HomePage() {
                         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-4">
                             <Link
                                 href="/auth?mode=signup"
-                                className="bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700 text-white px-12 py-5 text-lg rounded-2xl shadow-2xl shadow-[#2E6A56]/40 hover:shadow-[#2E6A56]/60 transition-all duration-300 transform hover:scale-105 group flex items-center font-semibold"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-12 py-5 text-lg rounded-2xl shadow-2xl transition-all duration-300 transform hover:scale-105 group flex items-center font-semibold"
                             >
                                 <Download className="w-5 h-5 mr-3" />
                                 Get Started Free
@@ -315,7 +315,7 @@ export default function HomePage() {
                                         <div className="pt-4">
                                             <Link
                                                 href="/auth?mode=signup"
-                                                className="w-full bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700 text-white py-4 rounded-xl font-semibold group/btn transition-all duration-300 flex items-center justify-center shadow-lg shadow-[#2E6A56]/30 hover:shadow-[#2E6A56]/50"
+                                                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-semibold group/btn transition-all duration-300 flex items-center justify-center shadow-lg"
                                             >
                                                 <Download className="w-5 h-5 mr-2" />
                                                 Get Started Now

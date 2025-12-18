@@ -196,7 +196,7 @@ export default function AdminIssueDetailPage() {
                     <Button
                         asChild
                         size="lg"
-                        className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] shadow-lg"
+                        className="bg-emerald-600 hover:bg-emerald-700 shadow-lg"
                     >
                         <Link href="/admin/issues">
                             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -630,7 +630,7 @@ export default function AdminIssueDetailPage() {
                                 >
                                     <Button
                                         variant="outline"
-                                        className="w-full justify-start bg-gradient-to-r from-[#2E6A56] to-[#5C9479] text-white border-0 hover:opacity-80 transition-all"
+                                        className="w-full justify-start bg-emerald-600 text-white border-0 hover:opacity-80 transition-all"
                                         asChild
                                     >
                                         <a

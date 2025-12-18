@@ -303,7 +303,7 @@ export default function ProfilePage() {
                                     <div className="flex flex-col gap-2 mb-4">
                                         <Badge
                                             variant="secondary"
-                                            className="w-fit bg-gradient-to-r from-[#2E6A56]/10 to-emerald-100 text-[#2E6A56] border-0"
+                                            className="w-fit bg-emerald-50 text-emerald-700 border-0"
                                         >
                                             {userRole === "admin"
                                                 ? "Administrator"
@@ -335,7 +335,7 @@ export default function ProfilePage() {
                                                 onClick={handleSave}
                                                 disabled={loading}
                                                 size="sm"
-                                                className="bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700"
+                                                className="bg-emerald-600 hover:bg-emerald-700"
                                             >
                                                 <Save className="w-4 h-4 mr-2" />
                                                 {loading ? "Saving..." : "Save"}

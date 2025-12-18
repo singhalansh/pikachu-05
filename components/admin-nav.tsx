@@ -66,7 +66,7 @@ export default function AdminNav() {
                             <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-[#2E6A56] to-emerald-600 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
                                 <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                             </div>
-                            <span className="font-semibold text-sm sm:text-base lg:text-lg truncate bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                            <span className="font-semibold text-sm sm:text-base lg:text-lg truncate text-emerald-700 ">
                                 civik Admin
                             </span>
                         </Link>
@@ -84,7 +84,7 @@ export default function AdminNav() {
                                         size="sm"
                                         className={`h-9 text-sm ${
                                             isActive
-                                                ? "bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#25584a] hover:to-emerald-700 text-white shadow-md"
+                                                ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-md"
                                                 : ""
                                         }`}
                                         asChild
@@ -105,7 +105,7 @@ export default function AdminNav() {
                             <Button
                                 variant="default"
                                 size="sm"
-                                className="h-9 bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#25584a] hover:to-emerald-700 text-white px-3 xl:px-4 text-sm shadow-md"
+                                className="h-9 bg-emerald-600 hover:bg-emerald-700 text-white px-3 xl:px-4 text-sm shadow-md"
                                 asChild
                             >
                                 <Link

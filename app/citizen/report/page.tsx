@@ -911,7 +911,7 @@ export default function ReportIssuePage() {
                     )}
 
                     <Card className="bg-white/5 backdrop-blur-sm shadow-xl border-0 overflow-hidden">
-                        <div className="h-1 bg-gradient-to-r from-[#2E6A56] via-emerald-500 to-[#2E6A56]"></div>
+                        <div className="h-1 bg-emerald-600"></div>
                         <CardHeader>
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-gradient-to-br from-[#2E6A56]/10 to-emerald-100 rounded-lg">
@@ -1445,7 +1445,7 @@ export default function ReportIssuePage() {
                                                 formData.location_lng
                                             )
                                         }
-                                        className="responsive-button flex-1 bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="responsive-button flex-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         {isSubmitting
                                             ? "Submitting..."

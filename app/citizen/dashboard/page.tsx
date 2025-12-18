@@ -482,7 +482,7 @@ export default function CitizenDashboard() {
                             >
                                 <Button
                                     asChild
-                                    className="w-full sm:w-auto h-10 sm:h-11 bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#3d6b58] text-white shadow-lg shadow-[#2E6A56]/30 hover:shadow-xl hover:shadow-[#2E6A56]/40 transition-all duration-300"
+                                    className="w-full sm:w-auto h-10 sm:h-11 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                                 >
                                     <Link href="/citizen/report">
                                         <Plus className="w-4 h-4 mr-2" />

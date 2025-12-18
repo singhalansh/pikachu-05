@@ -239,7 +239,7 @@ export default function CitizenIssueDetailPage() {
                     <Button
                         asChild
                         size="lg"
-                        className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] shadow-lg"
+                        className="bg-emerald-600 hover:bg-emerald-700 shadow-lg"
                     >
                         <Link href="/citizen/issues">
                             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -409,7 +409,7 @@ export default function CitizenIssueDetailPage() {
                             transition={{ duration: 0.5 }}
                         >
                             <Card className="border-2 shadow-xl hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
-                                <div className="h-1 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56]" />
+                                <div className="h-1 bg-emerald-600" />
                                 <CardHeader className="bg-gradient-to-br from-[#2E6A56]/5 to-[#5C9479]/5">
                                     <CardTitle className="flex items-center gap-3 text-2xl">
                                         <div className="p-2 bg-[#2E6A56] rounded-lg">
@@ -598,7 +598,7 @@ export default function CitizenIssueDetailPage() {
                                                 submittingComment
                                             }
                                             size="lg"
-                                            className="w-full bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] shadow-lg"
+                                            className="w-full bg-emerald-600 hover:bg-emerald-700 shadow-lg"
                                         >
                                             <Send className="w-4 h-4 mr-2" />
                                             {submittingComment
@@ -693,7 +693,7 @@ export default function CitizenIssueDetailPage() {
                             className="sticky top-24"
                         >
                             <Card className="border-2 shadow-xl overflow-hidden">
-                                <div className="h-1 bg-gradient-to-r from-[#2E6A56] to-[#5C9479]" />
+                                <div className="h-1 bg-emerald-600" />
                                 <CardHeader className="bg-gradient-to-br from-[#2E6A56]/5 to-[#5C9479]/5">
                                     <CardTitle className="text-xl">
                                         Issue Details

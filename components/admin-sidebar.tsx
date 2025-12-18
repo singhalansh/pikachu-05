@@ -160,7 +160,7 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
                                     onClick={() => navigateTo(item.route)}
                                     className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-200 ${
                                         isActive
-                                            ? "bg-gradient-to-r from-[#2E6A56] to-[#5C9479] text-white shadow-lg shadow-[#2E6A56]/30"
+                                            ? "bg-emerald-600 text-white shadow-lg"
                                             : "text-white/70 hover:bg-white/10 hover:text-white"
                                     }`}
                                 >
@@ -195,7 +195,7 @@ export default function AdminSidebar({ pendingIssues = 0 }: AdminSidebarProps) {
                             onClick={() => navigateTo("/admin/profile")}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                                 currentPage === "profile"
-                                    ? "bg-gradient-to-r from-[#2E6A56] to-[#5C9479] text-white shadow-md shadow-[#2E6A56]/30"
+                                    ? "bg-emerald-600 text-white shadow-md"
                                     : "text-white/70 hover:bg-white/10 hover:text-white"
                             }`}
                         >

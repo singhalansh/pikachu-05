@@ -321,7 +321,7 @@ function UnifiedAuthPageInner() {
                     {/* Main Card with Glass Morphism */}
                     <Card className="backdrop-blur-xl bg-white/95 shadow-2xl border-0 overflow-hidden">
                         {/* Decorative Top Bar */}
-                        <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56]" />
+                        <div className="h-2 bg-emerald-600" />
 
                         <CardHeader className="text-center pb-4 pt-8">
                             {/* Logo/Icon */}
@@ -347,7 +347,7 @@ function UnifiedAuthPageInner() {
 
                         <CardContent className="space-y-6 px-8 pb-8">
                             {/* Auth Mode Toggle */}
-                            <div className="flex bg-gradient-to-r from-[#2E6A56]/10 to-[#5C9479]/10 rounded-xl p-1.5 shadow-inner">
+                            <div className="flex bg-white/10 rounded-xl p-1.5 shadow-inner">
                                 <Button
                                     variant={
                                         authMode === "signin"
@@ -357,7 +357,7 @@ function UnifiedAuthPageInner() {
                                     size="sm"
                                     className={`flex-1 transition-all ${
                                         authMode === "signin"
-                                            ? "bg-gradient-to-r from-[#2E6A56] to-[#5C9479] text-white shadow-md"
+                                            ? "bg-emerald-600 text-white shadow-md"
                                             : "text-gray-600 hover:text-[#2E6A56]"
                                     }`}
                                     onClick={() => setAuthMode("signin")}
@@ -374,7 +374,7 @@ function UnifiedAuthPageInner() {
                                     size="sm"
                                     className={`flex-1 transition-all ${
                                         authMode === "signup"
-                                            ? "bg-gradient-to-r from-[#2E6A56] to-[#5C9479] text-white shadow-md"
+                                            ? "bg-emerald-600 text-white shadow-md"
                                             : "text-gray-600 hover:text-[#2E6A56]"
                                     }`}
                                     onClick={() => setAuthMode("signup")}
@@ -655,7 +655,7 @@ function UnifiedAuthPageInner() {
 
                                 <Button
                                     type="submit"
-                                    className="w-full bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
+                                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
                                     disabled={isLoading}
                                 >
                                     {isLoading ? (

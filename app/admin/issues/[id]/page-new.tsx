@@ -198,7 +198,7 @@ export default function AdminIssueDetailPage() {
                     <Button
                         asChild
                         size="lg"
-                        className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#4a7d63] shadow-lg"
+                        className="bg-emerald-600 hover:bg-emerald-700 shadow-lg"
                     >
                         <Link href="/admin/issues">
                             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -374,7 +374,7 @@ export default function AdminIssueDetailPage() {
 
                         {/* Issue Details Card */}
                         <Card className="border-2 shadow-xl">
-                            <div className="h-1 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56]" />
+                            <div className="h-1 bg-emerald-600" />
                             <CardHeader className="bg-gradient-to-br from-[#2E6A56]/5 to-[#5C9479]/5">
                                 <CardTitle className="text-2xl flex items-center gap-2">
                                     <FileText className="w-6 h-6 text-[#2E6A56]" />

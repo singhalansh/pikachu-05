@@ -522,7 +522,7 @@ export default function AdminIssuesPage() {
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
                                         >
-                                            <Button className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#1f4a3a] hover:to-[#3d6b58] text-white shadow-lg shadow-[#2E6A56]/30">
+                                            <Button className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg">
                                                 <MapPin className="w-4 h-4 mr-2" />
                                                 Map View
                                             </Button>
