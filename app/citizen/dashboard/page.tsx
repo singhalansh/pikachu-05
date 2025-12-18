@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -436,143 +437,190 @@ export default function CitizenDashboard() {
     }, [issues, selectedIssue]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 relative">
-            {/* Decorative Background Elements */}
-            <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-[#2E6A56]/5 to-emerald-400/5 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-40 left-20 w-80 h-80 bg-gradient-to-br from-green-300/5 to-teal-400/5 rounded-full blur-3xl"></div>
-            </div>
+        <div className="min-h-screen bg-black relative">
+            {/* Animated Background Elements */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="fixed inset-0 pointer-events-none overflow-hidden z-0"
+            >
+                <div className="absolute top-20 right-20 w-96 h-96 bg-[radial-gradient(circle,rgba(46,106,86,0.3),transparent_70%)] blur-3xl"></div>
+                <div className="absolute bottom-40 left-20 w-[500px] h-[500px] bg-[radial-gradient(circle,rgba(92,148,121,0.2),transparent_70%)] blur-3xl"></div>
+            </motion.div>
 
             {/* Header */}
-            <div className="bg-white/95 backdrop-blur-md shadow-lg relative z-10">
+            <motion.div
+                initial={{ y: -50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="bg-black/80 backdrop-blur-2xl border-b border-white/10 relative z-10"
+            >
                 <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#2E6A56] to-emerald-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                            <motion.div
+                                whileHover={{ scale: 1.1, rotate: 5 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-xl flex items-center justify-center shadow-lg shadow-[#2E6A56]/30 flex-shrink-0"
+                            >
                                 <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                            </div>
+                            </motion.div>
                             <div className="min-w-0 flex-1">
-                                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
+                                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
                                     Civic Issues Dashboard
                                 </h1>
-                                <p className="text-xs sm:text-sm lg:text-base text-gray-600">
+                                <p className="text-xs sm:text-sm lg:text-base text-white/60">
                                     Track and report community issues
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                            <Button
-                                asChild
-                                className="w-full sm:w-auto h-10 sm:h-11 bg-gradient-to-r from-[#2E6A56] to-emerald-600 hover:from-[#1f4a3a] hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
-                                <Link href="/citizen/report">
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    <span className="xs:hidden">
-                                        Report Issue
-                                    </span>
-                                </Link>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                asChild
-                                className="w-full sm:w-auto h-10 sm:h-11 bg-white shadow-sm text-[#2E6A56] hover:bg-[#2E6A56]/5 hover:shadow-md"
+                                <Button
+                                    asChild
+                                    className="w-full sm:w-auto h-10 sm:h-11 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                                >
+                                    <Link href="/citizen/report">
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        <span className="xs:hidden">
+                                            Report Issue
+                                        </span>
+                                    </Link>
+                                </Button>
+                            </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
-                                <Link href="/citizen/issues/map">
-                                    <MapIcon className="w-4 h-4 mr-2" />
-                                    Map
-                                </Link>
-                            </Button>
-                            <Button
-                                variant="outline"
-                                asChild
-                                className="w-full sm:w-auto h-10 sm:h-11 bg-transparent"
+                                <Button
+                                    variant="outline"
+                                    asChild
+                                    className="w-full sm:w-auto h-10 sm:h-11 bg-white/5 border-white/20 shadow-sm text-white hover:bg-white/10 hover:shadow-md"
+                                >
+                                    <Link href="/citizen/issues/map">
+                                        <MapIcon className="w-4 h-4 mr-2" />
+                                        Map
+                                    </Link>
+                                </Button>
+                            </motion.div>
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
                             >
-                                <Link href="/citizen/issues">My Issues</Link>
-                            </Button>
+                                <Button
+                                    variant="outline"
+                                    asChild
+                                    className="w-full sm:w-auto h-10 sm:h-11 bg-white/5 border-white/20 text-white hover:bg-white/10"
+                                >
+                                    <Link href="/citizen/issues">
+                                        My Issues
+                                    </Link>
+                                </Button>
+                            </motion.div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </motion.div>
 
             <div className="w-full max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 relative z-10">
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 mb-4 sm:mb-6">
-                    <Card className="bg-gradient-to-br from-white to-gray-50/50 shadow-lg hover:shadow-xl transition-all duration-300 border-0 hover:scale-105 transform">
-                        <CardContent className="p-3 sm:p-4">
-                            <div className="flex items-center justify-between">
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-xs sm:text-sm text-gray-600 truncate font-medium">
-                                        Total Issues
-                                    </p>
-                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">
-                                        {stats.total}
-                                    </p>
-                                </div>
-                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl flex items-center justify-center">
-                                    <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
-                                </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0, duration: 0.5 }}
+                        whileHover={{ scale: 1.05, y: -5 }}
+                        className="bg-white/5 border border-white/10 rounded-xl backdrop-blur-xl p-3 sm:p-4 shadow-lg hover:shadow-2xl hover:shadow-white/10 transition-all duration-300"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs sm:text-sm text-white/60 truncate font-medium">
+                                    Total Issues
+                                </p>
+                                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
+                                    {stats.total}
+                                </p>
                             </div>
-                        </CardContent>
-                    </Card>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-gray-500/20 to-gray-600/20 rounded-xl flex items-center justify-center border border-gray-400/20">
+                                <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-gray-300" />
+                            </div>
+                        </div>
+                    </motion.div>
 
-                    <Card className="bg-gradient-to-br from-blue-50 to-blue-100/50 shadow-lg hover:shadow-xl transition-all duration-300 border-0 hover:scale-105 transform">
-                        <CardContent className="p-3 sm:p-4">
-                            <div className="flex items-center justify-between">
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-xs sm:text-sm text-blue-700 truncate font-medium">
-                                        In Progress
-                                    </p>
-                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-600">
-                                        {stats.inProgress}
-                                    </p>
-                                </div>
-                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-xl flex items-center justify-center">
-                                    <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700" />
-                                </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1, duration: 0.5 }}
+                        whileHover={{ scale: 1.05, y: -5 }}
+                        className="bg-blue-500/20 border border-blue-500/30 rounded-xl backdrop-blur-xl p-3 sm:p-4 shadow-lg hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs sm:text-sm text-blue-300 truncate font-medium">
+                                    In Progress
+                                </p>
+                                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-200">
+                                    {stats.inProgress}
+                                </p>
                             </div>
-                        </CardContent>
-                    </Card>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400/20 to-blue-500/20 rounded-xl flex items-center justify-center border border-blue-400/30">
+                                <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-blue-300" />
+                            </div>
+                        </div>
+                    </motion.div>
 
-                    <Card className="bg-gradient-to-br from-emerald-50 to-green-100/50 shadow-lg hover:shadow-xl transition-all duration-300 border-0 hover:scale-105 transform">
-                        <CardContent className="p-3 sm:p-4">
-                            <div className="flex items-center justify-between">
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-xs sm:text-sm text-emerald-700 truncate font-medium">
-                                        Resolved
-                                    </p>
-                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-600">
-                                        {stats.resolved}
-                                    </p>
-                                </div>
-                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-200 to-green-300 rounded-xl flex items-center justify-center">
-                                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-700" />
-                                </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                        whileHover={{ scale: 1.05, y: -5 }}
+                        className="bg-[#5C9479]/20 border border-[#5C9479]/30 rounded-xl backdrop-blur-xl p-3 sm:p-4 shadow-lg hover:shadow-2xl hover:shadow-[#5C9479]/20 transition-all duration-300"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs sm:text-sm text-[#5C9479] truncate font-medium">
+                                    Resolved
+                                </p>
+                                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-300">
+                                    {stats.resolved}
+                                </p>
                             </div>
-                        </CardContent>
-                    </Card>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#5C9479]/20 to-emerald-500/20 rounded-xl flex items-center justify-center border border-[#5C9479]/30">
+                                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-[#5C9479]" />
+                            </div>
+                        </div>
+                    </motion.div>
 
-                    <Card className="bg-gradient-to-br from-[#2E6A56]/10 to-emerald-100/50 shadow-lg hover:shadow-xl transition-all duration-300 border-0 hover:scale-105 transform">
-                        <CardContent className="p-3 sm:p-4">
-                            <div className="flex items-center justify-between">
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-xs sm:text-sm text-[#2E6A56] truncate font-medium">
-                                        This Month
-                                    </p>
-                                    <p className="text-lg sm:text-xl lg:text-2xl font-bold text-[#2E6A56]">
-                                        {stats.createdThisMonth}
-                                    </p>
-                                </div>
-                                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-200 rounded-xl flex items-center justify-center">
-                                    <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-[#2E6A56]" />
-                                </div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                        whileHover={{ scale: 1.05, y: -5 }}
+                        className="bg-[#2E6A56]/20 border border-[#2E6A56]/30 rounded-xl backdrop-blur-xl p-3 sm:p-4 shadow-lg hover:shadow-2xl hover:shadow-[#2E6A56]/20 transition-all duration-300"
+                    >
+                        <div className="flex items-center justify-between">
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs sm:text-sm text-[#5C9479] truncate font-medium">
+                                    This Month
+                                </p>
+                                <p className="text-lg sm:text-xl lg:text-2xl font-bold text-emerald-300">
+                                    {stats.createdThisMonth}
+                                </p>
                             </div>
-                        </CardContent>
-                    </Card>
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#2E6A56]/20 to-[#5C9479]/20 rounded-xl flex items-center justify-center border border-[#2E6A56]/30">
+                                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-[#5C9479]" />
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
 
                 {/* Filters and Search */}
-                <Card className="mb-4 sm:mb-6 bg-white/95 backdrop-blur-sm shadow-lg border-0">
-                    <CardContent className="p-3 sm:p-4">
+                <div className="mb-4 sm:mb-6 bg-white/5 border border-white/10 backdrop-blur-xl shadow-lg rounded-2xl">
+                    <div className="p-3 sm:p-4">
                         <div className="space-y-3 sm:space-y-4">
                             {/* Search - Full width on mobile */}
                             <div className="relative">
@@ -697,8 +745,8 @@ export default function CitizenDashboard() {
                                 </div>
                             </div>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                </div>
 
                 {/* Content */}
                 {viewMode === "list" ? (
@@ -716,11 +764,11 @@ export default function CitizenDashboard() {
                         {!loading &&
                             !error &&
                             filteredIssues.map((issue) => (
-                                <Card
+                                <div
                                     key={issue.id}
-                                    className="w-full bg-white shadow-md hover:shadow-lg transition-all duration-300 ease-in-out overflow-hidden border-0"
+                                    className="w-full bg-white/5 border border-white/10 backdrop-blur-xl shadow-md hover:shadow-lg hover:shadow-white/10 transition-all duration-300 ease-in-out overflow-hidden rounded-2xl"
                                 >
-                                    <CardContent className="p-0 w-full">
+                                    <div className="p-0 w-full">
                                         {/* Mobile: Instagram-like feed layout */}
                                         <div className="block md:hidden w-full">
                                             {/* Full-width image at top - ensures no horizontal overflow */}
@@ -978,15 +1026,15 @@ export default function CitizenDashboard() {
                                                 </div>
                                             </div>
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                </div>
                             ))}
                     </div>
                 ) : (
                     <div className="space-y-4">
                         {/* Map Controls */}
-                        <Card>
-                            <CardContent className="p-4">
+                        <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-lg">
+                            <div className="p-4">
                                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                     <div className="flex items-center space-x-2">
                                         <Button
@@ -1007,7 +1055,7 @@ export default function CitizenDashboard() {
                                             </Link>
                                         </Button>
                                     </div>
-                                    <div className="text-sm text-gray-700">
+                                    <div className="text-sm text-white/80">
                                         {userLocation ? (
                                             <>
                                                 Showing {nearbyIssues.length}{" "}
@@ -1027,14 +1075,14 @@ export default function CitizenDashboard() {
                                         )}
                                     </div>
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </div>
 
                         <div className="grid lg:grid-cols-4 gap-6">
                             {/* Map */}
                             <div className="lg:col-span-3">
-                                <Card>
-                                    <CardContent className="p-4">
+                                <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-lg">
+                                    <div className="p-4">
                                         <div className="h-[50vh] sm:h-[60vh] rounded-lg overflow-hidden">
                                             {googleMapsApiKey ? (
                                                 <GoogleMap
@@ -1091,24 +1139,24 @@ export default function CitizenDashboard() {
                                                 </div>
                                             )}
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                </div>
                             </div>
 
                             {/* Sidebar */}
                             <div className="space-y-4">
                                 {/* Selected Issue Details */}
                                 {selectedIssueData ? (
-                                    <Card>
-                                        <CardContent className="p-4">
+                                    <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-lg">
+                                        <div className="p-4">
                                             <div className="space-y-3">
                                                 <div>
-                                                    <h4 className="font-semibold text-sm">
+                                                    <h4 className="font-semibold text-sm text-white">
                                                         {
                                                             selectedIssueData.title
                                                         }
                                                     </h4>
-                                                    <p className="text-xs text-muted-foreground">
+                                                    <p className="text-xs text-white/60">
                                                         {selectedIssueData.id}
                                                     </p>
                                                 </div>
@@ -1133,15 +1181,15 @@ export default function CitizenDashboard() {
                                                 </div>
 
                                                 <div className="space-y-2 text-xs">
-                                                    <div className="flex items-center">
-                                                        <MapPin className="w-3 h-3 mr-2 text-gray-600" />
+                                                    <div className="flex items-center text-white/80">
+                                                        <MapPin className="w-3 h-3 mr-2 text-[#5C9479]" />
                                                         <span>
                                                             {selectedIssueData.location_address ||
                                                                 "N/A"}
                                                         </span>
                                                     </div>
-                                                    <div className="flex items-center">
-                                                        <Calendar className="w-3 h-3 mr-2 text-gray-600" />
+                                                    <div className="flex items-center text-white/80">
+                                                        <Calendar className="w-3 h-3 mr-2 text-[#5C9479]" />
                                                         <span>
                                                             {new Date(
                                                                 selectedIssueData.created_at
@@ -1193,33 +1241,33 @@ export default function CitizenDashboard() {
                                                     </Link>
                                                 </Button>
                                             </div>
-                                        </CardContent>
-                                    </Card>
+                                        </div>
+                                    </div>
                                 ) : (
-                                    <Card>
-                                        <CardContent className="p-6 text-center">
-                                            <MapPin className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-                                            <h3 className="font-semibold mb-1">
+                                    <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-lg">
+                                        <div className="p-6 text-center">
+                                            <MapPin className="w-8 h-8 text-[#5C9479] mx-auto mb-2" />
+                                            <h3 className="font-semibold mb-1 text-white">
                                                 Select an Issue
                                             </h3>
-                                            <p className="text-xs text-muted-foreground">
+                                            <p className="text-xs text-white/60">
                                                 Click on a marker to view
                                                 details.
                                             </p>
-                                        </CardContent>
-                                    </Card>
+                                        </div>
+                                    </div>
                                 )}
 
                                 {/* Issues List */}
-                                <Card>
-                                    <CardContent className="p-4">
-                                        <h3 className="font-semibold mb-3 text-sm">
+                                <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-2xl shadow-lg">
+                                    <div className="p-4">
+                                        <h3 className="font-semibold mb-3 text-sm text-white">
                                             Issues on Map (
                                             {filteredIssues.length})
                                             {userLocation &&
                                                 nearbyIssues.length !==
                                                     filteredIssues.length && (
-                                                    <span className="text-xs font-normal text-gray-600 ml-2">
+                                                    <span className="text-xs font-normal text-white/60 ml-2">
                                                         ({nearbyIssues.length}{" "}
                                                         nearby)
                                                     </span>
@@ -1228,7 +1276,7 @@ export default function CitizenDashboard() {
                                         <div className="space-y-2 max-h-64 overflow-y-auto">
                                             {filteredIssues.length === 0 ? (
                                                 <div className="text-center py-4">
-                                                    <p className="text-xs text-muted-foreground">
+                                                    <p className="text-xs text-white/60">
                                                         No issues found with
                                                         current filters.
                                                     </p>
@@ -1319,8 +1367,8 @@ export default function CitizenDashboard() {
                                                 ))
                                             )}
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

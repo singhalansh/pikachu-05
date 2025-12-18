@@ -427,7 +427,7 @@ export default function AdminProfilePage() {
                 <div className="flex-1 overflow-auto">
                     <div className="container mx-auto px-4 py-8 max-w-6xl">
                         <div className="mb-8">
-                            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                            <h1 className="text-3xl font-bold text-white">
                                 Admin Profile
                             </h1>
                             <p className="text-muted-foreground">
@@ -438,7 +438,7 @@ export default function AdminProfilePage() {
                         <div className="grid gap-6 lg:grid-cols-3">
                             {/* Profile Overview */}
                             <div className="lg:col-span-1">
-                                <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
+                                <Card className="border border-white/10 shadow-xl hover:shadow-2xl transition-shadow bg-white/5 backdrop-blur-xl">
                                     <CardContent className="pt-6">
                                         <div className="flex flex-col items-center text-center">
                                             <div className="relative mb-4">
@@ -512,7 +512,7 @@ export default function AdminProfilePage() {
                                                     Admin
                                                 </Badge>
                                                 {userDepartmentName && (
-                                                    <Badge className="bg-white border-0 shadow-sm text-slate-700">
+                                                    <Badge className="bg-white/5 border border-white/10 shadow-sm text-white/80">
                                                         <Building className="w-3 h-3 mr-1" />
                                                         {userDepartmentName}
                                                     </Badge>
@@ -559,10 +559,10 @@ export default function AdminProfilePage() {
                                 </Card>
 
                                 {/* Admin Performance Summary */}
-                                <Card className="mt-6 border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
+                                <Card className="mt-6 border border-white/10 shadow-xl hover:shadow-2xl transition-shadow bg-white/5 backdrop-blur-xl">
                                     <CardHeader>
                                         <div className="flex items-center justify-between">
-                                            <CardTitle className="text-lg flex items-center gap-2 bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                                            <CardTitle className="text-lg flex items-center gap-2 text-white">
                                                 📊 Admin Performance
                                                 {statsLoading && (
                                                     <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -615,7 +615,7 @@ export default function AdminProfilePage() {
                                                     </Badge>
                                                 </div>
 
-                                                <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 shadow-sm">
+                                                <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 shadow-sm">
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-3 h-3 bg-green-500 rounded-full shadow-sm"></div>
                                                         <span className="text-sm font-medium text-green-900">
@@ -671,7 +671,7 @@ export default function AdminProfilePage() {
                                                     </Badge>
                                                 </div>
 
-                                                <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 shadow-sm">
+                                                <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-500/10 to-teal-500/10 shadow-sm">
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-3 h-3 bg-emerald-600 rounded-full shadow-sm"></div>
                                                         <span className="text-sm font-medium text-emerald-900">
@@ -715,7 +715,7 @@ export default function AdminProfilePage() {
                             {/* Profile Details */}
                             <div className="lg:col-span-2 space-y-6">
                                 {/* Personal Information */}
-                                <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
+                                <Card className="border border-white/10 shadow-xl hover:shadow-2xl transition-shadow bg-white/5 backdrop-blur-xl">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             <User className="w-5 h-5 text-emerald-600" />
@@ -745,7 +745,7 @@ export default function AdminProfilePage() {
                                                             )
                                                         }
                                                         placeholder="Enter your full name"
-                                                        className="bg-white border-emerald-200 focus:border-emerald-500"
+                                                        className="bg-white/5 border-white/10 focus:border-[#5C9479] text-white"
                                                     />
                                                 ) : (
                                                     <p className="text-muted-foreground">
@@ -862,10 +862,10 @@ export default function AdminProfilePage() {
                                                             );
                                                         }}
                                                     >
-                                                        <SelectTrigger className="w-full bg-white border-emerald-200 focus:border-emerald-500">
+                                                        <SelectTrigger className="w-full bg-white/5 border-white/10 focus:border-[#5C9479] text-white">
                                                             <SelectValue placeholder="Select department" />
                                                         </SelectTrigger>
-                                                        <SelectContent className="w-full min-w-[250px] max-w-[350px] bg-white border-emerald-200 shadow-xl">
+                                                        <SelectContent className="w-full min-w-[250px] max-w-[350px] bg-white/5 border-white/10 backdrop-blur-xl shadow-xl">
                                                             {departments.map(
                                                                 (dept) => (
                                                                     <SelectItem
@@ -924,10 +924,10 @@ export default function AdminProfilePage() {
                                                             )
                                                         }
                                                     >
-                                                        <SelectTrigger className="w-full bg-white border-emerald-200 focus:border-emerald-500">
+                                                        <SelectTrigger className="w-full bg-white/5 border-white/10 focus:border-[#5C9479] text-white">
                                                             <SelectValue placeholder="Select admin level" />
                                                         </SelectTrigger>
-                                                        <SelectContent className="w-full min-w-[200px] max-w-[300px] bg-white border-emerald-200 shadow-xl">
+                                                        <SelectContent className="w-full min-w-[200px] max-w-[300px] bg-white/5 border-white/10 backdrop-blur-xl shadow-xl">
                                                             <SelectItem value="junior">
                                                                 <div className="flex flex-col">
                                                                     <span className="font-medium">
@@ -1015,7 +1015,7 @@ export default function AdminProfilePage() {
                                                     }
                                                     placeholder="Tell us about your role and responsibilities..."
                                                     rows={3}
-                                                    className="bg-white border-emerald-200 focus:border-emerald-500"
+                                                    className="bg-white/5 border-white/10 focus:border-[#5C9479] text-white"
                                                 />
                                             ) : (
                                                 <p className="text-muted-foreground">
@@ -1028,7 +1028,7 @@ export default function AdminProfilePage() {
                                 </Card>
 
                                 {/* Admin Permissions & Settings */}
-                                <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
+                                <Card className="border border-white/10 shadow-xl hover:shadow-2xl transition-shadow bg-white/5 backdrop-blur-xl">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             <Shield className="w-5 h-5 text-emerald-600" />
@@ -1054,7 +1054,7 @@ export default function AdminProfilePage() {
                                                 </Badge>
                                             </div>
 
-                                            <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 shadow-sm">
+                                            <div className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-emerald-500/10 to-emerald-600/10 shadow-sm">
                                                 <div className="flex items-center gap-2">
                                                     <FileText className="w-4 h-4 text-green-600" />
                                                     <div>
@@ -1110,7 +1110,7 @@ export default function AdminProfilePage() {
                                 </Card>
 
                                 {/* Notification Settings */}
-                                <Card className="border-0 shadow-xl hover:shadow-2xl transition-shadow bg-white">
+                                <Card className="border border-white/10 shadow-xl hover:shadow-2xl transition-shadow bg-white/5 backdrop-blur-xl">
                                     <CardHeader>
                                         <CardTitle className="flex items-center gap-2">
                                             <Bell className="w-5 h-5 text-emerald-600" />

@@ -196,9 +196,9 @@ export default function LeaderboardPage() {
     const [timeFilter, setTimeFilter] = useState("all-time");
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+        <div className="min-h-screen bg-black/30">
             {/* Header */}
-            <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
+            <div className="border-b bg-white/5 backdrop-blur-sm shadow-sm">
                 <div className="container mx-auto px-4 py-4">
                     <div className="flex items-center space-x-4">
                         <Button variant="outline" size="sm" asChild>
@@ -208,7 +208,7 @@ export default function LeaderboardPage() {
                             </Link>
                         </Button>
                         <div>
-                            <h1 className="text-2xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                            <h1 className="text-2xl font-bold text-white">
                                 Community Leaderboard
                             </h1>
                             <p className="text-muted-foreground">
@@ -225,7 +225,7 @@ export default function LeaderboardPage() {
                     {/* Main Leaderboard */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Current User Stats */}
-                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-200">
+                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-emerald-500/10 to-emerald-600/10 border-emerald-200">
                             <CardHeader>
                                 <CardTitle className="flex items-center">
                                     <TrendingUp className="w-5 h-5 mr-2 text-emerald-700" />
@@ -291,7 +291,7 @@ export default function LeaderboardPage() {
                         </Card>
 
                         {/* Top Contributors */}
-                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-emerald-50/30">
+                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white/5 border-white/10 backdrop-blur-xl to-emerald-50/30">
                             <CardHeader>
                                 <CardTitle>Top Contributors</CardTitle>
                                 <CardDescription>
@@ -362,7 +362,7 @@ export default function LeaderboardPage() {
 
                     {/* Achievements Sidebar */}
                     <div className="space-y-6">
-                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-green-50/30">
+                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white/5 border-white/10 backdrop-blur-xl to-green-50/30">
                             <CardHeader>
                                 <CardTitle>Achievements</CardTitle>
                                 <CardDescription>
@@ -444,7 +444,7 @@ export default function LeaderboardPage() {
                         </Card>
 
                         {/* Quick Stats */}
-                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white to-emerald-50/30">
+                        <Card className="shadow-lg hover:shadow-xl transition-shadow bg-gradient-to-br from-white/5 border-white/10 backdrop-blur-xl to-emerald-50/30">
                             <CardHeader>
                                 <CardTitle>Community Stats</CardTitle>
                             </CardHeader>

@@ -86,13 +86,13 @@ export default function AdminUserAssigner({
 
     return (
         <Card className="border-[#2E6A56]/20 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56] rounded-t-lg"></div>
+            <div className="h-2 bg-emerald-600 rounded-t-lg"></div>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-lg shadow-md">
                         <User className="w-5 h-5 text-white" />
                     </div>
-                    <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent font-bold">
+                    <span className="text-emerald-700  font-bold">
                         Assign to User
                     </span>
                 </CardTitle>
@@ -178,7 +178,7 @@ export default function AdminUserAssigner({
                 <Button
                     onClick={assign}
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#5C9479] hover:to-[#2E6A56] text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {loading ? (
                         <>

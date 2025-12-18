@@ -238,19 +238,19 @@ export default function AdminDepartmentAssigner({
     if (fetchingDepartments) {
         return (
             <Card className="border-[#2E6A56]/20">
-                <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56] rounded-t-lg"></div>
+                <div className="h-2 bg-emerald-600 rounded-t-lg"></div>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-lg">
                             <Building2 className="w-5 h-5 text-white" />
                         </div>
-                        <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent">
+                        <span className="text-emerald-700 ">
                             Assign Department
                         </span>
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-[#2E6A56]/5 to-[#5C9479]/5 rounded-lg border border-[#2E6A56]/20">
+                    <div className="flex items-center gap-3 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
                         <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-full">
                             <Clock className="w-4 h-4 text-white animate-spin" />
                         </div>
@@ -265,13 +265,13 @@ export default function AdminDepartmentAssigner({
 
     return (
         <Card className="overflow-visible border-[#2E6A56]/20 shadow-lg hover:shadow-xl transition-shadow">
-            <div className="h-2 bg-gradient-to-r from-[#2E6A56] via-[#5C9479] to-[#2E6A56] rounded-t-lg"></div>
+            <div className="h-2 bg-emerald-600 rounded-t-lg"></div>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <div className="p-2 bg-gradient-to-br from-[#2E6A56] to-[#5C9479] rounded-lg shadow-md">
                         <Building2 className="w-5 h-5 text-white" />
                     </div>
-                    <span className="bg-gradient-to-r from-[#2E6A56] to-[#5C9479] bg-clip-text text-transparent font-bold">
+                    <span className="text-emerald-700  font-bold">
                         Assign Department
                     </span>
                 </CardTitle>
@@ -303,7 +303,7 @@ export default function AdminDepartmentAssigner({
                             {suggestedDepartments.map((dept) => (
                                 <Badge
                                     key={dept.id}
-                                    className="text-xs cursor-pointer bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#5C9479] hover:to-[#2E6A56] text-white border-0 shadow-sm hover:shadow-md transition-all hover:scale-105"
+                                    className="text-xs cursor-pointer bg-emerald-600 hover:bg-emerald-700 text-white border-0 shadow-sm hover:shadow-md transition-all hover:scale-105"
                                     onClick={() =>
                                         setSelectedDepartmentId(dept.id)
                                     }
@@ -328,10 +328,10 @@ export default function AdminDepartmentAssigner({
                         value={selectedDepartmentId}
                         onValueChange={setSelectedDepartmentId}
                     >
-                        <SelectTrigger className="w-full bg-white border-[#2E6A56]/30 focus:ring-[#2E6A56] focus:border-[#2E6A56] hover:border-[#2E6A56]/50 transition-colors">
+                        <SelectTrigger className="w-full bg-white dark:bg-gray-950 border-[#2E6A56]/30 focus:ring-[#2E6A56] focus:border-[#2E6A56] hover:border-[#2E6A56]/50 transition-colors">
                             <SelectValue placeholder="Choose a department" />
                         </SelectTrigger>
-                        <SelectContent className="bg-white w-full min-w-[300px] max-w-[400px] border-2 border-[#2E6A56]/20 shadow-xl">
+                        <SelectContent className="bg-white dark:bg-gray-950 w-full min-w-[300px] max-w-[400px] border-2 border-[#2E6A56]/20 shadow-xl backdrop-blur-none">
                             {departments.map((department) => (
                                 <SelectItem
                                     key={department.id}
@@ -427,7 +427,7 @@ export default function AdminDepartmentAssigner({
                             !selectedDepartmentId ||
                             selectedDepartmentId === currentDepartment?.id
                         }
-                        className="flex-1 bg-gradient-to-r from-[#2E6A56] to-[#5C9479] hover:from-[#5C9479] hover:to-[#2E6A56] text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? (
                             <>

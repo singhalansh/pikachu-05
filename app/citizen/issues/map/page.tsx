@@ -476,10 +476,10 @@ export default function CitizenIssuesMapPage() {
                                             value={statusFilter}
                                             onValueChange={setStatusFilter}
                                         >
-                                            <SelectTrigger className="w-32">
+                                            <SelectTrigger className="w-32 bg-white/5 border-white/10 text-white">
                                                 <SelectValue placeholder="Status" />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="bg-white/5 border-white/10 text-white shadow-lg backdrop-blur-xl">
                                                 <SelectItem value="all">
                                                     All Status
                                                 </SelectItem>
@@ -502,10 +502,10 @@ export default function CitizenIssuesMapPage() {
                                             value={priorityFilter}
                                             onValueChange={setPriorityFilter}
                                         >
-                                            <SelectTrigger className="w-32">
+                                            <SelectTrigger className="w-32 bg-white/5 border-white/10 text-white">
                                                 <SelectValue placeholder="Priority" />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="bg-white/5 border-white/10 text-white shadow-lg backdrop-blur-xl">
                                                 <SelectItem value="all">
                                                     All Priority
                                                 </SelectItem>
@@ -525,10 +525,10 @@ export default function CitizenIssuesMapPage() {
                                             value={categoryFilter}
                                             onValueChange={setCategoryFilter}
                                         >
-                                            <SelectTrigger className="w-32">
+                                            <SelectTrigger className="w-32 bg-white/5 border-white/10 text-white">
                                                 <SelectValue placeholder="Category" />
                                             </SelectTrigger>
-                                            <SelectContent>
+                                            <SelectContent className="bg-white/5 border-white/10 text-white shadow-lg backdrop-blur-xl">
                                                 <SelectItem value="all">
                                                     All Categories
                                                 </SelectItem>

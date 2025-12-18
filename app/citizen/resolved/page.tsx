@@ -52,9 +52,9 @@ export default function ResolvedIssuesPage() {
     const [activeTab, setActiveTab] = useState("all");
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+        <div className="min-h-screen bg-black/30">
             {/* Header */}
-            <div className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+            <div className="bg-white/5 backdrop-blur-sm shadow-lg border-0">
                 <div className="container mx-auto px-4 py-4 sm:py-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">

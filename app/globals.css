@@ -119,9 +119,17 @@
         @apply border-border outline-ring/50;
     }
     body {
-        @apply bg-background text-foreground;
+        @apply bg-black text-white;
         font-family: "Poppins", "Inter", "Montserrat", sans-serif;
         transition: all ease-in-out 300ms, background 0.3s, color 0.3s;
+    }
+
+    /* Force dark theme globally */
+    body,
+    #__next,
+    html {
+        background-color: #000000 !important;
+        color: #ffffff !important;
     }
 
     /* Ensure pointer cursor for all buttons and button-like elements */
@@ -152,6 +160,164 @@
 
     .font-inter {
         font-family: "Inter", sans-serif;
+    }
+
+    /* ==================== COMPREHENSIVE DARK THEME ==================== */
+
+    /* ALL gradient backgrounds → dark theme */
+    .bg-gradient-to-br,
+    .bg-gradient-to-r,
+    .bg-gradient-to-l,
+    .bg-gradient-to-t,
+    .bg-gradient-to-b {
+        background: linear-gradient(
+            to bottom right,
+            rgba(46, 106, 86, 0.2),
+            rgba(0, 0, 0, 1),
+            rgba(92, 148, 121, 0.2)
+        ) !important;
+    }
+
+    /* ALL Cards → glassmorphism dark theme */
+    [class*="Card"],
+    [class*="card"],
+    .card,
+    [data-card] {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(20px) !important;
+        color: white !important;
+    }
+
+    /* ALL text colors → white variants */
+    .text-gray-900,
+    .text-gray-800,
+    .text-gray-700,
+    .text-slate-900,
+    .text-slate-800 {
+        color: rgba(255, 255, 255, 1) !important;
+    }
+
+    .text-gray-600,
+    .text-slate-600,
+    .text-zinc-600 {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    .text-gray-500,
+    .text-slate-500,
+    .text-muted-foreground {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    .text-gray-400,
+    .text-slate-400 {
+        color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    .text-gray-300,
+    .text-slate-300 {
+        color: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    /* ALL light backgrounds → dark transparent */
+    .bg-white,
+    .bg-gray-50,
+    .bg-gray-100,
+    .bg-slate-50,
+    .bg-slate-100 {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    .bg-blue-50,
+    .bg-purple-50,
+    .bg-indigo-50,
+    .bg-emerald-50,
+    .bg-green-50 {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+    }
+
+    .bg-yellow-50,
+    .bg-orange-50,
+    .bg-red-50,
+    .bg-pink-50 {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+    }
+
+    /* Input fields → dark theme */
+    input,
+    textarea,
+    select {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+        color: rgba(255, 255, 255, 0.4) !important;
+    }
+
+    /* Buttons → dark theme */
+    button:not([class*="bg-gradient"]):not([class*="bg-[#"]) {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    button:hover:not([class*="bg-gradient"]) {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Tables → dark theme */
+    table,
+    thead,
+    tbody,
+    tr,
+    th,
+    td {
+        background-color: transparent !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+    }
+
+    th {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    tr:hover {
+        background-color: rgba(255, 255, 255, 0.03) !important;
+    }
+
+    /* Modals & Popovers → dark theme */
+    [role="dialog"],
+    [data-modal],
+    [data-popover] {
+        background-color: rgba(0, 0, 0, 0.95) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+        color: white !important;
+    }
+
+    /* Headers & Sticky elements → dark theme */
+    .sticky,
+    [class*="sticky"] {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+        backdrop-filter: blur(20px) !important;
+    }
+
+    /* Borders → subtle white */
+    .border,
+    [class*="border-"] {
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Shadow overrides for dark theme */
+    .shadow,
+    .shadow-sm,
+    .shadow-md,
+    .shadow-lg,
+    .shadow-xl {
+        box-shadow: 0 0 20px rgba(92, 148, 121, 0.1) !important;
     }
 }
 

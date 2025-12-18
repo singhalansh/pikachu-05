@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import AdminSidebar from "@/components/admin-sidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -464,42 +465,45 @@ const AdminDashboard = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center">
+            <div className="min-h-screen bg-black flex items-center justify-center">
                 <div className="text-center">
-                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-accent" />
-                    <p className="text-muted-foreground">
-                        Loading dashboard...
-                    </p>
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-[#5C9479]" />
+                    <p className="text-white/60">Loading dashboard...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="flex h-screen pt-16 md:pt-0">
+        <div className="flex h-screen pt-16 md:pt-0 bg-black">
             <AdminSidebar pendingIssues={overviewStats.pendingIssues} />
 
-            <div className="flex-1 overflow-auto bg-gradient-to-br from-slate-50 via-white to-emerald-50/30">
+            <div className="flex-1 overflow-auto bg-black relative">
+                {/* Animated Background */}
+                <div className="fixed inset-0 z-0">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#2E6A56]/20 via-black to-[#5C9479]/20" />
+                </div>
+
                 {/* Header */}
-                <div className="sticky top-0 bg-white/95 backdrop-blur-md shadow-lg border-0 p-4 md:p-6 flex items-center justify-between z-30 md:z-10">
+                <div className="sticky top-0 bg-black/80 backdrop-blur-2xl border-b border-white/10 p-4 md:p-6 flex items-center justify-between z-10">
                     <div className="flex-1">
-                        <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#2E6A56] to-emerald-600 bg-clip-text text-transparent">
+                        <h1 className="text-2xl md:text-3xl font-bold text-white">
                             Dashboard Overview
                         </h1>
-                        <p className="text-sm text-gray-600 mt-1">
+                        <p className="text-sm text-white/60 mt-1">
                             Welcome back! Here's your real-time analytics 📈
                         </p>
                     </div>
                     <div className="flex items-center gap-4">
                         <div className="relative hidden md:block">
-                            <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
+                            <Search className="absolute left-3 top-2.5 w-4 h-4 text-white/40" />
                             <Input
                                 placeholder="Search..."
-                                className="pl-10 w-64 bg-gray-50 border-gray-200 shadow-sm"
+                                className="pl-10 w-64 bg-white/10 border-white/20 text-white placeholder:text-white/40 shadow-sm"
                             />
                         </div>
-                        <button className="relative p-2 hover:bg-indigo-50 rounded-lg transition-colors shadow-sm">
-                            <Bell size={20} className="text-indigo-600" />
+                        <button className="relative p-2 hover:bg-white/10 rounded-lg transition-colors shadow-sm">
+                            <Bell size={20} className="text-[#5C9479]" />
                             {notifications > 0 && (
                                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                             )}
@@ -510,110 +514,125 @@ const AdminDashboard = () => {
                 {/* Content Area */}
                 <div className="p-4 md:p-6 space-y-6">
                     {error && (
-                        <Card className="border-0 bg-gradient-to-r from-red-50 to-pink-50 shadow-md">
+                        <Card className="bg-red-500/20 border border-red-500/30 shadow-md backdrop-blur-xl">
                             <CardContent className="p-4">
-                                <p className="text-red-800">{error}</p>
+                                <p className="text-red-300">{error}</p>
                             </CardContent>
                         </Card>
                     )}
 
-                    {/* KPI Cards */}
+                    {/* KPI Cards - Bento Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {[
                             {
                                 title: "Total Issues",
                                 value: overviewStats.totalIssues.toLocaleString(),
                                 icon: AlertTriangle,
-                                color: "bg-orange-50 dark:bg-orange-950",
-                                textColor: "text-orange-600",
+                                color: "bg-orange-500/20 border-orange-500/30",
+                                textColor: "text-orange-400",
                                 change: `+${overviewStats.newThisWeek} this week`,
                             },
                             {
                                 title: "Pending",
                                 value: overviewStats.pendingIssues.toLocaleString(),
                                 icon: Clock,
-                                color: "bg-yellow-50 dark:bg-yellow-950",
-                                textColor: "text-yellow-600",
+                                color: "bg-yellow-500/20 border-yellow-500/30",
+                                textColor: "text-yellow-400",
                                 change: "Awaiting review",
                             },
                             {
                                 title: "In Progress",
                                 value: overviewStats.inProgressIssues.toLocaleString(),
                                 icon: Eye,
-                                color: "bg-blue-50 dark:bg-blue-950",
-                                textColor: "text-blue-600",
+                                color: "bg-blue-500/20 border-blue-500/30",
+                                textColor: "text-blue-400",
                                 change: "Being worked on",
                             },
                             {
                                 title: "Resolved",
                                 value: overviewStats.resolvedIssues.toLocaleString(),
                                 icon: CheckCircle,
-                                color: "bg-gradient-to-br from-green-50 to-emerald-100",
-                                textColor: "text-green-600",
+                                color: "bg-emerald-500/20 border-emerald-500/30",
+                                textColor: "text-emerald-400",
                                 change: `+${overviewStats.resolvedThisWeek} this week`,
                             },
                         ].map((kpi, idx) => {
                             const Icon = kpi.icon;
                             return (
-                                <Card
+                                <motion.div
                                     key={idx}
-                                    className="hover:shadow-xl transition-all duration-300 hover:scale-105 border-0 shadow-md"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: idx * 0.1 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    className={`${kpi.color} border rounded-3xl p-6 backdrop-blur-xl relative overflow-hidden group`}
                                 >
-                                    <CardContent
-                                        className={`p-4 md:p-6 rounded-lg ${kpi.color}`}
-                                    >
-                                        <div className="flex items-start justify-between">
-                                            <div>
-                                                <p className="text-sm text-gray-600 mb-1">
-                                                    {kpi.title}
-                                                </p>
-                                                <p
-                                                    className={`text-2xl md:text-3xl font-bold ${kpi.textColor}`}
-                                                >
-                                                    {kpi.value}
-                                                </p>
-                                                <p className="text-xs text-gray-600 mt-2">
-                                                    {kpi.change}
-                                                </p>
-                                            </div>
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <div className="relative z-10">
+                                        <div className="flex items-start justify-between mb-4">
+                                            <p className="text-sm text-white/60">
+                                                {kpi.title}
+                                            </p>
                                             <Icon
-                                                className={`w-8 h-8 ${kpi.textColor} opacity-50`}
+                                                className={`w-8 h-8 ${kpi.textColor}`}
                                             />
                                         </div>
-                                    </CardContent>
-                                </Card>
+                                        <p
+                                            className={`text-4xl font-black ${kpi.textColor} mb-2`}
+                                        >
+                                            {kpi.value}
+                                        </p>
+                                        <p className="text-xs text-white/50">
+                                            {kpi.change}
+                                        </p>
+                                    </div>
+                                </motion.div>
                             );
                         })}
                     </div>
 
-                    {/* Charts Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Charts Section - Bento Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                         {/* Monthly Trends */}
-                        <Card className="lg:col-span-2">
-                            <CardHeader className="pb-4">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <CardTitle className="flex items-center gap-2">
-                                            <LineChartIcon className="w-5 h-5" />
-                                            Monthly Trends
-                                        </CardTitle>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="lg:col-span-2 bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl"
+                        >
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-[#2E6A56]/30 rounded-xl">
+                                        <LineChartIcon className="w-5 h-5 text-[#5C9479]" />
                                     </div>
-                                    <select className="text-sm border rounded px-2 py-1 bg-background">
-                                        <option>Last 12 Months</option>
-                                        <option>Last 6 Months</option>
-                                        <option>Last 3 Months</option>
-                                    </select>
+                                    <h3 className="text-xl font-bold text-white">
+                                        Monthly Trends
+                                    </h3>
                                 </div>
-                            </CardHeader>
-                            <CardContent>
+                                <select className="text-sm border border-white/20 rounded-lg px-3 py-2 bg-white/10 text-white">
+                                    <option className="bg-black text-white">
+                                        Last 12 Months
+                                    </option>
+                                    <option className="bg-black text-white">
+                                        Last 6 Months
+                                    </option>
+                                    <option className="bg-black text-white">
+                                        Last 3 Months
+                                    </option>
+                                </select>
+                            </div>
+                            <div>
                                 <ResponsiveContainer width="100%" height={300}>
                                     <RechartsLineChart data={monthlyTrends}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke="#e5e7eb"
+                                            stroke="rgba(255,255,255,0.1)"
                                         />
-                                        <XAxis dataKey="month" stroke="#666" />
-                                        <YAxis stroke="#666" />
+                                        <XAxis
+                                            dataKey="month"
+                                            stroke="rgba(255,255,255,0.5)"
+                                        />
+                                        <YAxis stroke="rgba(255,255,255,0.5)" />
                                         <Tooltip
                                             contentStyle={{
                                                 backgroundColor: "#fff",
@@ -633,21 +652,21 @@ const AdminDashboard = () => {
                                         <Line
                                             type="monotone"
                                             dataKey="resolved"
-                                            stroke="#10b981"
-                                            strokeWidth={2}
-                                            dot={{ fill: "#10b981", r: 4 }}
-                                            activeDot={{ r: 6 }}
+                                            stroke="#5C9479"
+                                            strokeWidth={3}
+                                            dot={{ fill: "#5C9479", r: 5 }}
+                                            activeDot={{ r: 8 }}
                                             name="Resolved"
                                         />
                                     </RechartsLineChart>
                                 </ResponsiveContainer>
-                            </CardContent>
-                        </Card>
+                            </div>
+                        </motion.div>
 
                         {/* Category Distribution */}
-                        <Card>
+                        <Card className="bg-white/5 border border-white/10 backdrop-blur-xl">
                             <CardHeader className="pb-4">
-                                <CardTitle className="flex items-center gap-2">
+                                <CardTitle className="flex items-center gap-2 text-white">
                                     <PieChart className="w-5 h-5" />
                                     Issues by Category
                                 </CardTitle>
@@ -684,7 +703,7 @@ const AdminDashboard = () => {
                                         </RechartsPieChart>
                                     </ResponsiveContainer>
                                 ) : (
-                                    <div className="h-[300px] flex items-center justify-center text-muted-foreground">
+                                    <div className="h-[300px] flex items-center justify-center text-white/60">
                                         No data available
                                     </div>
                                 )}
@@ -693,9 +712,9 @@ const AdminDashboard = () => {
                     </div>
 
                     {/* Department Performance */}
-                    <Card>
+                    <Card className="bg-white/5 border border-white/10 backdrop-blur-xl">
                         <CardHeader className="pb-4">
-                            <CardTitle className="flex items-center gap-2">
+                            <CardTitle className="flex items-center gap-2 text-white">
                                 <BarChart3 className="w-5 h-5" />
                                 Department Performance & Efficiency
                             </CardTitle>
@@ -706,19 +725,19 @@ const AdminDashboard = () => {
                                     <div key={idx} className="space-y-2">
                                         <div className="flex items-center justify-between">
                                             <div>
-                                                <p className="font-medium">
+                                                <p className="font-medium text-white">
                                                     {dept.department}
                                                 </p>
-                                                <p className="text-sm text-muted-foreground">
+                                                <p className="text-sm text-white/60">
                                                     {dept.completed} of{" "}
                                                     {dept.assigned} resolved
                                                 </p>
                                             </div>
                                             <div className="text-right">
-                                                <p className="font-bold text-lg text-accent">
+                                                <p className="font-bold text-lg text-[#5C9479]">
                                                     {dept.efficiency}%
                                                 </p>
-                                                <p className="text-xs text-muted-foreground">
+                                                <p className="text-xs text-white/60">
                                                     Efficiency
                                                 </p>
                                             </div>
@@ -734,10 +753,10 @@ const AdminDashboard = () => {
                     </Card>
 
                     {/* Recent Issues */}
-                    <Card>
+                    <Card className="bg-white/5 border border-white/10 backdrop-blur-xl">
                         <CardHeader className="pb-4">
                             <div className="flex items-center justify-between">
-                                <CardTitle className="flex items-center gap-2">
+                                <CardTitle className="flex items-center gap-2 text-white">
                                     <AlertTriangle className="w-5 h-5" />
                                     Recent Issues
                                 </CardTitle>
@@ -745,7 +764,7 @@ const AdminDashboard = () => {
                                     variant="outline"
                                     size="sm"
                                     asChild
-                                    className="bg-transparent"
+                                    className="bg-white/10 border-white/20 text-white hover:bg-white/20"
                                 >
                                     <a href="/admin/issues">View All</a>
                                 </Button>
@@ -756,13 +775,13 @@ const AdminDashboard = () => {
                                 {recentIssues.map((issue) => (
                                     <div
                                         key={issue.id}
-                                        className="flex items-center justify-between p-3 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                                        className="flex items-center justify-between p-3 border border-white/10 rounded-lg hover:bg-white/5 transition-colors"
                                     >
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-medium truncate">
+                                            <p className="font-medium truncate text-white">
                                                 {issue.title}
                                             </p>
-                                            <p className="text-sm text-muted-foreground">
+                                            <p className="text-sm text-white/60">
                                                 {issue.location_address ||
                                                     "No location"}
                                             </p>

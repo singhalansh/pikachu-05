@@ -65,7 +65,7 @@ export default function HomePage() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50 relative overflow-hidden">
+        <div className="min-h-screen bg-black relative overflow-hidden">
             {/* Animated Background Blobs */}
             <div className="fixed inset-0 pointer-events-none">
                 <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-br from-[#2E6A56]/8 to-emerald-400/8 rounded-full blur-3xl animate-pulse"></div>
@@ -84,14 +84,14 @@ export default function HomePage() {
             </div>
 
             {/* Navigation */}
-            <nav className="bg-white/95 backdrop-blur-md border-b shadow-sm border-gray-200 sticky top-0 z-50">
+            <nav className="bg-black/80 backdrop-blur-xl border-b border-white/10 shadow-2xl sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
+                    <div className="flex justify-between items-center h-20">
                         <div className="flex items-center space-x-3">
-                            <div className="w-10 h-10 rounded-lg bg-[#2E6A56] flex items-center justify-center">
-                                <MapPin className="w-6 h-6 text-white" />
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#2E6A56] to-emerald-600 flex items-center justify-center shadow-lg shadow-[#2E6A56]/30">
+                                <MapPin className="w-7 h-7 text-white" />
                             </div>
-                            <span className="text-2xl font-bold text-[#2E6A56]">
+                            <span className="text-3xl font-bold text-white">
                                 civik
                             </span>
                         </div>
@@ -99,10 +99,16 @@ export default function HomePage() {
                         <div className="flex items-center space-x-6">
                             <Link
                                 href="/auth?mode=login"
-                                className="text-[#2E6A56] hover:text-[#1f4a3a] font-medium flex items-center gap-2"
+                                className="text-white/80 hover:text-white font-medium flex items-center gap-2 transition-all duration-300 hover:scale-105"
                             >
                                 <LogIn className="w-4 h-4" />
                                 Login
+                            </Link>
+                            <Link
+                                href="/auth?mode=signup"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-300 hover:scale-105 shadow-lg"
+                            >
+                                Get Started
                             </Link>
                         </div>
                     </div>
@@ -163,29 +169,29 @@ export default function HomePage() {
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center space-y-8 max-w-4xl mx-auto">
-                        <div className="inline-flex items-center bg-[#2E6A56]/10 text-[#2E6A56] hover:bg-[#2E6A56]/15 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105">
-                            <Globe className="w-4 h-4 mr-2" />
+                    <div className="text-center space-y-10 max-w-5xl mx-auto">
+                        <div className="inline-flex items-center bg-white/10 border border-white/20 text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105 shadow-lg backdrop-blur-xl">
+                            <Globe className="w-4 h-4 mr-2 text-emerald-400" />
                             Digital Governance Platform
                         </div>
 
-                        <h1 className="text-4xl lg:text-7xl font-bold text-gray-900 leading-tight">
+                        <h1 className="text-5xl sm:text-6xl lg:text-8xl font-black text-white leading-[1.1] tracking-tight">
                             Connect with your city.
-                            <span className="text-[#2E6A56] block mt-2">
+                            <span className="text-emerald-400 block mt-3">
                                 Make it better.
                             </span>
                         </h1>
 
-                        <p className="text-xl lg:text-2xl text-gray-700 leading-relaxed max-w-3xl mx-auto">
+                        <p className="text-xl lg:text-2xl text-white/70 leading-relaxed max-w-3xl mx-auto font-light">
                             Report issues, track updates, and participate in
                             building stronger communities through digital
                             governance.
                         </p>
 
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-4">
                             <Link
                                 href="/auth?mode=signup"
-                                className="bg-[#2E6A56] hover:bg-[#1f4a3a] text-white px-10 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group flex items-center"
+                                className="bg-emerald-600 hover:bg-emerald-700 text-white px-12 py-5 text-lg rounded-2xl shadow-2xl transition-all duration-300 transform hover:scale-105 group flex items-center font-semibold"
                             >
                                 <Download className="w-5 h-5 mr-3" />
                                 Get Started Free
@@ -194,30 +200,46 @@ export default function HomePage() {
 
                             <Link
                                 href="/auth?mode=login"
-                                className="text-[#2E6A56] hover:text-[#1f4a3a] font-medium text-lg flex items-center group transition-all duration-300"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 text-white px-12 py-5 text-lg rounded-2xl font-semibold flex items-center group transition-all duration-300 hover:scale-105"
                             >
-                                <Shield className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                                Portal
+                                <Shield className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                                Admin Portal
                             </Link>
+                        </div>
+
+                        {/* Trust Indicators */}
+                        <div className="flex flex-wrap justify-center items-center gap-8 pt-12 text-white/60 text-sm">
+                            <div className="flex items-center gap-2">
+                                <Check className="w-5 h-5 text-emerald-500" />
+                                <span>50K+ Active Users</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Check className="w-5 h-5 text-emerald-500" />
+                                <span>98% Satisfaction Rate</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Check className="w-5 h-5 text-emerald-500" />
+                                <span>24/7 Support</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Stats Section */}
-            <section className="py-16 bg-white/70 backdrop-blur-sm border-y border-gray-100">
+            <section className="py-20 bg-gradient-to-b from-black via-[#2E6A56]/5 to-black border-y border-white/5">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
                         {stats.map((stat, index) => (
-                            <div
-                                key={index}
-                                className="text-center group hover:scale-105 transition-transform duration-300"
-                            >
-                                <div className="text-3xl lg:text-4xl font-bold text-[#2E6A56] mb-2">
-                                    {stat.number}
-                                </div>
-                                <div className="text-sm lg:text-base text-gray-700 font-medium">
-                                    {stat.label}
+                            <div key={index} className="relative group">
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-300 opacity-0 group-hover:opacity-100"></div>
+                                <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 text-center group-hover:scale-105 group-hover:border-[#2E6A56]/40 transition-all duration-300">
+                                    <div className="text-4xl lg:text-5xl font-black text-white mb-2">
+                                        {stat.number}
+                                    </div>
+                                    <div className="text-sm lg:text-base text-white/70 font-medium">
+                                        {stat.label}
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -226,7 +248,7 @@ export default function HomePage() {
             </section>
 
             {/* App Preview Section */}
-            <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+            <section className="py-20 bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center space-y-8">
                         <div className="space-y-4">
@@ -234,7 +256,7 @@ export default function HomePage() {
                                 <Smartphone className="w-4 h-4 mr-2" />
                                 Mobile App
                             </div>
-                            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900">
+                            <h2 className="text-3xl lg:text-5xl font-bold text-white">
                                 Everything you need
                                 <span className="text-[#2E6A56] block">
                                     in your pocket
@@ -243,60 +265,63 @@ export default function HomePage() {
                         </div>
 
                         <div className="max-w-md mx-auto">
-                            <div className="bg-white/95 backdrop-blur-sm shadow-xl border-0 hover:shadow-2xl transition-all duration-500 hover:scale-105 rounded-lg">
-                                <div className="text-center pb-4 pt-6 px-6">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-[#2E6A56] to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                                        <Smartphone className="w-8 h-8 text-white" />
-                                    </div>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                                        civik Mobile App
-                                    </h3>
-                                    <div className="flex items-center justify-center space-x-1 mt-2">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                                            />
-                                        ))}
-                                        <span className="ml-2 text-sm font-medium text-gray-600">
-                                            4.8 (12K+ reviews)
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="space-y-3 p-6">
-                                    <div className="flex items-center space-x-3 p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors">
-                                        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                                            <MapPin className="w-4 h-4 text-emerald-600" />
+                            <div className="relative group">
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#2E6A56] to-emerald-600 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-all duration-500"></div>
+                                <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl hover:shadow-[#2E6A56]/20 transition-all duration-500 hover:scale-105 rounded-3xl overflow-hidden">
+                                    <div className="bg-gradient-to-br from-[#2E6A56]/10 to-emerald-600/10 text-center pb-6 pt-8 px-6 border-b border-white/10">
+                                        <div className="w-20 h-20 bg-gradient-to-br from-[#2E6A56] to-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl shadow-[#2E6A56]/40 group-hover:scale-110 transition-transform duration-500">
+                                            <Smartphone className="w-10 h-10 text-white" />
                                         </div>
-                                        <span className="text-sm font-medium text-emerald-800">
-                                            Report civic issues instantly
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center space-x-3 p-3 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition-colors">
-                                        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                                            <Bell className="w-4 h-4 text-emerald-600" />
+                                        <h3 className="text-3xl font-bold text-white mb-3">
+                                            civik Mobile App
+                                        </h3>
+                                        <div className="flex items-center justify-center space-x-1 mt-3">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    className="w-5 h-5 fill-yellow-400 text-yellow-400"
+                                                />
+                                            ))}
+                                            <span className="ml-3 text-base font-semibold text-white/80">
+                                                4.8 (12K+ reviews)
+                                            </span>
                                         </div>
-                                        <span className="text-sm font-medium text-emerald-800">
-                                            Track resolution progress
-                                        </span>
                                     </div>
-                                    <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
-                                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                                            <Users className="w-4 h-4 text-green-600" />
+                                    <div className="space-y-3 p-6">
+                                        <div className="flex items-center space-x-4 p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-[#2E6A56]/30 transition-all duration-300 group/item">
+                                            <div className="w-10 h-10 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 rounded-xl flex items-center justify-center group-hover/item:scale-110 transition-transform">
+                                                <MapPin className="w-5 h-5 text-emerald-400" />
+                                            </div>
+                                            <span className="text-sm font-semibold text-white/90">
+                                                Report civic issues instantly
+                                            </span>
                                         </div>
-                                        <span className="text-sm font-medium text-green-800">
-                                            Community engagement
-                                        </span>
-                                    </div>
-                                    <div className="pt-4">
-                                        <Link
-                                            href="/auth?mode=signup"
-                                            className="w-full bg-[#2E6A56] hover:bg-[#1f4a3a] text-white py-3 rounded-lg group transition-all duration-300 flex items-center justify-center"
-                                        >
-                                            <Download className="w-4 h-4 mr-2" />
-                                            Get Started Now
-                                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                                        </Link>
+                                        <div className="flex items-center space-x-4 p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-[#2E6A56]/30 transition-all duration-300 group/item">
+                                            <div className="w-10 h-10 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 rounded-xl flex items-center justify-center group-hover/item:scale-110 transition-transform">
+                                                <Bell className="w-5 h-5 text-emerald-400" />
+                                            </div>
+                                            <span className="text-sm font-semibold text-white/90">
+                                                Track resolution progress
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center space-x-4 p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 hover:border-[#2E6A56]/30 transition-all duration-300 group/item">
+                                            <div className="w-10 h-10 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 rounded-xl flex items-center justify-center group-hover/item:scale-110 transition-transform">
+                                                <Users className="w-5 h-5 text-emerald-400" />
+                                            </div>
+                                            <span className="text-sm font-semibold text-white/90">
+                                                Community engagement
+                                            </span>
+                                        </div>
+                                        <div className="pt-4">
+                                            <Link
+                                                href="/auth?mode=signup"
+                                                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-xl font-semibold group/btn transition-all duration-300 flex items-center justify-center shadow-lg"
+                                            >
+                                                <Download className="w-5 h-5 mr-2" />
+                                                Get Started Now
+                                                <ArrowRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+                                            </Link>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -306,41 +331,41 @@ export default function HomePage() {
             </section>
 
             {/* Features Section */}
-            <section className="py-20 bg-white">
+            <section className="py-20 bg-black">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center space-y-6 mb-16">
                         <div className="inline-flex items-center bg-[#2E6A56]/10 text-[#2E6A56] px-4 py-2 rounded-full text-sm font-medium">
                             Platform Features
                         </div>
-                        <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                        <h2 className="text-3xl lg:text-5xl font-bold text-white leading-tight">
                             Built for citizens,
                             <span className="text-[#2E6A56] block">
                                 powered by innovation
                             </span>
                         </h2>
-                        <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
                             Modern tools that make civic engagement simple,
                             transparent, and effective for everyone.
                         </p>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {features.map((feature, index) => (
-                            <div
-                                key={index}
-                                className="bg-white border border-gray-100 shadow-sm hover:shadow-xl hover:border-[#2E6A56]/20 transition-all duration-300 hover:scale-105 group rounded-lg p-6"
-                            >
-                                <div className="pb-4">
-                                    <div className="w-14 h-14 bg-gradient-to-br from-[#2E6A56]/10 to-emerald-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                                        <feature.icon className="w-7 h-7 text-[#2E6A56]" />
+                            <div key={index} className="relative group">
+                                <div className="absolute inset-0 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                                <div className="relative bg-white/5 border border-white/10 backdrop-blur-xl shadow-lg hover:shadow-2xl hover:shadow-[#2E6A56]/10 hover:border-[#2E6A56]/30 transition-all duration-500 hover:scale-105 rounded-2xl p-8">
+                                    <div className="pb-4">
+                                        <div className="w-16 h-16 bg-gradient-to-br from-[#2E6A56]/20 to-emerald-600/20 border border-[#2E6A56]/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-[#2E6A56]/50 transition-all duration-300 shadow-lg shadow-[#2E6A56]/20">
+                                            <feature.icon className="w-8 h-8 text-emerald-400" />
+                                        </div>
+                                        <h3 className="text-2xl font-bold text-white mb-3">
+                                            {feature.title}
+                                        </h3>
                                     </div>
-                                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-[#2E6A56] transition-colors mb-3">
-                                        {feature.title}
-                                    </h3>
+                                    <p className="text-white/70 leading-relaxed text-base">
+                                        {feature.description}
+                                    </p>
                                 </div>
-                                <p className="text-gray-700 leading-relaxed">
-                                    {feature.description}
-                                </p>
                             </div>
                         ))}
                     </div>
@@ -348,34 +373,35 @@ export default function HomePage() {
             </section>
 
             {/* CTA Section */}
-            <section className="py-20 bg-gradient-to-br from-[#2E6A56] to-emerald-700 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-r from-[#2E6A56]/95 to-emerald-700/95"></div>
-                <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                    <div className="space-y-8">
-                        <h2 className="text-3xl lg:text-5xl font-bold text-white leading-tight">
-                            Ready to make a difference?
-                        </h2>
-                        <p className="text-xl lg:text-2xl text-emerald-50 leading-relaxed">
-                            Join thousands building stronger communities through
-                            digital governance.
-                        </p>
-                        <div className="pt-4">
+            <section className="py-24 bg-gradient-to-br from-[#2E6A56] via-emerald-600 to-emerald-700 relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_50%)]"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,255,255,0.05),transparent_50%)]"></div>
+                <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <div className="space-y-10">
+                        <div className="space-y-6">
+                            <h2 className="text-4xl lg:text-6xl font-black text-white leading-tight">
+                                Ready to make a difference?
+                            </h2>
+                            <p className="text-xl lg:text-2xl text-white/90 leading-relaxed font-light max-w-3xl mx-auto">
+                                Join thousands building stronger communities
+                                through digital governance.
+                            </p>
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-6">
                             <Link
                                 href="/auth?mode=signup"
-                                className="inline-block bg-white text-[#2E6A56] hover:bg-gray-100 px-10 py-4 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group transform hover:scale-105"
+                                className="bg-white hover:bg-white/90 text-[#2E6A56] px-12 py-5 text-lg rounded-2xl shadow-2xl hover:shadow-white/20 transition-all duration-300 group transform hover:scale-105 font-bold flex items-center"
                             >
-                                <Download className="w-5 h-5 mr-3 inline" />
+                                <Download className="w-5 h-5 mr-3" />
                                 Get Started Free
-                                <ArrowRight className="w-5 h-5 ml-3 inline group-hover:translate-x-1 transition-transform" />
+                                <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform" />
                             </Link>
-                        </div>
-                        <div className="pt-4">
                             <Link
                                 href="/auth?mode=login"
-                                className="text-emerald-100 hover:text-white font-medium text-lg flex items-center justify-center mx-auto group transition-all duration-300"
+                                className="bg-white/10 hover:bg-white/20 backdrop-blur-xl border-2 border-white/30 text-white px-12 py-5 text-lg rounded-2xl font-semibold flex items-center group transition-all duration-300 hover:scale-105"
                             >
-                                <Lock className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-                                istrator Access
+                                <Lock className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                                Admin Access
                             </Link>
                         </div>
                     </div>
@@ -383,57 +409,88 @@ export default function HomePage() {
             </section>
 
             {/* Footer */}
-            <footer className="bg-gray-900 text-white py-12">
+            <footer className="bg-black border-t border-white/10 text-white py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid md:grid-cols-3 gap-8">
-                        <div className="space-y-4">
+                    <div className="grid md:grid-cols-3 gap-12 mb-12">
+                        <div className="space-y-6">
                             <div className="flex items-center space-x-3">
-                                <div className="w-8 h-8 rounded-lg bg-[#2E6A56] flex items-center justify-center">
-                                    <MapPin className="w-5 h-5 text-white" />
+                                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#2E6A56] to-emerald-600 flex items-center justify-center shadow-lg shadow-[#2E6A56]/30">
+                                    <MapPin className="w-6 h-6 text-white" />
                                 </div>
-                                <span className="text-xl font-bold">civik</span>
+                                <span className="text-2xl font-bold">
+                                    civik
+                                </span>
                             </div>
-                            <p className="text-gray-400">
+                            <p className="text-white/60 leading-relaxed text-base">
                                 Empowering digital democracy through
                                 transparent, efficient, and responsive
                                 governance.
                             </p>
                         </div>
 
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-semibold">
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-bold text-white">
                                 Quick Links
                             </h3>
-                            <div className="space-y-2">
+                            <div className="space-y-3">
                                 <Link
                                     href="/auth?mode=signup"
-                                    className="block text-gray-400 hover:text-white transition-colors"
+                                    className="block text-white/60 hover:text-white transition-all duration-300 hover:translate-x-1 font-medium"
                                 >
                                     Get Started
                                 </Link>
                                 <Link
                                     href="/auth?mode=login"
-                                    className="block text-gray-400 hover:text-white transition-colors"
+                                    className="block text-white/60 hover:text-white transition-all duration-300 hover:translate-x-1 font-medium"
                                 >
-                                    Portal
+                                    Admin Portal
+                                </Link>
+                                <Link
+                                    href="/citizen/dashboard"
+                                    className="block text-white/60 hover:text-white transition-all duration-300 hover:translate-x-1 font-medium"
+                                >
+                                    Citizen Portal
                                 </Link>
                             </div>
                         </div>
 
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-semibold">Contact</h3>
-                            <div className="space-y-2 text-gray-400">
-                                <p>support@civik.gov.in</p>
-                                <p>+91 1800-XXX-XXXX</p>
+                        <div className="space-y-6">
+                            <h3 className="text-xl font-bold text-white">
+                                Contact
+                            </h3>
+                            <div className="space-y-3">
+                                <a
+                                    href="mailto:support@civik.gov.in"
+                                    className="block text-white/60 hover:text-emerald-400 transition-colors font-medium"
+                                >
+                                    support@civik.gov.in
+                                </a>
+                                <p className="text-white/60 font-medium">
+                                    +91 1800-XXX-XXXX
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                        <p>
+                    <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <p className="text-white/50 text-sm">
                             © 2025 civik. All rights reserved. | A Digital India
                             Initiative
                         </p>
+                        <div className="flex gap-6">
+                            <Link
+                                href="#"
+                                className="text-white/50 hover:text-white transition-colors text-sm font-medium"
+                            >
+                                Privacy Policy
+                            </Link>
+                            <Link
+                                href="#"
+                                className="text-white/50 hover:text-white transition-colors text-sm font-medium"
+                            >
+                                Terms of Service
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </footer>
