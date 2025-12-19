@@ -1051,10 +1051,10 @@ export default function ReportIssuePage() {
                                                                         }
                                                                     }}
                                                                 >
-                                                                    <SelectTrigger className="h-8">
+                                                                    <SelectTrigger className="h-8 bg-white/5 border border-white/10 text-white">
                                                                         <SelectValue placeholder="Select language" />
                                                                     </SelectTrigger>
-                                                                    <SelectContent>
+                                                                    <SelectContent className="bg-white/5 border border-white/10 text-white shadow-lg backdrop-blur-xl">
                                                                         <SelectItem value="en-US">
                                                                             English
                                                                             (US)
