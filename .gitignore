@@ -20,8 +20,9 @@ zip2
 *.zip
 *.zip2
 .zip*
-# env files
+# env files (but keep .env.example for reference)
 .env*
+!.env.example
 
 # vercel
 .vercel

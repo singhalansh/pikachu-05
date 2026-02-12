@@ -35,6 +35,8 @@ Before setting up the project, ensure you have the following installed:
 
 ## 🚀 Quick Start
 
+> **📝 Note:** This setup requires you to obtain and configure your own API keys and credentials. The application will not work without proper environment configuration.
+
 ### 1. Clone the Repository
 
 ```bash
@@ -52,7 +54,17 @@ yarn install
 
 ### 3. Environment Setup
 
-Create a `.env.local` file in the root directory with the following variables:
+> **⚠️ IMPORTANT:** You must create your own `.env.local` file with your actual credentials. The placeholder values shown below will NOT work. You need to obtain your own API keys and configuration values from the respective services.
+
+#### Create Your Environment File
+
+Copy the example file and add your own credentials:
+
+```bash
+cp .env.example .env.local
+```
+
+Then edit `.env.local` and replace all placeholder values with your actual credentials:
 
 ```env
 # Supabase Configuration (Required)
@@ -77,6 +89,8 @@ NEXT_PUBLIC_VAPI_ASSISTANT_ID=your_vapi_assistant_id
 # Site URL (for API calls)
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
+
+> **🔒 Security Note:** Never commit your `.env.local` file to version control. It contains sensitive credentials and is already included in `.gitignore`.
 
 #### Getting Supabase Credentials
 
