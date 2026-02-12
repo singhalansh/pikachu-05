@@ -255,10 +255,11 @@ The application can be deployed to any platform that supports Next.js:
 #### Build Errors
 
 **Problem**: TypeScript errors during build
-```bash
-npm run build
-```
-**Solution**: The project is configured with `ignoreBuildErrors: false`. Fix TypeScript errors before building.
+**Solution**: This project enforces strict TypeScript checking. Common fixes:
+- Check for type mismatches in your code
+- Ensure all imports have proper type definitions
+- Run `npm run lint` to identify issues
+- Review the TypeScript errors in the build output for specific line numbers and error messages
 
 #### Database Connection Issues
 
@@ -286,9 +287,9 @@ npm run build
 
 ### Getting Help
 
-- Check existing [documentation files](.) for specific features
 - Review [DATABASE.md](DATABASE.md) for database-related issues
 - See [GOOGLE_MAPS_SETUP.md](GOOGLE_MAPS_SETUP.md) for map integration issues
+- Check the additional documentation files listed below for specific features
 
 ## 📚 Additional Documentation
 
