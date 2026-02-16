@@ -5,6 +5,12 @@ export async function POST(req: Request) {
     try {
         const { title, category, description, imageBase64 } = await req.json();
 
+        if (!process.env.OPENAI_API_KEY) {
+            console.error("OPENAI_API_KEY not configured");
+            // Fallback: treat as not verified to avoid accepting spam
+            return NextResponse.json({ decision: "No" });
+        }
+
         // Prompt for verifying issue legitimacy
         const verifyPrompt = `
 You are verifying a civic issue report. Analyze if this is a legitimate civic issue that requires municipal attention.
@@ -39,25 +45,12 @@ Return only the category that best matches the issue. match the result word to w
 `;
 
         // === Build request bodies ===
-        const requestBody: any = {
-            contents: [
-                {
-                    parts: [{ text: verifyPrompt }],
-                },
-            ],
-            generationConfig: {
-                temperature: 0.1,
-                maxOutputTokens: 10,
-            },
-        };
+        const verifyContentParts: any[] = [{ type: "text", text: verifyPrompt }];
+        const categoryContentParts: any[] = [
+            { type: "text", text: categoryPrompt },
+        ];
 
-        const categoryRequestBody: any = {
-            contents: [
-                {
-                    parts: [{ text: categoryPrompt }],
-                },
-            ],
-        };
+        let imagePart: any = null;
 
         // === Handle image if provided ===
         if (imageBase64) {
@@ -75,37 +68,66 @@ Return only the category that best matches the issue. match the result word to w
                 base64Data = imageBase64.split(",")[1];
             }
 
-            const inlineImage = {
-                inline_data: {
-                    mime_type: mimeType,
-                    data: base64Data,
+            imagePart = {
+                type: "image_url",
+                image_url: {
+                    url: `data:${mimeType};base64,${base64Data}`,
                 },
             };
 
             // Add image to both requests
-            requestBody.contents[0].parts.push(inlineImage);
-            categoryRequestBody.contents[0].parts.push(inlineImage);
+            verifyContentParts.push(imagePart);
+            categoryContentParts.push(imagePart);
         }
 
-        // === Call Gemini APIs ===
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const verifyRequestBody: any = {
+            model: process.env.OPENAI_MODEL || "gpt-4.1",
+            messages: [
+                {
+                    role: "user",
+                    content: verifyContentParts,
+                },
+            ],
+            temperature: 0.1,
+            max_tokens: 10,
+        };
+
+        const categoryRequestBody: any = {
+            model: process.env.OPENAI_MODEL || "gpt-4.1",
+            messages: [
+                {
+                    role: "user",
+                    content: categoryContentParts,
+                },
+            ],
+            temperature: 0.1,
+        };
+
+        // === Call OpenAI APIs ===
+        const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
         const [categoryResponse, verifyResponse] = await Promise.all([
-            fetch(GEMINI_URL, {
+            fetch(OPENAI_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+                },
                 body: JSON.stringify(categoryRequestBody),
             }),
-            fetch(GEMINI_URL, {
+            fetch(OPENAI_URL, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(requestBody),
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+                },
+                body: JSON.stringify(verifyRequestBody),
             }),
         ]);
 
         if (!verifyResponse.ok) {
             console.error(
-                "Gemini API verification error:",
+                "OpenAI API verification error:",
                 verifyResponse.status,
                 await verifyResponse.text()
             );
@@ -114,33 +136,50 @@ Return only the category that best matches the issue. match the result word to w
 
         if (!categoryResponse.ok) {
             console.error(
-                "Gemini API category error:",
+                "OpenAI API category error:",
                 categoryResponse.status,
                 await categoryResponse.text()
             );
         }
 
         // === Parse responses ===
-        const verifyData = await verifyResponse.json();
-        const categoryData = await categoryResponse.json();
+        const verifyData: any = await verifyResponse.json();
+        const categoryData: any = await categoryResponse.json();
 
-        const verifyText =
-            verifyData?.candidates?.[0]?.content?.parts?.[0]?.text || "No";
-        const categoryText =
-            categoryData?.candidates?.[0]?.content?.parts?.[0]?.text ||
-            category;
+        const getTextFromChoice = (data: any, fallback: string) => {
+            const choice = data?.choices?.[0];
+            const message = choice?.message;
+
+            if (!message) return fallback;
+
+            if (typeof message.content === "string") {
+                return message.content;
+            }
+
+            if (Array.isArray(message.content)) {
+                return message.content
+                    .filter((part: any) => part.type === "text" && part.text)
+                    .map((part: any) => part.text)
+                    .join("\n");
+            }
+
+            return fallback;
+        };
+
+        const verifyText = getTextFromChoice(verifyData, "No");
+        const categoryText = getTextFromChoice(categoryData, category);
 
         const decision = verifyText.trim().toLowerCase().includes("yes")
             ? "Yes"
             : "No";
 
-        console.log("=== GEMINI VERIFICATION RESULT ===");
+        console.log("=== OPENAI VERIFICATION RESULT ===");
         console.log("Title:", title);
         console.log("Category (user):", category);
         console.log("Category (AI):", categoryText.trim());
         console.log("Description:", description);
         console.log("Has Image:", !!imageBase64);
-        console.log("Gemini Verify Response:", verifyText.trim());
+        console.log("OpenAI Verify Response:", verifyText.trim());
         console.log("Final Decision:", decision);
         console.log(
             "Available Categories:",

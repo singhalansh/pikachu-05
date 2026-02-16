@@ -403,7 +403,7 @@ function UnifiedAuthPageInner() {
                                         <SelectTrigger className="border-white/10 focus:border-[#5C9479] focus:ring-[#5C9479] bg-white/5 text-white">
                                             <SelectValue placeholder="Choose your role" />
                                         </SelectTrigger>
-                                        <SelectContent className="relative z-10 bg-white border-2">
+                                        <SelectContent className="relative z-10 bg-white/5 border-white/10 backdrop-blur-xl border-2">
                                             <SelectItem value="citizen">
                                                 <div className="flex items-center space-x-2">
                                                     <MapPin className="w-4 h-4 text-[#2E6A56]" />

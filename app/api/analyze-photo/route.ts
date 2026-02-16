@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 /**
  * POST /api/analyze-photo
- * Analyzes a photo and extracts civic issue details using Gemini AI
+ * Analyzes a photo and extracts civic issue details using OpenAI (Vision)
  */
 export async function POST(req: Request) {
     try {
@@ -17,8 +17,8 @@ export async function POST(req: Request) {
             );
         }
 
-        if (!process.env.GEMINI_API_KEY) {
-            console.error("GEMINI_API_KEY not configured");
+        if (!process.env.OPENAI_API_KEY) {
+            console.error("OPENAI_API_KEY not configured");
             return NextResponse.json(
                 { error: "AI service not configured" },
                 { status: 500 }
@@ -73,39 +73,45 @@ If this is NOT a civic issue (e.g., personal photo, unrelated content), return:
             base64Data = imageBase64.split(",")[1];
         }
 
-        const requestBody = {
-            contents: [
+        const openAiRequestBody = {
+            model: process.env.OPENAI_MODEL || "gpt-4.1",
+            messages: [
                 {
-                    parts: [
-                        { text: analysisPrompt },
+                    role: "user",
+                    content: [
+                        { type: "text", text: analysisPrompt },
                         {
-                            inline_data: {
-                                mime_type: mimeType,
-                                data: base64Data,
+                            type: "image_url",
+                            image_url: {
+                                url: `data:${mimeType};base64,${base64Data}`,
                             },
                         },
                     ],
                 },
             ],
+            temperature: 0.2,
         };
 
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const OPENAI_URL = "https://api.openai.com/v1/chat/completions";
 
-        console.log("[Analyze Photo] Calling Gemini API...");
+        console.log("[Analyze Photo] Calling OpenAI API...");
         const startTime = Date.now();
 
-        const response = await fetch(GEMINI_URL, {
+        const response = await fetch(OPENAI_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            },
+            body: JSON.stringify(openAiRequestBody),
         });
 
         const elapsed = Date.now() - startTime;
-        console.log(`[Analyze Photo] Gemini responded in ${elapsed}ms`);
+        console.log(`[Analyze Photo] OpenAI responded in ${elapsed}ms`);
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error("Gemini API error:", response.status, errorText);
+            console.error("OpenAI API error:", response.status, errorText);
             return NextResponse.json(
                 {
                     error: "AI analysis failed",
@@ -122,10 +128,24 @@ If this is NOT a civic issue (e.g., personal photo, unrelated content), return:
             );
         }
 
-        const data = await response.json();
+        const data: any = await response.json();
 
         // Extract the AI response text
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+        let aiText = "";
+        const firstChoice = data.choices?.[0];
+        const message = firstChoice?.message;
+
+        if (message) {
+            if (typeof message.content === "string") {
+                aiText = message.content;
+            } else if (Array.isArray(message.content)) {
+                aiText = message.content
+                    .filter((part: any) => part.type === "text" && part.text)
+                    .map((part: any) => part.text)
+                    .join("\n");
+            }
+        }
+
         console.log("[Analyze Photo] AI Response:", aiText);
 
         if (!aiText) {
