@@ -53,6 +53,7 @@ import {
 import SimpleAdminActions from "@/components/simple-admin-actions";
 import { useAuth } from "@/contexts/auth-context";
 import AIUrgencyBadge from "@/components/ai-urgency-badge";
+import { toast } from "sonner";
 
 interface Issue {
     id: string;
@@ -343,23 +344,13 @@ export default function AdminIssuesPage() {
                     statusMessages[newStatus as keyof typeof statusMessages] ||
                     `Status updated to ${newStatus}`;
 
-                const toast = document.createElement("div");
-                toast.className =
-                    "fixed top-4 right-4 bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2";
-                toast.innerHTML = `<CheckCircle class="w-4 h-4" /> <span>${message}</span>`;
-                document.body.appendChild(toast);
-                setTimeout(() => document.body.removeChild(toast), 3000);
+                toast.success(message);
             } else {
                 throw new Error("Failed to update status");
             }
         } catch (error) {
             console.error("Error updating status:", error);
-            const errorToast = document.createElement("div");
-            errorToast.className =
-                "fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center space-x-2";
-            errorToast.innerHTML = `<AlertTriangle class="w-4 h-4" /> <span>Failed to update issue status</span>`;
-            document.body.appendChild(errorToast);
-            setTimeout(() => document.body.removeChild(errorToast), 3000);
+            toast.error("Failed to update issue status");
         }
     };
 
@@ -697,10 +688,10 @@ export default function AdminIssuesPage() {
                                                 value={statusFilter}
                                                 onValueChange={setStatusFilter}
                                             >
-                                                <SelectTrigger>
+                                                <SelectTrigger className="border-white/10 focus:border-[#5C9479] focus:ring-[#5C9479] bg-white/5 text-white">
                                                     <SelectValue placeholder="All Status" />
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="relative z-10 bg-white/5 border-white/10 backdrop-blur-xl border-2">
                                                     <SelectItem value="all">
                                                         All Status
                                                     </SelectItem>
@@ -733,10 +724,10 @@ export default function AdminIssuesPage() {
                                                     setPriorityFilter
                                                 }
                                             >
-                                                <SelectTrigger>
+                                                <SelectTrigger className="border-white/10 focus:border-[#5C9479] focus:ring-[#5C9479] bg-white/5 text-white">
                                                     <SelectValue placeholder="All Priority" />
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="relative z-10 bg-white/5 border-white/10 backdrop-blur-xl border-2">
                                                     <SelectItem value="all">
                                                         All Priority
                                                     </SelectItem>
@@ -763,10 +754,10 @@ export default function AdminIssuesPage() {
                                                     setCategoryFilter
                                                 }
                                             >
-                                                <SelectTrigger>
+                                                <SelectTrigger className="border-white/10 focus:border-[#5C9479] focus:ring-[#5C9479] bg-white/5 text-white">
                                                     <SelectValue placeholder="All Categories" />
                                                 </SelectTrigger>
-                                                <SelectContent>
+                                                <SelectContent className="relative z-10 bg-white/5 border-white/10 backdrop-blur-xl border-2">
                                                     <SelectItem value="all">
                                                         All Categories
                                                     </SelectItem>

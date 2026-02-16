@@ -143,7 +143,7 @@ export default function SimpleAdminActions({
                 createPortal(
                     <div
                         ref={dropdownRef}
-                        className="fixed w-48 max-h-[60vh] overflow-auto bg-white border border-gray-200 rounded-md shadow-lg z-50"
+                        className="fixed w-48 max-h-[60vh] overflow-auto bg-white/5 border border-white/10 backdrop-blur-xl rounded-md shadow-lg z-50"
                         style={{
                             top: dropdownPosition.top,
                             left: dropdownPosition.left,
@@ -151,29 +151,29 @@ export default function SimpleAdminActions({
                     >
                         <div className="py-1">
                             {/* Header */}
-                            <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b">
+                            <div className="px-3 py-2 text-xs font-semibold text-white/60 uppercase tracking-wide border-b border-white/10">
                                 Quick Actions
                             </div>
 
                             {/* View & Edit Actions */}
                             <button
                                 onClick={() => handleAction("view")}
-                                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                className="flex items-center w-full px-3 py-2 text-sm text-white hover:bg-white/10"
                             >
                                 <Eye className="w-4 h-4 mr-2" />
                                 View Details
                             </button>
                             <button
                                 onClick={() => handleAction("edit")}
-                                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                className="flex items-center w-full px-3 py-2 text-sm text-white hover:bg-white/10"
                             >
                                 <Edit className="w-4 h-4 mr-2" />
                                 Edit Issue
                             </button>
 
                             {/* Separator */}
-                            <div className="border-t border-gray-100 my-1"></div>
-                            <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <div className="border-t border-white/10 my-1"></div>
+                            <div className="px-3 py-2 text-xs font-semibold text-white/60 uppercase tracking-wide">
                                 Status Actions
                             </div>
 
@@ -182,14 +182,14 @@ export default function SimpleAdminActions({
                                 <>
                                     <button
                                         onClick={() => handleAction("accept")}
-                                        className="flex items-center w-full px-3 py-2 text-sm text-green-600 hover:bg-green-50"
+                                        className="flex items-center w-full px-3 py-2 text-sm text-green-400 hover:bg-white/10"
                                     >
                                         <CheckCircle className="w-4 h-4 mr-2" />
                                         Accept Issue
                                     </button>
                                     <button
                                         onClick={() => handleAction("reject")}
-                                        className="flex items-center w-full px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                                        className="flex items-center w-full px-3 py-2 text-sm text-red-400 hover:bg-white/10"
                                     >
                                         <AlertTriangle className="w-4 h-4 mr-2" />
                                         Reject Issue
@@ -201,7 +201,7 @@ export default function SimpleAdminActions({
                                 issue.status === "submitted") && (
                                 <button
                                     onClick={() => handleAction("in_progress")}
-                                    className="flex items-center w-full px-3 py-2 text-sm text-blue-600 hover:bg-blue-50"
+                                    className="flex items-center w-full px-3 py-2 text-sm text-blue-400 hover:bg-white/10"
                                 >
                                     <Clock className="w-4 h-4 mr-2" />
                                     Start Work
@@ -211,7 +211,7 @@ export default function SimpleAdminActions({
                             {issue.status === "in_progress" && (
                                 <button
                                     onClick={() => handleAction("resolve")}
-                                    className="flex items-center w-full px-3 py-2 text-sm text-green-600 hover:bg-green-50"
+                                    className="flex items-center w-full px-3 py-2 text-sm text-green-400 hover:bg-white/10"
                                 >
                                     <CheckCircle className="w-4 h-4 mr-2" />
                                     Mark Resolved
@@ -221,12 +221,12 @@ export default function SimpleAdminActions({
                             {issue.status !== "closed" &&
                                 issue.status !== "resolved" && (
                                     <>
-                                        <div className="border-t border-gray-100 my-1"></div>
+                                        <div className="border-t border-white/10 my-1"></div>
                                         <button
                                             onClick={() =>
                                                 handleAction("close")
                                             }
-                                            className="flex items-center w-full px-3 py-2 text-sm text-gray-600 hover:bg-gray-50"
+                                            className="flex items-center w-full px-3 py-2 text-sm text-white/70 hover:bg-white/10"
                                         >
                                             <X className="w-4 h-4 mr-2" />
                                             Close Issue
@@ -235,20 +235,20 @@ export default function SimpleAdminActions({
                                 )}
 
                             {/* Management Actions */}
-                            <div className="border-t border-gray-100 my-1"></div>
-                            <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <div className="border-t border-white/10 my-1"></div>
+                            <div className="px-3 py-2 text-xs font-semibold text-white/60 uppercase tracking-wide">
                                 Management
                             </div>
                             <button
                                 onClick={() => handleAction("assign")}
-                                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                className="flex items-center w-full px-3 py-2 text-sm text-white hover:bg-white/10"
                             >
                                 <Building2 className="w-4 h-4 mr-2" />
                                 Assign Department
                             </button>
                             <button
                                 onClick={() => handleAction("priority")}
-                                className="flex items-center w-full px-3 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                className="flex items-center w-full px-3 py-2 text-sm text-white hover:bg-white/10"
                             >
                                 <AlertTriangle className="w-4 h-4 mr-2" />
                                 Change Priority

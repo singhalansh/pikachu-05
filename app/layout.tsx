@@ -4,7 +4,7 @@ import { Poppins, Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/auth-context";
-import { ToastProvider, ToastViewport } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/sonner";
 import VapiWidget from "@/components/VapiWidget";
 
 const poppins = Poppins({
@@ -44,9 +44,7 @@ export default function RootLayout({
             >
                 <AuthProvider>
                     {children}
-                    <ToastProvider>
-                        <ToastViewport />
-                    </ToastProvider>
+                    <Toaster />
                     {/* Global sticky voice widget (renders once, bottom-right) */}
                     {vapiApiKey && vapiAssistantId ? (
                         <VapiWidget
